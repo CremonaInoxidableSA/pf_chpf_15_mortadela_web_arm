@@ -47,9 +47,9 @@ const DropdownBanderas = () => {
           style: { width: "20px", height: "15px" },
         })}
         <FaChevronDown
-          className={`ml-[2px] transition-transform ${
+          className={`ml-0.5 transition-transform ${
             isOpen ? "rotate-180" : ""
-          } inline-block w-[8px] h-[8px]`}
+          } inline-block w-2 h-2`}
         />
       </button>
 

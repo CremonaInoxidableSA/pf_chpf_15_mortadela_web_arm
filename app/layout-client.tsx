@@ -26,18 +26,14 @@ export default function LayoutClient({
 
   // On client mount, restore previously selected language (default to Spanish)
   useEffect(() => {
-    try {
-      const saved =
-        (typeof window !== "undefined" &&
-          (localStorage.getItem("selectedLanguage") ||
-            Cookies.get("selectedLanguage"))) ||
-        null;
-      const lang = saved === "en" || saved === "es" ? saved : "es";
-      if (i18n.language !== lang) {
-        i18n.changeLanguage(lang);
-      }
-    } catch (e) {
-      // ignore
+    const saved =
+      (typeof window !== "undefined" &&
+        (localStorage.getItem("selectedLanguage") ||
+          Cookies.get("selectedLanguage"))) ||
+      null;
+    const lang = saved === "en" || saved === "es" ? saved : "es";
+    if (i18n.language !== lang) {
+      i18n.changeLanguage(lang);
     }
   }, []);
 
