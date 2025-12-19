@@ -3,6 +3,8 @@
     "exportar": "OPCIONES DE EXPORTACION"
   },
   "min": {
-    "totalNiveles": "Niveles totales"
+    "titulo": "PF-MORTADELA",
+    "home": "Home",
+    "camaras": "Camaras"
   }
 }

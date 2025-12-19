@@ -1,44 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 export const useThemeToggle = () => {
-  const [theme, setTheme] = useState<null | "light" | "dark">("light");
-  
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-      const html = document.querySelector("html")!
-      html.classList.add(savedTheme);
-    }
-  }, [])
-
+  // Wait until mounted to avoid hydration mismatch
   useEffect(() => {
-    const html = document.querySelector("html")!
-    html.classList.remove("light", "dark");
-    if (theme === "light") {
-      html.classList.add("light");
-      localStorage.setItem("theme", "light");
-    } else if (theme === "dark") {
-      html.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      html.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    }
-  }, [theme])
-  
+    setMounted(true);
+  }, []);
+
+  const currentTheme = mounted ? resolvedTheme ?? theme : null;
+
   const toggleTheme = () => {
-    if (theme === "light") {
+    const t = resolvedTheme ?? theme;
+    if (t === "light") {
       setTheme("dark");
-    } else if (theme === "dark") {
-      setTheme("light");
     } else {
       setTheme("light");
     }
-  }
+  };
 
-  return { theme, toggleTheme };
+  return { theme: currentTheme as "light" | "dark" | null, toggleTheme };
 };

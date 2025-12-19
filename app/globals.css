@@ -86,7 +86,7 @@
 
   /*Colores personalizados*/
   --header-bg: #a4deff;
-  --texto-header: "#111",
+  --texto-header: "#111";
 }
 
 .dark {
@@ -124,7 +124,7 @@
 
   /*Colores personalizados*/
   --header-bg: #111;
-  --texto-header: "#FAFAFA",
+  --texto-header: "#FAFAFA";
 }
 
 @layer base {

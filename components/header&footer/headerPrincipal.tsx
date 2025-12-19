@@ -32,15 +32,17 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
   const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
+  // Updated useEffect to avoid synchronous setState
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleCamarasClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
     const userData = sessionStorage.getItem("user_data");
-    let url = process.env.NEXT_PUBLIC_CAMARAS_URL;
+    const url = process.env.NEXT_PUBLIC_CAMARAS_URL;
     const params = new URLSearchParams();
 
     if (userData) params.append("userData", encodeURIComponent(userData));
@@ -148,9 +150,9 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
             <Image
               alt="Creminox"
               className="h-full w-26.25"
-              height={1000}
+              height={25}
               src="/logo/creminox.png"
-              width={1000}
+              width={105}
             />
           </Link>
         </ul>

@@ -9,13 +9,16 @@ export const ThemeSwitcher = () => {
     toggleTheme();
   };
 
+  // If theme is null during hydration, show the current default (avoid layout shift)
+  const isLight = theme === "light";
+
   return (
     <button
       onClick={handleClick}
       aria-label="Toggle theme"
       className="group relative flex items-center justify-center w-6.25 h-6.25 ease-in-out"
     >
-      {theme === "light" ? (
+      {isLight ? (
         <div className="group relative flex items-center justify-center w-6.25 h-6.25 ease-in-out">
           <div className="absolute inset-0 rounded-lg bg-gray-400/0 group-hover:bg-gray-400/20 ease-in-out group-hover:scale-150 pointer-events-none" />
           <MoonFilledIcon className="w-6.25 h-6.25 transition-transform ease-in-out group-hover:scale-110" />
