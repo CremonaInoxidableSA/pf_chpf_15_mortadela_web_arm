@@ -7,12 +7,15 @@ export const useThemeToggle = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Wait until mounted to avoid hydration mismatch
+  // Wait until mounted to avoid hydration mismatch.
+  // Schedule the state update in the next animation frame to avoid
+  // calling setState synchronously within the effect.
   useEffect(() => {
-    setMounted(true);
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
   }, []);
 
-  const currentTheme = mounted ? resolvedTheme ?? theme : null;
+  const currentTheme = mounted ? (resolvedTheme ?? theme) : null;
 
   const toggleTheme = () => {
     const t = resolvedTheme ?? theme;

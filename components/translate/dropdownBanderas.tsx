@@ -9,7 +9,7 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 
 type Option = {
   value: "es" | "en";
-  flagComponent: React.ComponentType<any>;
+  flagComponent: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
 
 const DropdownBanderas = () => {

@@ -48,6 +48,20 @@
   /*Colores personalizados*/
   --color-header-bg: var(--header-bg);
   --color-texto-header: var(--texto-header);
+  --color-backgroundoscuro: var(--backgroundoscuro);
+  --color-background: var(--background);
+  --color-background2: var(--background2);
+  --color-background3: var(--background3);
+  --color-background4: var(--background4);
+  --color-background5: var(--background5);
+  --color-background6: var(--background6);
+  --color-headerbg: var(--headerbg);
+  --color-texto: var(--texto);
+  --color-texto2: var(--texto2);
+  --color-textohover: var(--textohover);
+  --color-textodesac: var(--textodesac);
+  --color-datosblueback: var(--datosblueback);
+  --color-datosbluebackhover: var(--datosbluebackhover);
 }
 
 :root {
@@ -87,6 +101,20 @@
   /*Colores personalizados*/
   --header-bg: #a4deff;
   --texto-header: "#111";
+  --backgroundoscuro: "#EDEDED";
+  --background: "#FDFDFD";
+  --background2: "#EDEDED";
+  --background3: "#E0E0E0";
+  --background4: "#D8D8D8";
+  --background5: "#D3D3D3";
+  --background6: "#CECECE";
+  --headerbg: "#a4deffff";
+  --texto: "#222";
+  --texto2: "#555";
+  --textohover: "#333";
+  --textodesac: "#929292ff";
+  --datosblueback: "#a4deffff";
+  --datosbluebackhover: "#93d2f7ff";
 }
 
 .dark {
@@ -125,6 +153,20 @@
   /*Colores personalizados*/
   --header-bg: #111;
   --texto-header: "#FAFAFA";
+  --backgroundoscuro: "#111";
+  --background: "#1B1B1B";
+  --background2: "#222";
+  --background3: "#292929";
+  --background4: "#333";
+  --background5: "#393939";
+  --background6: "#3E3E3E";
+  --headerbg: "#111";
+  --texto: "#EEE";
+  --texto2: "#AAA";
+  --textohover: "#DDD";
+  --textodesac: "#585858";
+  --datosblueback: "#073753ff";
+  --datosbluebackhover: "#0c4566ff";
 }
 
 @layer base {

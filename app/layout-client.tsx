@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 
 import HeaderPrincipal from "@/components/header&footer/headerPrincipal";
-//import Navbar2 from "@/components/footer&header/navbar2";
+import HeaderSecundario from "@/components/header&footer/headerSecundario";
 import Footer from "@/components/header&footer/footer";
 
 import { I18nextProvider } from "react-i18next";
@@ -24,7 +24,6 @@ export default function LayoutClient({
 
   const isDesmoldeoPage = pathname === "/desmoldeo";
 
-  // On client mount, restore previously selected language (default to Spanish)
   useEffect(() => {
     const saved =
       (typeof window !== "undefined" &&
@@ -42,7 +41,7 @@ export default function LayoutClient({
       <div className="flex flex-col grow min-h-screen">
         <div className="sticky top-0 left-0 w-full z-999">
           {!hideHeaderFooter && <HeaderPrincipal currentPath={pathname} />}
-          {/* {!hideHeaderFooter && showHeader2 && <Navbar2 />} */}
+          {!hideHeaderFooter && <HeaderSecundario />}
         </div>
         <main
           className={`grow ${isDesmoldeoPage ? "pl-67.5" : ""} ${
