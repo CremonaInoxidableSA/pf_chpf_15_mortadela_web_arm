@@ -22,7 +22,7 @@ export default function LayoutClient({
     "/login/recuperacion",
   ].includes(pathname);
 
-  const isDesmoldeoPage = pathname === "/desmoldeo";
+  const isDesarmadoPage = pathname === "/desarmado";
 
   useEffect(() => {
     const saved =
@@ -44,7 +44,7 @@ export default function LayoutClient({
           {!hideHeaderFooter && <HeaderSecundario />}
         </div>
         <main
-          className={`grow ${isDesmoldeoPage ? "pl-67.5" : ""} ${
+          className={`grow ${isDesarmadoPage ? "pl-67.5" : ""} ${
             pathname === "/login" || pathname === "/login/recuperacion"
               ? "flex justify-center items-center"
               : ""
@@ -52,7 +52,7 @@ export default function LayoutClient({
         >
           {children}
         </main>
-        <div className={isDesmoldeoPage ? "pl-67.5" : ""}>
+        <div className={isDesarmadoPage ? "pl-67.5" : ""}>
           {!hideHeaderFooter && <Footer />}
         </div>
       </div>
