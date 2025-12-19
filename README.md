@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
+## Iconos y banderas
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install react-icons --save
+
+npm install country-flag-icons --save
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```js
+import { FiMapPin } from "react-icons/fi"; //Mapa
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+import { CiBellOn } from "react-icons/ci"; //Campana
+import { CiMail } from "react-icons/ci"; //Mail
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+import { FaWeightHanging } from "react-icons/fa"; //Peso
+import { FaFacebook } from "react-icons/fa"; //Facebook
+import { FaLinkedin } from "react-icons/fa"; //Linkedin
+import { FaRegClock } from "react-icons/fa"; //Reloj
+import { FaSearch } from "react-icons/fa"; //Lupa
 
-## Learn More
+import { MdPrecisionManufacturing } from "react-icons/md"; //Kuka
 
-To learn more about Next.js, take a look at the following resources:
+import { BiReceipt } from "react-icons/bi"; //Receta
+import { BiCabinet } from "react-icons/bi"; //Torre
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+import { PiArrowsDownUpFill } from "react-icons/pi"; //Flechas Up & Down
+import { PiChefHat } from "react-icons/pi"; //Receta 2
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+import { VscAccount } from "react-icons/vsc"; //User
 
-## Deploy on Vercel
+import { GoDotFill } from "react-icons/go"; //Punto
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+import { AiOutlineExclamationCircle } from "react-icons/ai"; //Circulo Exclamacion con circulo
+import { HiOutlineSwitchVertical } from "react-icons/hi"; //Flechas Verticales Arriba y Abajo
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+import { TbCircleLetterAFilled } from "react-icons/tb"; //A
+import { TbCircleLetterBFilled } from "react-icons/tb"; //B
+import { TbCircleLetterCFilled } from "react-icons/tb"; //C
+import { TbBowl } from "react-icons/tb"; //Molde
+
+import { GrResources } from "react-icons/gr"; //Nivel
+
+import { MdCancel } from "react-icons/md"; //Cancel
+```
+
+## Traducciones
+
+```bash
+npm install i18next react-i18next
+```
+
+Como usar?
+
+```js
+import { useTranslation } from 'react-i18next';
+
+export default Ejemplo () {
+  const { t } = useTranslation('NombreDelArchivo');
+  <p> {t("objeto.atributo")} </p>
+}
+```
