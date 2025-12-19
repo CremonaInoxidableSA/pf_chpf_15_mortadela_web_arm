@@ -1,6 +1,10 @@
 {
   "mayus": {
-    "exportar": "EXPORT OPTIONS"
+    "exportar": "EXPORT OPTIONS",
+    "general": "GENERAL",
+    "armado": "ARMING",
+    "desarmado": "DISASSEMBLY",
+    "paletizado": "PALETIZING"
   },
   "min": {
     "titulo": "PF-MORTADELA",

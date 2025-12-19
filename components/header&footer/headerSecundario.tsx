@@ -23,19 +23,19 @@ const HeaderSecundario = () => {
     {
       id: 1,
       path: "/",
-      text: t("mayus.completo"),
+      text: t("mayus.general"),
       styleClass: "",
     },
     {
       id: 2,
-      path: ["/desarmado", "/desarmado/equipos"],
-      text: t("mayus.desmoldeo"),
+      path: "/armado",
+      text: t("mayus.armado"),
       styleClass: "",
     },
     {
       id: 3,
-      path: "/encajonado",
-      text: t("mayus.encajonado"),
+      path: "/desarmado",
+      text: t("mayus.desarmado"),
       styleClass: "desac",
     },
     {

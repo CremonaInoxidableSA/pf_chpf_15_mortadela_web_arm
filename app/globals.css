@@ -66,7 +66,6 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -100,25 +99,24 @@
 
   /*Colores personalizados*/
   --header-bg: #a4deff;
-  --texto-header: "#111";
-  --backgroundoscuro: "#EDEDED";
-  --background: "#FDFDFD";
-  --background2: "#EDEDED";
-  --background3: "#E0E0E0";
-  --background4: "#D8D8D8";
-  --background5: "#D3D3D3";
-  --background6: "#CECECE";
-  --headerbg: "#a4deffff";
-  --texto: "#222";
-  --texto2: "#555";
-  --textohover: "#333";
-  --textodesac: "#929292ff";
-  --datosblueback: "#a4deffff";
-  --datosbluebackhover: "#93d2f7ff";
+  --texto-header: #111;
+  --backgroundoscuro: #EDEDED;
+  --background: #FDFDFD;
+  --background2: #EDEDED;
+  --background3: #E0E0E0;
+  --background4: #D8D8D8;
+  --background5: #D3D3D3;
+  --background6: #CECECE;
+  --headerbg: #a4deffff;
+  --texto: #222;
+  --texto2: #555;
+  --textohover: #333;
+  --textodesac: #929292ff;
+  --datosblueback: #a4deffff;
+  --datosbluebackhover: #93d2f7ff;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -152,21 +150,21 @@
 
   /*Colores personalizados*/
   --header-bg: #111;
-  --texto-header: "#FAFAFA";
-  --backgroundoscuro: "#111";
-  --background: "#1B1B1B";
-  --background2: "#222";
-  --background3: "#292929";
-  --background4: "#333";
-  --background5: "#393939";
-  --background6: "#3E3E3E";
-  --headerbg: "#111";
-  --texto: "#EEE";
-  --texto2: "#AAA";
-  --textohover: "#DDD";
-  --textodesac: "#585858";
-  --datosblueback: "#073753ff";
-  --datosbluebackhover: "#0c4566ff";
+  --texto-header: #FAFAFA;
+  --backgroundoscuro: #111;
+  --background: #1B1B1B;
+  --background2: #222;
+  --background3: #292929;
+  --background4: #333;
+  --background5: #393939;
+  --background6: #3E3E3E;
+  --headerbg: #111;
+  --texto: #EEE;
+  --texto2: #AAA;
+  --textohover: #DDD;
+  --textodesac: #585858;
+  --datosblueback: #073753ff;
+  --datosbluebackhover: #0c4566ff;
 }
 
 @layer base {

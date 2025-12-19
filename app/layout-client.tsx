@@ -22,7 +22,7 @@ export default function LayoutClient({
     "/login/recuperacion",
   ].includes(pathname);
 
-  const isDesarmadoPage = pathname === "/desarmado";
+  const isDesarmadoPage = pathname === "/armado" || pathname === "/desarmado" || pathname === "/paletizado";
 
   useEffect(() => {
     const saved =
