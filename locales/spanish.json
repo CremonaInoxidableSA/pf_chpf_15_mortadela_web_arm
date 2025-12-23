@@ -4,11 +4,16 @@
     "general": "GENERAL",
     "armado": "ARMADO",
     "desarmado": "DESARMADO",
-    "paletizado": "PALETIZADO"
+    "paletizado": "PALETIZADO",
+    "datosArmado": "DATOS ARMADO"
   },
   "min": {
     "titulo": "PF-MORTADELA",
     "home": "Home",
-    "camaras": "Camaras"
+    "camaras": "Camaras",
+    "usuario": "Usuario",
+    "contra": "Contraseña",
+    "acceder": "Acceder",
+    "recuperar": "Recuperar Contraseña"
   }
 }

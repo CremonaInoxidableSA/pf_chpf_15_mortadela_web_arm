@@ -1,3 +1,5 @@
+"use client";
+
 import DatosLateralesArmado from "./datosLateralesArmado";
 
 export default function ArmadoLayout({
@@ -6,11 +8,11 @@ export default function ArmadoLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex w-full min-h-screen">
-      <aside className="w-72 bg-background2 p-4 hidden md:block">
+    <div className="flex h-full w-full">
+      <aside className="w-67.5 bg-background2 p-4 hidden md:block">
         <DatosLateralesArmado />
       </aside>
-      <section className="flex-1 p-4">{children}</section>
+      <section className="flex flex-col flex-1 p-4">{children}</section>
     </div>
   );
 }

@@ -7,6 +7,8 @@ import HeaderPrincipal from "@/components/header&footer/headerPrincipal";
 import HeaderSecundario from "@/components/header&footer/headerSecundario";
 import Footer from "@/components/header&footer/footer";
 
+import { Toaster } from "@/components/ui/sonner";
+
 import { I18nextProvider } from "react-i18next";
 import { i18n } from "@/i18n";
 
@@ -44,7 +46,7 @@ export default function LayoutClient({
           {!hideHeaderFooter && <HeaderSecundario />}
         </div>
         <main
-          className={`grow ${isDesarmadoPage ? "pl-67.5" : ""} ${
+          className={`grow ${
             pathname === "/login" || pathname === "/login/recuperacion"
               ? "flex justify-center items-center"
               : ""
@@ -52,6 +54,7 @@ export default function LayoutClient({
         >
           {children}
         </main>
+        <Toaster />
         <div className={isDesarmadoPage ? "pl-67.5" : ""}>
           {!hideHeaderFooter && <Footer />}
         </div>

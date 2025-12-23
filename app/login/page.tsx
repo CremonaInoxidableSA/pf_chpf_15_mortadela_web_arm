@@ -1,0 +1,84 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useTranslation } from "react-i18next";
+
+import LogoBase64 from "@/public/logo/LogoBase64";
+import { Button } from "@/components/ui/button";
+
+const Spinner = () => (
+  <div className="border border-solid border-[#f3f3f3] border-t-[#e82a31] rounded-[100%] w-6 h-6 animate-spin" />
+);
+
+const Login = () => {
+  const { t } = useTranslation();
+  const router = useRouter();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // evita recarga
+    router.push("/"); // redirige a /
+  };
+
+  return (
+    <section className="flex h-full w-full items-center justify-center">
+      <div className="w-auto h-[60vh] gap-3.75 flex flex-col items-center p-[3rem_4rem_2rem_4rem] max-w-480  bg-backgroundoscuro rounded-lg">
+        <LogoBase64 className="flex w-[65%] p-0 h-auto" />
+
+        <form
+          className="flex flex-col w-full justify-between h-[60%] gap-2.5"
+          onSubmit={handleSubmit}
+        >
+          <div className="flex flex-col gap-1.25 h-1/3">
+            <label className="flex font-semibold text-[17px] tracking-[0.5px]">
+              {t("min.usuario")}
+            </label>
+            <input
+              className="bg-background2 p-1 rounded-lg w-full h-2/3 flex items-center justify-center border-none px-4"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.25 h-1/3">
+            <label className="flex font-semibold text-[17px] tracking-[0.5px]">
+              {t("min.contra")}
+            </label>
+            <input
+              className="bg-background2 p-1 rounded-lg w-full h-2/3 flex items-center justify-center border-none px-4"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          {message && <div className="text-red-500 text-sm">{message}</div>}
+
+          <Button
+            className="bg-[#e82a31] mt-1.25 p-1 rounded-lg w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
+            disabled={loading}
+            onClick={handleSubmit}
+          >
+            {loading ? <Spinner /> : t("min.acceder")}
+          </Button>
+        </form>
+
+        <Link
+          className="w-full flex text-center justify-center text-[#5d5d5d] h-auto text-[14px] font-semibold tracking-[0.5px] cursor-pointer hover:text-[#e82a31] ease-in-out"
+          href="/login/recuperacion"
+        >
+          {t("min.recuperar")}
+        </Link>
+      </div>
+    </section>
+  );
+};
+
+export default Login;
