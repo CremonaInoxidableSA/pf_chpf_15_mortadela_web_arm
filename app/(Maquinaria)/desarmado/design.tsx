@@ -1,12 +1,12 @@
 import Image from "next/image";
 
-import ArmadoDesign from "@/public/designs/Armado.png";
+import DesarmadoDesign from "@/public/designs/Armado.png";
 
-export default function DatosLateralesArmado() {
+export default function DatosLateralesDesarmado() {
   return (
     <div className="bg-background2 p-4 rounded-lg">
       <Image
-        src={ArmadoDesign}
+        src={DesarmadoDesign}
         alt="Diseño de máquina de armado"
       />
     </div>
