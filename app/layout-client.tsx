@@ -22,6 +22,7 @@ export default function LayoutClient({
     "/signup",
     "/login",
     "/login/recuperacion",
+    "/bootstrap",
   ].includes(pathname);
 
   const isDesarmadoPage = pathname === "/armado" || pathname === "/desarmado" || pathname === "/paletizado";
@@ -41,7 +42,7 @@ export default function LayoutClient({
   return (
     <I18nextProvider i18n={i18n}>
       <div className="flex flex-col grow min-h-screen">
-        <div className="sticky top-0 left-0 w-full z-999">
+        <div className="sticky top-0 left-0 w-full z-900">
           {!hideHeaderFooter && <HeaderPrincipal currentPath={pathname} />}
           {!hideHeaderFooter && <HeaderSecundario />}
         </div>

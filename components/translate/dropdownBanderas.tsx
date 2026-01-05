@@ -66,7 +66,7 @@ const DropdownBanderas = () => {
               .map((option) => (
                 <button
                   key={option.value}
-                  className="block w-full text-left px-1 py-0.5 text-sm text-gray-700 z-999 cursor-pointer"
+                  className="block w-full text-left px-1 py-0.5 text-sm text-gray-700 z-901 cursor-pointer"
                   role="menuitem"
                   onClick={() => handleLanguageChange(option.value)}
                 >

@@ -2,7 +2,6 @@ import { ThemeSwitcher } from "@/components/theme/themeSwitcher";
 
 import { useTranslation } from "react-i18next";
 import { VscBell } from "react-icons/vsc";
-import { VscAccount } from "react-icons/vsc";
 import { GoGear } from "react-icons/go";
 
 import Link from "next/link";
@@ -10,6 +9,7 @@ import Image from "next/image";
 import { JSX, useEffect, useState } from "react";
 
 import DropdownBanderas from "@/components/translate/dropdownBanderas";
+import UserIcon from "@/components/userIcon/userIcon";
 
 interface Header {
   currentPath: string;
@@ -54,10 +54,7 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
     {
       id: 1,
       icon: (
-        <div className="group relative flex items-center justify-center w-6.25 h-6.25 ease-in-out">
-          <div className="absolute inset-0 rounded-lg bg-gray-400/0 group-hover:bg-gray-400/20 ease-in-out group-hover:scale-150 pointer-events-none" />
-          <VscAccount className="w-6.25 h-6.25 transition-transform ease-in-out group-hover:scale-110" />
-        </div>
+        <UserIcon />
       ),
     },
     {

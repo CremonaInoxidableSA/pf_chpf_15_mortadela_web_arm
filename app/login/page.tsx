@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/context/AuthProvider";
 
 import LogoBase64 from "@/public/logo/LogoBase64";
 import { Button } from "@/components/ui/button";
@@ -14,16 +15,30 @@ const Spinner = () => (
 
 const Login = () => {
   const { t } = useTranslation();
-  const router = useRouter();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // evita recarga
-    router.push("/"); // redirige a /
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await login(username, password);
+
+      if (!result.success) {
+        setError(result.error || "Error en el login");
+      }
+    } catch (err) {
+      setError("Error de conexión");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,30 +51,46 @@ const Login = () => {
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col gap-1.25 h-1/3">
-            <label className="flex font-semibold text-[17px] tracking-[0.5px]">
+            <label
+              htmlFor="email"
+              className="flex font-semibold text-[17px] tracking-[0.5px]"
+            >
               {t("min.usuario")}
             </label>
             <input
               className="bg-background2 p-1 rounded-lg w-full h-2/3 flex items-center justify-center border-none px-4"
+              id="username"
+              name="username"
               type="text"
+              autoComplete="username"
+              required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
           <div className="flex flex-col gap-1.25 h-1/3">
-            <label className="flex font-semibold text-[17px] tracking-[0.5px]">
+            <label
+              htmlFor="password"
+              className="flex font-semibold text-[17px] tracking-[0.5px]"
+            >
               {t("min.contra")}
             </label>
             <input
               className="bg-background2 p-1 rounded-lg w-full h-2/3 flex items-center justify-center border-none px-4"
+              id="password"
+              name="password"
               type="password"
+              autoComplete="current-password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
-          {message && <div className="text-red-500 text-sm">{message}</div>}
+          {error && (
+            <div className="text-red-600 text-sm text-center">{error}</div>
+          )}
 
           <Button
             className="bg-[#e82a31] mt-1.25 p-1 rounded-lg w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
