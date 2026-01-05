@@ -10,9 +10,26 @@ import { Button } from "@/components/ui/button";
 
 import { VscAccount } from "react-icons/vsc";
 import { useAuth } from "@/context/AuthProvider";
+import { Spinner } from "@/components/ui/spinner";
 
 const UserIcon = () => {
-  const { logout } = useAuth();
+  const { logout, user, loading } = useAuth();
+
+  const roleMap: Record<string, string> = {
+    superadmin: "Superadministrador",
+    admin: "Administrador",
+    user: "Usuario",
+  };
+
+  const displayName = user
+    ? user.name ?? (user as any).nombre
+      ? `${(user as any).nombre}${
+          (user as any).apellido ? " " + (user as any).apellido : ""
+        }`
+      : user.email
+    : "Usuario";
+
+  const rawRole = user ? user.role ?? (user as any).rol : undefined;
 
   const closeSession = async () => {
     try {
@@ -31,17 +48,28 @@ const UserIcon = () => {
         </div>
       </PopoverTrigger>
       <PopoverContent className="z-901">
-        <p className="text-lg">Usuario</p>
-        <p className="text-xs">Administrador</p>
-        <Button className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer">
-          Configuracion del perfil
-        </Button>
-        <Button
-          className="mt-2 w-full bg-redlogo hover:bg-red2 text-white cursor-pointer"
-          onClick={closeSession}
-        >
-          Cerrar sesión
-        </Button>
+        {loading ? (
+          <div className="flex items-center gap-2">
+            <Spinner />
+            <span>Verificando...</span>
+          </div>
+        ) : (
+          <>
+            <p className="text-lg">{displayName}</p>
+            <p className="text-xs">
+              {rawRole ? roleMap[rawRole] ?? rawRole : "Sin rol"}
+            </p>
+            <Button className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer">
+              Configuracion del perfil
+            </Button>
+            <Button
+              className="mt-2 w-full bg-redlogo hover:bg-red2 text-white cursor-pointer"
+              onClick={closeSession}
+            >
+              Cerrar sesión
+            </Button>
+          </>
+        )}
       </PopoverContent>
     </Popover>
   );

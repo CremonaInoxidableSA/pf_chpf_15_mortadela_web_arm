@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthProvider";
 
 const BootstrapPage = () => {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [nombre, setNombre] = useState("");
@@ -57,17 +59,11 @@ const BootstrapPage = () => {
         return;
       }
 
-      // Intentar login automático
-      const loginRes = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ username, password }),
-      });
+      // Intentar login automático usando AuthProvider para que el estado se actualice
+      const loginResult = await login(username, password);
 
-      const loginJson = await loginRes.json();
-
-      if (loginJson.success) {
+      if (loginResult.success) {
+        // AuthProvider limpia la necesidad de bootstrap y redirige
         router.push("/");
       } else {
         router.push("/login");
@@ -84,13 +80,13 @@ const BootstrapPage = () => {
       <div className="w-auto gap-3.75 flex flex-col items-center p-6 max-w-md bg-backgroundoscuro rounded-lg">
         <h2 className="text-2xl font-semibold">Crear Superadmin inicial</h2>
         <p className="text-sm text-muted-foreground">
-          No hay usuarios en la base de datos. Por favor, crea el primer
-          superadmin.
+          No hay usuarios en la base de datos. Por favor, crea el usuario
+          administrador de Creminox.
         </p>
 
         <form className="w-full mt-4" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2 mb-2">
-            <label>Username</label>
+            <label>User</label>
             <input
               required
               value={username}

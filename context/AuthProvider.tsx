@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (user && (pathname === "/login" || pathname === "/register")) {
-        router.push("/dashboard");
+        router.push("/");
       }
     }
   }, [user, loading, needBootstrap, pathname, router]);
@@ -86,6 +86,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setLoading(false);
             return;
           }
+
+          // No se necesita bootstrap
+          setNeedBootstrap(false);
 
           if (data.data && data.data.user) {
             setUser(data.data.user);
@@ -115,6 +118,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data.success) {
         setUser(data.data.user);
+        // Clear bootstrap requirement after login
+        setNeedBootstrap(false);
         router.push("/");
       }
 
