@@ -21,13 +21,22 @@ const UserIcon = () => {
     user: "Usuario",
   };
 
-  const displayName = user
-    ? user.name ?? (user as any).nombre
-      ? `${(user as any).nombre}${
-          (user as any).apellido ? " " + (user as any).apellido : ""
-        }`
-      : user.email
-    : "Usuario";
+  const displayName = (() => {
+    if (!user) return "Usuario";
+
+    if (typeof user.name === "string" && user.name.trim())
+      return user.name.trim();
+
+    const nombre = (user as any).nombre;
+    const apellido = (user as any).apellido;
+    const full = [nombre, apellido]
+      .filter((s) => typeof s === "string" && s.trim())
+      .join(" ")
+      .trim();
+    if (full) return full;
+
+    return (user.email && String(user.email)) || "Usuario";
+  })();
 
   const rawRole = user ? user.role ?? (user as any).rol : undefined;
 

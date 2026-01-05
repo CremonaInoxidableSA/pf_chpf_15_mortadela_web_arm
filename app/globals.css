@@ -78,6 +78,13 @@
   --color-datorRed: #581420;
   --color-datosgrey: #5a5a5a;
   --color-cerrarsesion: #f15b5f;
+
+  --color-botonredborder: #ee2255;
+  --color-botonredhover: #ed292e11;
+  --color-botonred: #ed292e33;
+
+  --color-botonblueborder: #30A0F0;
+  --color-botonblue: #30A0F044;
 }
 
 :root {
