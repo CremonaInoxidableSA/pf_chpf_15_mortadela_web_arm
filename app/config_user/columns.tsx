@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, Slash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,43 +9,63 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
+export type User = {
   email: string;
+  username: string;
+  nombre: string;
+  apellido: string;
+  rol: string;
+  habilitado: number;
+  reporte: number;
 };
 
-export const columns: ColumnDef<Payment>[] = [
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
+export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "email",
     header: "Email",
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "username",
+    header: "Usuario",
+  },
+  {
+    accessorKey: "nombre",
+    header: "Nombre",
+  },
+  {
+    accessorKey: "apellido",
+    header: "Apellido",
+  },
+  {
+    accessorKey: "rol",
+    header: "Rol",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      const role = row.getValue("rol") as string;
+      const roleMap: Record<string, string> = {
+        superadmin: "Super Administrador",
+        admin: "Administrador",
+        user: "Usuario",
+      };
+      return roleMap[role] ?? role ?? "—";
     },
+  },
+  {
+    accessorKey: "habilitado",
+    header: "Habilitado",
+    cell: ({ row }) => (row.getValue("habilitado") === 1 ? "Sí" : "No"),
+  },
+  {
+    accessorKey: "reporte",
+    header: "Recibe Reportes",
+    cell: ({ row }) => (row.getValue("reporte") === 1 ? "Sí" : "No"),
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const user = row.original;
 
       return (
         <DropdownMenu>
@@ -56,15 +76,16 @@ export const columns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+            <DropdownMenuItem>
+              <Edit className="mr-2 h-4 w-4" /> Editar
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Trash2 className="mr-2 h-4 w-4" /> Eliminar
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Slash className="mr-2 h-4 w-4" /> Deshabilitar
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

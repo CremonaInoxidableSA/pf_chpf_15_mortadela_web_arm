@@ -1,27 +1,35 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { VscAccount } from "react-icons/vsc";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
-import { columns, Payment } from "./columns";
+import { columns, User } from "./columns";
 import { DataTable } from "./data-table";
-
-function getData(): Payment[] {
-  // Fetch data from your API here or return mock data synchronously
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
-  ];
-}
+import { Spinner } from "@/components/ui/spinner";
 
 export default function ConfiguracionUsuario() {
   const { nombre, apellido, email, rol, reporte } = useAuth();
-  const data = getData();
+  const [data, setData] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    setIsLoading(true);
+    fetch(
+      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`
+    )
+      .then((res) => res.json())
+      .then((users: User[]) => {
+        if (mounted) setData(users);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => mounted && setIsLoading(false));
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const getRoleName = (role?: string) => {
     const roleMap: Record<string, string> = {
@@ -32,7 +40,9 @@ export default function ConfiguracionUsuario() {
     return (role && roleMap[role]) || role || "—";
   };
 
-  const fullname = `${nombre ?? ""}${nombre || apellido ? " " : ""}${apellido ?? ""}`.trim();
+  const fullname = `${nombre ?? ""}${nombre || apellido ? " " : ""}${
+    apellido ?? ""
+  }`.trim();
 
   return (
     <div className="w-full p-4 flex flex-row gap-4">
@@ -79,10 +89,16 @@ export default function ConfiguracionUsuario() {
         </div>
       </div>
       <div className="flex flex-col h-full w-4/5 gap-4">
-        <p className="text-2xl w-full flex justify-center items-center">
-          {" "}
-          Lista de Usuarios{" "}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-2xl">Lista de Usuarios</p>
+          {isLoading && (
+            <div className="flex items-center gap-2">
+              <Spinner />
+              <span>Cargando...</span>
+            </div>
+          )}
+        </div>
+
         <DataTable columns={columns} data={data} />
         <div className="mt-4"></div>
       </div>
