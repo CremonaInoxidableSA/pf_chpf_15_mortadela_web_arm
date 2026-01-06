@@ -9,36 +9,17 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { VscAccount } from "react-icons/vsc";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthProvider";
 import { Spinner } from "@/components/ui/spinner";
 
 const UserIcon = () => {
-  const { logout, user, loading } = useAuth();
+  const router = useRouter();
+  const { logout, nombre, apellido, rol, loading } = useAuth();
 
-  const roleMap: Record<string, string> = {
-    superadmin: "Superadministrador",
-    admin: "Administrador",
-    user: "Usuario",
-  };
-
-  const displayName = (() => {
-    if (!user) return "Usuario";
-
-    if (typeof user.name === "string" && user.name.trim())
-      return user.name.trim();
-
-    const nombre = (user as any).nombre;
-    const apellido = (user as any).apellido;
-    const full = [nombre, apellido]
-      .filter((s) => typeof s === "string" && s.trim())
-      .join(" ")
-      .trim();
-    if (full) return full;
-
-    return (user.email && String(user.email)) || "Usuario";
-  })();
-
-  const rawRole = user ? user.role ?? (user as any).rol : undefined;
+  const displayName =
+    `${nombre ?? ""}${nombre || apellido ? " " : ""}${apellido ?? ""}`.trim() ||
+    "Usuario";
 
   const closeSession = async () => {
     try {
@@ -65,12 +46,10 @@ const UserIcon = () => {
         ) : (
           <>
             <p className="text-lg">{displayName}</p>
-            <p className="text-xs">
-              {rawRole ? roleMap[rawRole] ?? rawRole : "Sin rol"}
-            </p>
+            <p className="text-xs">{rol}</p>
             <Button
               className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer"
-              onClick={() => window.location.href = "/config_user"}
+              onClick={() => router.push("/config_user")}
             >
               Configuracion del perfil
             </Button>

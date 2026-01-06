@@ -1,108 +1,72 @@
 "use client";
 
-import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export type Usuario = {
-  id: number;
+export type Payment = {
+  id: string;
+  amount: number;
+  status: "pending" | "processing" | "success" | "failed";
   email: string;
-  username: string;
-  nombre: string;
-  apellido: string;
-  rol: "superadmin" | "admin" | "user";
-  created_at: string; // ISO string
 };
 
-export const columns: ColumnDef<Usuario>[] = [
+export const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: "status",
+    header: "Status",
   },
   {
     accessorKey: "email",
     header: "Email",
   },
   {
-    accessorKey: "username",
-    header: "Username",
-  },
-  {
-    accessorKey: "nombre",
-    header: "Nombre",
-  },
-  {
-    accessorKey: "apellido",
-    header: "Apellido",
-  },
-  {
-    accessorKey: "rol",
-    header: "Rol",
-    cell: ({ getValue }) => {
-      const value = getValue() as string;
-      const map: Record<string, string> = {
-        superadmin: "Superadministrador",
-        admin: "Administrador",
-        user: "Usuario",
-      };
-      return map[value] ?? value;
-    },
-  },
-  {
-    accessorKey: "created_at",
-    header: "Creado",
-    cell: ({ getValue }) => {
-      const value = getValue() as string | undefined;
-      if (!value) return "-";
-      try {
-        return new Date(value).toLocaleString();
-      } catch (e) {
-        return value;
-      }
+    accessorKey: "amount",
+    header: () => <div className="text-right">Amount</div>,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
     },
   },
   {
     id: "actions",
-    header: "Acciones",
-    enableSorting: false,
     cell: ({ row }) => {
-      const user = row.original as Usuario;
+      const payment = row.original;
+
       return (
-        <Popover>
-          <PopoverTrigger asChild>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              {/* simple vertical ellipsis */}
-              <span className="text-xl">⋮</span>
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
             </Button>
-          </PopoverTrigger>
-          <PopoverContent align="end" className="w-44">
-            <div className="flex flex-col gap-2">
-              <Button
-                variant="ghost"
-                onClick={() => console.log("edit-user", user.id)}
-              >
-                Editar
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => console.log("change-password", user.id)}
-              >
-                Cambiar contraseña
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => console.log("delete-user", user.id)}
-              >
-                Borrar
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment.id)}
+            >
+              Copy payment ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>View payment details</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

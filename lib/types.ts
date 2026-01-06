@@ -1,16 +1,23 @@
 export interface User {
   id: number;
   email: string;
-  name?: string;
-  role: 'superadmin' | 'admin' | 'user';
-  created_at: Date;
+  username: string;
+  nombre: string;
+  apellido: string;
+  rol: "superadmin" | "admin" | "user";
+  habilitado: boolean;
+  reporte: boolean;
 }
 
 export interface UserSession {
   id: number;
   email: string;
-  role: 'superadmin' | 'admin' | 'user';
-  name?: string;
+  username: string;
+  nombre: string;
+  apellido: string;
+  rol: "superadmin" | "admin" | "user";
+  habilitado: boolean;
+  reporte: boolean;
 }
 
 export interface ConfigParam {
@@ -18,7 +25,6 @@ export interface ConfigParam {
   param_name: string;
   param_value: string;
   description?: string;
-  created_by: number;
 }
 
 export interface ApiResponse<T = any> {

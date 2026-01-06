@@ -1,13 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -19,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+
 import { Button } from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
@@ -31,38 +28,15 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState<any>([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-2 gap-2">
-        <div className="text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} resultados
-        </div>
-        <div className="flex items-center gap-2 w-1/2">
-          <Input
-            placeholder="Buscar..."
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-          />
-          <Button
-            variant="ghost"
-            onClick={() => setGlobalFilter("")}
-            className="ml-2"
-          >
-            Limpiar
-          </Button>
-        </div>
-      </div>
-
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -71,27 +45,12 @@ export function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={`flex items-center gap-2 select-none ${
-                            header.column.getCanSort() ? "cursor-pointer" : ""
-                          }`}
-                          onClick={
-                            header.column.getCanSort()
-                              ? header.column.getToggleSortingHandler()
-                              : undefined
-                          }
-                        >
-                          {flexRender(
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                          {{
-                            asc: <span>▲</span>,
-                            desc: <span>▼</span>,
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
-                      )}
                     </TableHead>
                   );
                 })}
@@ -127,6 +86,24 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
       </div>
     </div>
   );

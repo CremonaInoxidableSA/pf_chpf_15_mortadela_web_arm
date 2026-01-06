@@ -1,7 +1,7 @@
-import bcrypt from 'bcryptjs';
-import jwt, { Secret, SignOptions } from 'jsonwebtoken';
-import { cookies } from 'next/headers';
-import { UserSession } from './types';
+import bcrypt from "bcryptjs";
+import jwt, { Secret, SignOptions } from "jsonwebtoken";
+import { cookies } from "next/headers";
+import { UserSession } from "./types";
 
 const JWT_SECRET = process.env.JWT_SECRET as Secret | undefined;
 const SALT_ROUNDS = 10;
@@ -12,7 +12,10 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 // Verificar contraseña
-export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+export async function verifyPassword(
+  password: string,
+  hashedPassword: string
+): Promise<boolean> {
   return bcrypt.compare(password, hashedPassword);
 }
 
@@ -20,29 +23,32 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 export function generateToken(user: UserSession): string {
   const secret = JWT_SECRET as Secret | undefined;
   if (!secret) {
-    throw new Error('JWT_SECRET no está definida en las variables de entorno');
+    throw new Error("JWT_SECRET no está definida en las variables de entorno");
   }
 
-  const options = { expiresIn: process.env.JWT_EXPIRES_IN ?? '24h' } as any;
+  const options = { expiresIn: process.env.JWT_EXPIRES_IN ?? "24h" } as any;
 
-  return jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      name: user.name,
-    },
-    secret,
-    options
-  );
-} 
+  // Incluir todos los campos relevantes de la sesión para poder reconstruir el usuario desde el token
+  const payload = {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    nombre: user.nombre,
+    apellido: user.apellido,
+    rol: user.rol,
+    habilitado: user.habilitado,
+    reporte: user.reporte,
+  };
+
+  return jwt.sign(payload, secret, options);
+}
 
 // Verificar JWT
 export function verifyToken(token: string): UserSession | null {
   try {
     const secret = JWT_SECRET as Secret | undefined;
     if (!secret) {
-      console.error('verifyToken: JWT_SECRET no está definida');
+      console.error("verifyToken: JWT_SECRET no está definida");
       return null;
     }
 
@@ -50,12 +56,12 @@ export function verifyToken(token: string): UserSession | null {
   } catch (error) {
     return null;
   }
-} 
+}
 
 // Obtener usuario actual desde cookies
 export async function getCurrentUser(): Promise<UserSession | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get('auth_token')?.value;
+  const token = cookieStore.get("auth_token")?.value;
 
   if (!token) return null;
 
@@ -63,38 +69,48 @@ export async function getCurrentUser(): Promise<UserSession | null> {
 }
 
 // Verificar rol
-export function hasRole(user: UserSession | null, requiredRole: 'superadmin' | 'admin' | 'user'): boolean {
+export function hasRole(
+  user: UserSession | null,
+  requiredRole: "superadmin" | "admin" | "user"
+): boolean {
   if (!user) return false;
   // superadmin tiene todos los permisos
-  if (user.role === 'superadmin') return true;
+  if (user.role === "superadmin") return true;
   return user.role === requiredRole;
 }
 
 // Middleware de autenticación (para usar en endpoints API)
-export function withAuth(handler: Function, requiredRole?: 'superadmin' | 'admin' | 'user') {
+export function withAuth(
+  handler: Function,
+  requiredRole?: "superadmin" | "admin" | "user"
+) {
   return async (req: Request) => {
     try {
       const user = await getCurrentUser();
-      
+
       if (!user) {
         return Response.json(
-          { success: false, error: 'No autorizado' },
+          { success: false, error: "No autorizado" },
           { status: 401 }
         );
       }
-      
-      if (requiredRole && user.role !== requiredRole && user.role !== 'superadmin') {
+
+      if (
+        requiredRole &&
+        user.role !== requiredRole &&
+        user.role !== "superadmin"
+      ) {
         return Response.json(
-          { success: false, error: 'Permisos insuficientes' },
+          { success: false, error: "Permisos insuficientes" },
           { status: 403 }
         );
       }
-      
+
       return handler(req, user);
     } catch (error) {
-      console.error('Auth error:', error);
+      console.error("Auth error:", error);
       return Response.json(
-        { success: false, error: 'Error de autenticación' },
+        { success: false, error: "Error de autenticación" },
         { status: 500 }
       );
     }

@@ -37,7 +37,7 @@ export function proxy(request: NextRequest) {
 
   // Verificar rol de admin para rutas administrativas
   const isAdminRoute = adminRoutes.some(route => pathname.startsWith(route));
-  if (isAdminRoute && user.role !== 'admin' && user.role !== 'superadmin') {
+  if (isAdminRoute && user.rol !== 'admin' && user.rol !== 'superadmin') {
     return NextResponse.redirect(new URL('/', request.url));
   }
 

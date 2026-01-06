@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { verifyPassword, generateToken } from '@/lib/auth';
 import { ApiResponse } from '@/lib/types';
-import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     // Buscar usuario por username
     const users = await query(
-      'SELECT id, email, username, nombre, apellido, password_hash, rol FROM Usuarios WHERE username = ? LIMIT 1',
+      'SELECT id, email, username, nombre, apellido, password_hash, rol, habilitado, reporte FROM Usuarios WHERE username = ? LIMIT 1',
       [username]
     ) as any[];
 
@@ -40,15 +39,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Construir nombre legible
-    const fullName = (user.nombre || user.username || '') + (user.apellido ? ' ' + user.apellido : '');
-
     // Generar token
     const token = generateToken({
       id: user.id,
       email: user.email,
-      role: user.rol,
-      name: fullName || user.username,
+      rol: user.rol,
+      nombre: user.nombre,
+      apellido: user.apellido,
+      username: user.username,
+      habilitado: user.habilitado,
+      reporte: user.reporte,
     });
 
     // Responder sin password

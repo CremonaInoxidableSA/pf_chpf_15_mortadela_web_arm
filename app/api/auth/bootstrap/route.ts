@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     // Verificar si ya existe un superadmin
     const existing = await query(
-      "SELECT id, email, username, nombre, apellido, rol FROM Usuarios WHERE rol = 'superadmin' LIMIT 1"
+      "SELECT id FROM Usuarios WHERE rol = 'superadmin' LIMIT 1"
     ) as any[];
 
     if (existing.length > 0) {
@@ -32,15 +32,15 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json().catch(() => ({}));
 
-    const email = body.email || process.env.ADMIN_EMAIL;
-    const password = body.password || process.env.ADMIN_PASSWORD;
-    const username = body.username || process.env.ADMIN_USERNAME || 'superadmin';
-    const nombre = body.nombre || process.env.ADMIN_NOMBRE || 'Super';
-    const apellido = body.apellido || process.env.ADMIN_APELLIDO || 'Admin';
+    const email = body.email || 'sistemas@creminox.com';
+    const password = body.password;
+    const username = body.username || 'superadmin';
+    const nombre = body.nombre || 'Sistemas';
+    const apellido = body.apellido || 'Creminox';
 
     if (!email || !password) {
       return NextResponse.json<ApiResponse>(
-        { success: false, error: 'Email y contraseña del superadmin son requeridos' },
+        { success: false, error: 'Email y contraseña requeridos' },
         { status: 400 }
       );
     }
@@ -48,14 +48,14 @@ export async function POST(request: NextRequest) {
     const hashed = await hashPassword(password);
 
     const result = await query(
-      'INSERT INTO Usuarios (email, username, nombre, apellido, password_hash, rol) VALUES (?, ?, ?, ?, ?, ?)',
-      [email, username, nombre, apellido, hashed, 'superadmin']
+      'INSERT INTO Usuarios (email, username, nombre, apellido, password_hash, rol, habilitado, reporte) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [email, username, nombre, apellido, hashed, 'superadmin', true, true]
     );
 
     // Obtener el usuario insertado
-    const inserted = await query(
-      'SELECT id, email, username, nombre, apellido, rol, created_at FROM Usuarios WHERE id = LAST_INSERT_ID() LIMIT 1'
-    ) as any[];
+    const inserted = (await query(
+      "SELECT id, email, username, nombre, apellido, rol, habilitado, reporte FROM Usuarios WHERE id = LAST_INSERT_ID() LIMIT 1"
+    )) as any[];
 
     return NextResponse.json<ApiResponse>({
       success: true,
