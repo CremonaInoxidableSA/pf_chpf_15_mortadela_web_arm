@@ -16,7 +16,7 @@ export const ThemeSwitcher = () => {
     <button
       onClick={handleClick}
       aria-label="Toggle theme"
-      className="group relative flex items-center justify-center w-6.25 h-6.25 ease-in-out"
+      className="group relative flex items-center justify-center w-6.25 h-6.25 ease-in-out cursor-pointer"
     >
       {isLight ? (
         <div className="group relative flex items-center justify-center w-6.25 h-6.25 ease-in-out">

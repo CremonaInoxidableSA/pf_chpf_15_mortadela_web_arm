@@ -117,7 +117,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json();
 
       if (data.success) {
-        setUser(data.data.user);
+        // Guardar token en localStorage para que peticiones cliente puedan usarlo
+        const token = data.data?.token;
+        try {
+          if (token && typeof window !== "undefined") {
+            localStorage.setItem("access_token", token);
+          }
+        } catch (e) {
+          console.warn("Could not store access_token in localStorage", e);
+        }
+
+        // Incluir token en el objeto user en memoria
+        setUser({ ...(data.data.user || {}), token });
+
         // Clear bootstrap requirement after login
         setNeedBootstrap(false);
         router.push("/");

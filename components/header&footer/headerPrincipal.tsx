@@ -10,6 +10,7 @@ import { JSX, useEffect, useState } from "react";
 
 import DropdownBanderas from "@/components/translate/dropdownBanderas";
 import UserIcon from "@/components/userIcon/userIcon";
+import { Button } from "../ui/button";
 
 interface Header {
   currentPath: string;

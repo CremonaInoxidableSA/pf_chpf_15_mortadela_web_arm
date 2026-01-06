@@ -196,7 +196,7 @@ const DatosLaterales: React.FC = () => {
   };
 
   return (
-    <div className="fixed left-0 w-67.5 bg-background2 p-5 z-998 flex flex-col h-[calc(100vh-112px)] overflow-auto">
+    <div className="fixed left-0 w-67.5 bg-background2 p-5 z-850 flex flex-col h-[calc(100vh-112px)] overflow-auto">
       <ul className="flex flex-col gap-2 list-none">
         {opcionesAlarma.map(({ id, nombre }) => (
           <li key={id} className="gap-2.5">

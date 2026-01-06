@@ -68,7 +68,10 @@ const UserIcon = () => {
             <p className="text-xs">
               {rawRole ? roleMap[rawRole] ?? rawRole : "Sin rol"}
             </p>
-            <Button className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer">
+            <Button
+              className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer"
+              onClick={() => window.location.href = "/config_user"}
+            >
               Configuracion del perfil
             </Button>
             <Button

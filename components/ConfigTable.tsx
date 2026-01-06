@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthProvider";
+import { Button } from "./ui/button";
 
 interface ConfigParam {
   id: number;
@@ -138,13 +139,13 @@ export default function ConfigTable() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     {editingId === param.id ? (
                       <div className="space-x-2">
-                        <button
+                        <Button
                           onClick={() => handleUpdate(param.id)}
                           className="text-green-600 hover:text-green-900"
                         >
                           Guardar
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                           onClick={() => {
                             setEditingId(null);
                             setEditValue("");
@@ -152,10 +153,10 @@ export default function ConfigTable() {
                           className="text-gray-600 hover:text-gray-900"
                         >
                           Cancelar
-                        </button>
+                        </Button>
                       </div>
                     ) : (
-                      <button
+                      <Button
                         onClick={() => {
                           setEditingId(param.id);
                           setEditValue(param.param_value);
@@ -163,7 +164,7 @@ export default function ConfigTable() {
                         className="text-blue-600 hover:text-blue-900"
                       >
                         Editar
-                      </button>
+                      </Button>
                     )}
                   </td>
                 )}

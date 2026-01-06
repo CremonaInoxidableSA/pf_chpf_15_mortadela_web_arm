@@ -1,75 +1,47 @@
 "use client";
 
-import { useAuth } from "@/context/AuthProvider";
-
 import { VscAccount } from "react-icons/vsc";
-
 import { Button } from "@/components/ui/button";
 
 export default function ConfiguracionUsuario() {
-  const { user } = useAuth();
-
-  const nombre = (() => {
-    if (!user) return "";
-    if ((user as any).nombre) return (user as any).nombre;
-    if (typeof user.name === "string" && user.name.trim()) {
-      const parts = user.name.trim().split(" ");
-      return parts[0] ?? "";
-    }
-    return "";
-  })();
-
-  const apellido = (() => {
-    if (!user) return "";
-    if ((user as any).apellido) return (user as any).apellido;
-    if (typeof user.name === "string" && user.name.trim()) {
-      const parts = user.name.trim().split(" ");
-      return parts.slice(1).join(" ") || "";
-    }
-    return "";
-  })();
-
-  const email = user?.email ?? "";
-
-  const roleMap: Record<string, string> = {
-    superadmin: "Superadministrador",
-    admin: "Administrador",
-    user: "Usuario",
-  };
-
-  const rawRole = user ? user.role ?? (user as any).rol : undefined;
-  const role = rawRole ? roleMap[rawRole] ?? rawRole : "";
-
   return (
-    <div className="w-full h-full p-4 flex flex-row gap-4">
-      <div className="h-full w-1/5 flex flex-col bg-background2 rounded-lg p-4 gap-4">
+    <div className="w-full p-4 flex flex-row gap-4">
+      <div className="h-full w-1/5 flex flex-col bg-background2 rounded-lg p-4 gap-4 self-stretch">
         <div className="flex w-full items-center justify-center">
-          <VscAccount className="w-20 h-20" />
+          <VscAccount className="w-15 h-15" />
         </div>
 
         <div className="flex flex-col gap-5 text-left">
           <div>
-            <p className="font-bold text-xl">Nombre</p>
-            <p>{nombre || "—"}</p>
+            <p className="font-semibold text-xl">Nombre</p>
+            <p>{"—"}</p>
           </div>
 
           <div>
-            <p className="font-bold text-xl">Apellido</p>
-            <p>{apellido || "—"}</p>
+            <p className="font-semibold text-lg">Apellido</p>
+            <p>{"—"}</p>
           </div>
 
           <div>
-            <p className="font-bold text-xl">EMAIL</p>
-            <p>{email || "—"}</p>
+            <p className="font-semibold text-lg">Email</p>
+            <p>{"—"}</p>
           </div>
 
           <div>
-            <p className="font-bold text-xl">Rol</p>
-            <p>{role || "—"}</p>
+            <p className="font-semibold text-lg">Rol</p>
+            <p>{"—"}</p>
+          </div>
+
+          <div>
+            <p className="font-semibold text-lg">Recibe Reportes</p>
+            <p>{"—"}</p>
           </div>
         </div>
 
         <div className="flex flex-col gap-4">
+          <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
+            CREAR USUARIO
+          </Button>
           <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
             IMPORTAR BDD
           </Button>
@@ -81,8 +53,13 @@ export default function ConfiguracionUsuario() {
           </Button>
         </div>
       </div>
-      <div className="flex h-full w-4/5 bg-background2">
-        <p> Hola </p>
+      <div className="flex flex-col h-full w-4/5">
+        <p className="text-2xl w-full flex justify-center items-center">
+          {" "}
+          Lista de Usuarios{" "}
+        </p>
+
+        <div className="mt-4"></div>
       </div>
     </div>
   );

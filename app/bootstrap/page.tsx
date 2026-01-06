@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthProvider";
+import { Button } from "@/components/ui/button";
 
 const BootstrapPage = () => {
   const router = useRouter();
@@ -145,14 +146,14 @@ const BootstrapPage = () => {
           </div>
 
           {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
-
-          <button
+    
+          <Button
             type="submit"
             className="btn-primary w-full"
             disabled={loading}
           >
             {loading ? "Creando..." : "Crear Superadmin"}
-          </button>
+          </Button>
         </form>
       </div>
     </section>
