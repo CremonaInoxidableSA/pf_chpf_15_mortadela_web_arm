@@ -11,6 +11,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { UserSession } from "@/lib/types";
 
 interface AuthContextType {
+  user: UserSession | null;
   email: string | null;
   username: string | null;
   nombre: string | null;
@@ -21,7 +22,7 @@ interface AuthContextType {
   loading: boolean;
   login: (username: string, password: string) => Promise<ApiResponse>;
   register: (data: RegisterData) => Promise<ApiResponse>;
-  logout: () => Promise<void>;
+  logout: () => Promise<boolean>;
 }
 
 interface ApiResponse {
@@ -43,7 +44,7 @@ interface RegisterData {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -59,22 +60,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Verificar sesión al cargar
   const [needBootstrap, setNeedBootstrap] = useState(false);
 
   useEffect(() => {
     checkSession();
   }, []);
 
-  // Redirigir si no está autenticado en rutas protegidas o si se necesita bootstrap
   useEffect(() => {
     if (!loading) {
       const publicRoutes = ["/login", "/register", "/bootstrap"];
       const isPublicRoute = publicRoutes.some((route) =>
-        pathname?.startsWith(route),
+        pathname?.startsWith(route)
       );
 
-      // Si se necesita bootstrap, forzar a /bootstrap
       if (needBootstrap && pathname !== "/bootstrap") {
         router.push("/bootstrap");
         return;
@@ -90,7 +88,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user, loading, needBootstrap, pathname, router]);
 
-  // Mantener los campos individuales sincronizados con `user`
   useEffect(() => {
     if (user) {
       setEmail(user.email ?? null);
@@ -98,7 +95,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setNombre(user.nombre ?? null);
       setApellido(user.apellido ?? null);
       setRol(user.rol ?? null);
-      // Convertir flags numéricos (1/0) o booleanos a booleanos
       setHabilitado(!!user.habilitado);
       setReporte(!!user.reporte);
     } else {
@@ -113,53 +109,88 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const checkSession = async () => {
+    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP ?? "localhost"}:${
+      process.env.NEXT_PUBLIC_API_PORT ?? "8000"
+    }`;
+
     try {
-      // Si guardamos el token en localStorage como respaldo, enviarlo en el header Authorization
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-      try {
-        if (typeof window !== "undefined") {
-          const token = localStorage.getItem("access_token");
-          if (token) {
-            headers["Authorization"] = `Bearer ${token}`;
-          }
+      const token =
+        (typeof window !== "undefined" &&
+          localStorage.getItem("access_token")) ||
+        undefined;
+
+      const decodeToken = (t?: string) => {
+        if (!t) return null;
+        try {
+          const parts = t.split(".");
+          if (parts.length < 2) return null;
+          const payload = parts[1];
+          const b64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+          const json = decodeURIComponent(
+            atob(b64)
+              .split("")
+              .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+              .join("")
+          );
+          return JSON.parse(json);
+        } catch (e) {
+          return null;
         }
-      } catch (e) {
-        console.warn("Could not access localStorage during session check", e);
+      };
+
+      if (token) {
+        const payload = decodeToken(token);
+        if (payload && payload.sub) {
+          setUser({
+            username: payload.sub,
+            rol: payload.rol ?? undefined,
+          } as any);
+          setLoading(false);
+          return;
+        }
       }
 
-      const response = await fetch("/api/auth/check", {
-        credentials: "include",
-        headers,
-      });
+      try {
+        const res = await fetch(`${apiBase}/check`, {
+          credentials: "include",
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          // Si la API indica que no hay usuarios, marcar necesidad de bootstrap
-          if (data.data && data.data.needBootstrap) {
-            setNeedBootstrap(true);
-            setLoading(false);
-            return;
+        if (res.ok) {
+          let data: any = {};
+          try {
+            data = await res.json();
+          } catch (_) {
+            data = {};
           }
 
-          // No se necesita bootstrap
-          setNeedBootstrap(false);
+          if (data && data.success) {
+            if (data.data && data.data.needBootstrap) {
+              setNeedBootstrap(true);
+              setLoading(false);
+              return;
+            }
 
-          if (data.data && data.data.user) {
-            const incomingUser = data.data.user;
-            // Normalizar si la API devuelve un array con el usuario
-            if (Array.isArray(incomingUser) && incomingUser.length > 0) {
-              setUser(incomingUser[0]);
-            } else {
-              setUser(incomingUser);
+            setNeedBootstrap(false);
+
+            if (data.data && data.data.user) {
+              const incomingUser = data.data.user;
+              if (Array.isArray(incomingUser) && incomingUser.length > 0) {
+                setUser(incomingUser[0]);
+              } else {
+                setUser(incomingUser);
+              }
+              setLoading(false);
+              return;
             }
           }
         }
-      }
+      } catch (err) {}
+
+      setUser(null);
     } catch (error) {
       console.error("Session check error:", error);
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -167,39 +198,91 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (
     username: string,
-    password: string,
+    password: string
   ): Promise<ApiResponse> => {
+    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP ?? "localhost"}:${
+      process.env.NEXT_PUBLIC_API_PORT ?? "8000"
+    }`;
+
     try {
-      const response = await fetch("/api/auth/login", {
+      const form = new URLSearchParams();
+      form.set("username", username);
+      form.set("password", password);
+
+      const response = await fetch(`${apiBase}/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: form.toString(),
         credentials: "include",
       });
 
-      const data = await response.json();
+      let data: any = {};
+      try {
+        data = await response.json();
+      } catch (e) {
+        if (!response.ok) {
+          return {
+            success: false,
+            error: response.statusText || "Error en el login",
+          };
+        }
+        return { success: false, error: "Respuesta inesperada del servidor" };
+      }
 
-      if (data.success) {
-        // Guardar token en localStorage para que peticiones cliente puedan usarlo
-        const token = data.data?.token;
+      const token =
+        data.access_token ??
+        data.token ??
+        data.data?.token ??
+        data.data?.access_token;
+
+      if (token) {
         try {
-          if (token && typeof window !== "undefined") {
+          if (typeof window !== "undefined")
             localStorage.setItem("access_token", token);
-          }
         } catch (e) {
           console.warn("Could not store access_token in localStorage", e);
         }
 
-        // Incluir token en el objeto user en memoria
-        const incomingUser = data.data?.user;
-        const userObj = Array.isArray(incomingUser)
-          ? incomingUser[0]
-          : incomingUser;
-        setUser({ ...(userObj || {}), token });
+        const decodeToken = (t: string) => {
+          try {
+            const parts = t.split(".");
+            if (parts.length < 2) return null;
+            const payload = parts[1];
+            const b64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+            const json = decodeURIComponent(
+              atob(b64)
+                .split("")
+                .map(
+                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`
+                )
+                .join("")
+            );
+            return JSON.parse(json);
+          } catch (e) {
+            return null;
+          }
+        };
 
-        // Clear bootstrap requirement after login
+        const payload = decodeToken(token);
+        if (payload && payload.sub) {
+          setUser({
+            username: payload.sub,
+            rol: payload.rol ?? undefined,
+          } as any);
+        }
+
+        const incomingUser = data.data?.user ?? data.user;
+        if (incomingUser) {
+          const u = Array.isArray(incomingUser)
+            ? incomingUser[0]
+            : incomingUser;
+          setUser({ ...(u || {}), token });
+        }
+
         setNeedBootstrap(false);
         router.push("/");
+
+        return { success: true, data };
       }
 
       return data;
@@ -210,37 +293,63 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (data: RegisterData): Promise<ApiResponse> => {
-    // Registro vía aplicación no soportado; el único usuario inicial debe crearse mediante el bootstrap (superadmin)
     return {
       success: false,
       error: "Registro no disponible. Contacte al administrador.",
     };
   };
 
-  const logout = async () => {
+  const logout = async (): Promise<boolean> => {
+    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP ?? "localhost"}:${
+      process.env.NEXT_PUBLIC_API_PORT ?? "8000"
+    }`;
+
     try {
-      await fetch("/api/auth/logout", {
+      // Call backend logout to remove server-side cookie
+      const res = await fetch(`${apiBase}/logout`, {
         method: "POST",
         credentials: "include",
       });
 
+      // Try to read body safely
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch (e) {
+        data = {};
+      }
+
+      // Clear client state regardless, but signal success only if backend accepted
       setUser(null);
       try {
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined")
           localStorage.removeItem("access_token");
-        }
+      } catch (e) {
+        console.warn("Could not remove access_token from localStorage", e);
+      }
+
+      router.push("/login");
+
+      return res.ok && (data.success ?? true);
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Ensure client cleanup even if backend call failed
+      setUser(null);
+      try {
+        if (typeof window !== "undefined")
+          localStorage.removeItem("access_token");
       } catch (e) {
         console.warn("Could not remove access_token from localStorage", e);
       }
       router.push("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
+      return false;
     }
   };
 
   return (
     <AuthContext.Provider
       value={{
+        user,
         email,
         username,
         nombre,

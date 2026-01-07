@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { authFetch } from "@/app/api/api";
 import { useAuth } from "@/context/AuthProvider";
 import { Button } from "./ui/button";
 
@@ -25,7 +26,7 @@ export default function ConfigTable() {
 
   const fetchParams = async () => {
     try {
-      const response = await fetch("/api/config", {
+      const response = await authFetch("/api/config", {
         credentials: "include",
       });
       const data = await response.json();
@@ -44,9 +45,8 @@ export default function ConfigTable() {
     if (!editValue.trim()) return;
 
     try {
-      const response = await fetch("/api/config", {
+      const response = await authFetch("/api/config", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, param_value: editValue }),
         credentials: "include",
       });
@@ -77,7 +77,7 @@ export default function ConfigTable() {
           Parámetros de Configuración
         </h3>
         <p className="mt-1 text-sm text-gray-500">
-          {user?.role === "admin"
+          {user?.rol === "admin"
             ? "Puedes editar los valores de configuración"
             : "Solo lectura - Contacta al administrador para cambios"}
         </p>
@@ -108,7 +108,7 @@ export default function ConfigTable() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Valor
               </th>
-              {user?.role === "admin" && (
+              {user?.rol === "admin" && (
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Acciones
                 </th>
@@ -139,7 +139,7 @@ export default function ConfigTable() {
                     </span>
                   )}
                 </td>
-                {user?.role === "admin" && (
+                {user?.rol === "admin" && (
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     {editingId === param.id ? (
                       <div className="space-x-2">

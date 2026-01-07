@@ -1,118 +1,26 @@
-import bcrypt from "bcryptjs";
-import jwt, { Secret, SignOptions } from "jsonwebtoken";
-import { cookies } from "next/headers";
-import { UserSession } from "./types";
-
-const JWT_SECRET = process.env.JWT_SECRET as Secret | undefined;
-const SALT_ROUNDS = 10;
-
-// Hash de contraseña
-export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, SALT_ROUNDS);
-}
-
-// Verificar contraseña
-export async function verifyPassword(
-  password: string,
-  hashedPassword: string,
-): Promise<boolean> {
-  return bcrypt.compare(password, hashedPassword);
-}
-
-// Generar JWT
-export function generateToken(user: UserSession): string {
-  const secret = JWT_SECRET as Secret | undefined;
-  if (!secret) {
-    throw new Error("JWT_SECRET no está definida en las variables de entorno");
-  }
-
-  const options = { expiresIn: process.env.JWT_EXPIRES_IN ?? "24h" } as any;
-
-  // Incluir todos los campos relevantes de la sesión para poder reconstruir el usuario desde el token
-  const payload = {
-    id: user.id,
-    email: user.email,
-    username: user.username,
-    nombre: user.nombre,
-    apellido: user.apellido,
-    rol: user.rol,
-    habilitado: user.habilitado,
-    reporte: user.reporte,
-  };
-
-  return jwt.sign(payload, secret, options);
-}
-
-// Verificar JWT
-export function verifyToken(token: string): UserSession | null {
+export function verifyToken(token?: string | null) {
+  if (!token) return null;
   try {
-    const secret = JWT_SECRET as Secret | undefined;
-    if (!secret) {
-      console.error("verifyToken: JWT_SECRET no está definida");
-      return null;
+    if (token.toLowerCase().startsWith("bearer "))
+      token = token.split(" ", 2)[1];
+
+    const parts = token.split(".");
+    if (parts.length < 2) return null;
+
+    const payloadB64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const pad = payloadB64.length % 4;
+    const padded = pad === 0 ? payloadB64 : payloadB64 + "=".repeat(4 - pad);
+
+    const json = Buffer.from(padded, "base64").toString("utf8");
+    const payload = JSON.parse(json);
+
+    if (payload.exp && typeof payload.exp === "number") {
+      const now = Math.floor(Date.now() / 1000);
+      if (payload.exp < now) return null;
     }
 
-    return jwt.verify(token, secret) as UserSession;
-  } catch (error) {
+    return payload;
+  } catch (e) {
     return null;
   }
-}
-
-// Obtener usuario actual desde cookies
-export async function getCurrentUser(): Promise<UserSession | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
-
-  if (!token) return null;
-
-  return verifyToken(token);
-}
-
-// Verificar rol
-export function hasRole(
-  user: UserSession | null,
-  requiredRole: "superadmin" | "admin" | "user",
-): boolean {
-  if (!user) return false;
-  // superadmin tiene todos los permisos
-  if (user.role === "superadmin") return true;
-  return user.role === requiredRole;
-}
-
-// Middleware de autenticación (para usar en endpoints API)
-export function withAuth(
-  handler: Function,
-  requiredRole?: "superadmin" | "admin" | "user",
-) {
-  return async (req: Request) => {
-    try {
-      const user = await getCurrentUser();
-
-      if (!user) {
-        return Response.json(
-          { success: false, error: "No autorizado" },
-          { status: 401 },
-        );
-      }
-
-      if (
-        requiredRole &&
-        user.role !== requiredRole &&
-        user.role !== "superadmin"
-      ) {
-        return Response.json(
-          { success: false, error: "Permisos insuficientes" },
-          { status: 403 },
-        );
-      }
-
-      return handler(req, user);
-    } catch (error) {
-      console.error("Auth error:", error);
-      return Response.json(
-        { success: false, error: "Error de autenticación" },
-        { status: 500 },
-      );
-    }
-  };
 }

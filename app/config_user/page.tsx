@@ -1,32 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { VscAccount } from "react-icons/vsc";
+import { authFetch } from "@/app/api/api";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import FormUsuario from "./(formulario)/FormUsuario";
 
 import { columns, User } from "./(table)/columns";
 import { DataTable } from "./(table)/data-table";
@@ -34,17 +15,22 @@ import { DataTable } from "./(table)/data-table";
 import { useAuth } from "@/context/AuthProvider";
 
 export default function ConfiguracionUsuario() {
+  const refetchUsuarios = async () => {
+    const res = await authFetch(
+      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`
+    );
+    const users = await res.json();
+    setData(users);
+  };
+
   const deshabilitarUsuario = async (username: string) => {
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/deshabilitar_usuario`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({ username }),
-        },
+        }
       );
 
       const result = await res.json();
@@ -55,9 +41,7 @@ export default function ConfiguracionUsuario() {
       }
 
       setData((prev) =>
-        prev.map((u) =>
-          u.username === username ? { ...u, habilitado: 0 } : u,
-        ),
+        prev.map((u) => (u.username === username ? { ...u, habilitado: 0 } : u))
       );
     } catch (err) {
       console.error(err);
@@ -66,44 +50,48 @@ export default function ConfiguracionUsuario() {
   };
 
   const habilitarUsuario = async (username: string) => {
-    const res = await fetch(
+    const res = await authFetch(
       `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/habilitar_usuario`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username }),
-      },
+      }
     );
 
     if (!res.ok) return;
 
     setData((prev: User[]) =>
       prev.map((u: User) =>
-        u.username === username ? { ...u, habilitado: 1 } : u,
-      ),
+        u.username === username ? { ...u, habilitado: 1 } : u
+      )
     );
   };
 
   const eliminarUsuario = async (username: string) => {
     const confirmar = confirm(
-      "¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer.",
+      "¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer."
     );
 
     if (!confirmar) return;
 
     try {
-      const res = await fetch(
+      // Use POST to delete for compatibility with servers that don't accept bodies on DELETE
+      const res = await authFetch(
         `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/eliminar_usuario`,
         {
           method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({ username }),
-        },
+        }
       );
 
-      const result = await res.json();
+      // Parse JSON only when possible
+      let result: any = {};
+      try {
+        result = await res.json();
+      } catch (e) {
+        // no JSON response
+        result = { detail: res.statusText || "Error" };
+      }
 
       if (!res.ok) {
         alert(result.detail || "Error al eliminar usuario");
@@ -111,7 +99,7 @@ export default function ConfiguracionUsuario() {
       }
 
       setData((prev: User[]) =>
-        prev.filter((u: User) => u.username !== username),
+        prev.filter((u: User) => u.username !== username)
       );
     } catch (error) {
       console.error(error);
@@ -126,8 +114,8 @@ export default function ConfiguracionUsuario() {
   useEffect(() => {
     let mounted = true;
     setIsLoading(true);
-    fetch(
-      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`,
+    authFetch(
+      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`
     )
       .then((res) => res.json())
       .then((users: User[]) => {
@@ -191,90 +179,7 @@ export default function ConfiguracionUsuario() {
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-150 bg-background3 z-800">
-              <DialogHeader>
-                <DialogTitle>Crear usuario</DialogTitle>
-                <DialogDescription>
-                  Completá los datos para crear un nuevo usuario.
-                </DialogDescription>
-              </DialogHeader>
-
-              {/* ACÁ VA TU FORM */}
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Ingrese el correo electrónico del usuario"
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="username">Usuario</Label>
-                  <Input id="username" placeholder="Asigne un usuario unico" />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="username">Nombre</Label>
-                  <Input
-                    id="username"
-                    placeholder="Ingrese el nombre del usuario"
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="username">Apellido</Label>
-                  <Input
-                    id="username"
-                    placeholder="Ingrese el apellido del usuario"
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Rol</Label>
-                  <Select>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Seleccione un rol para el usuario" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Rol</SelectLabel>
-                        <SelectItem value="admin">Administrador</SelectItem>
-                        <SelectItem value="user">Usuario</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="password">Contraseña</Label>
-                <Input
-                  id="password"
-                  placeholder="Ingrese una contraseña para el usuario"
-                />
-              </div>
-
-              <RadioGroup defaultValue="option-one">
-                <Label className="mb-2 mt-4">Recibe Reportes</Label>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option-one" id="option-one" />
-                  <Label htmlFor="true">Si</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option-two" id="option-two" />
-                  <Label htmlFor="false">No</Label>
-                </div>
-              </RadioGroup>
-
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancelar</Button>
-                </DialogClose>
-                <Button>Crear</Button>
-              </DialogFooter>
-            </DialogContent>
+            <FormUsuario onUserCreated={refetchUsuarios} />
           </Dialog>
           <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
             IMPORTAR BDD
@@ -302,7 +207,7 @@ export default function ConfiguracionUsuario() {
           columns={columns(
             deshabilitarUsuario,
             habilitarUsuario,
-            eliminarUsuario,
+            eliminarUsuario
           )}
           data={data}
         />

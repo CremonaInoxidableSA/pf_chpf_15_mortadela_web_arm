@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { authFetch } from "@/app/api/api";
 import { useAuth } from "@/context/AuthProvider";
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +22,7 @@ const BootstrapPage = () => {
     // Verificar que realmente se necesite bootstrap
     (async () => {
       try {
-        const res = await fetch("/api/auth/check");
+        const res = await authFetch("/api/auth/check");
         const data = await res.json();
 
         if (!(data?.success && data?.data?.needBootstrap)) {
@@ -46,7 +47,7 @@ const BootstrapPage = () => {
       const headers: any = { "Content-Type": "application/json" };
       if (secret) headers["x-bootstrap-secret"] = secret;
 
-      const res = await fetch("/api/auth/bootstrap", {
+      const res = await authFetch("/api/auth/bootstrap", {
         method: "POST",
         headers,
         body: JSON.stringify(body),

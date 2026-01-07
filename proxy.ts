@@ -9,11 +9,27 @@ const adminRoutes = ["/admin", "/api/config"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("auth_token")?.value;
+
+  // Accept token from multiple places: legacy `auth_token` cookie, new `access_token` cookie,
+  // or Authorization header. Prefer cookie when present.
+  let token =
+    request.cookies.get("auth_token")?.value ||
+    request.cookies.get("access_token")?.value ||
+    request.cookies.get("accessToken")?.value ||
+    null;
+
+  if (!token) {
+    const authHeader =
+      request.headers.get("authorization") ||
+      request.headers.get("Authorization");
+    if (authHeader && authHeader.toLowerCase().startsWith("bearer ")) {
+      token = authHeader.split(" ", 2)[1];
+    }
+  }
 
   // Verificar si es una ruta pública
   const isPublicRoute = publicRoutes.some((route) =>
-    pathname.startsWith(route),
+    pathname.startsWith(route)
   );
 
   if (isPublicRoute) {
@@ -24,6 +40,7 @@ export function proxy(request: NextRequest) {
     ) {
       return NextResponse.redirect(new URL("/", request.url));
     }
+
     return NextResponse.next();
   }
 
@@ -32,11 +49,14 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Verificar token
+  // Verificar token (decode + exp check)
   const user = verifyToken(token);
   if (!user) {
     const response = NextResponse.redirect(new URL("/login", request.url));
+    // Clean up possible token cookies (both names)
     response.cookies.delete("auth_token");
+    response.cookies.delete("access_token");
+    response.cookies.delete("accessToken");
     return response;
   }
 

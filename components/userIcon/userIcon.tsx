@@ -19,6 +19,7 @@ const UserIcon = () => {
   const router = useRouter();
   const { logout, nombre, apellido, rol, loading } = useAuth();
   const [open, setOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const displayName =
     `${nombre ?? ""}${nombre || apellido ? " " : ""}${apellido ?? ""}`.trim() ||
@@ -26,9 +27,13 @@ const UserIcon = () => {
 
   const closeSession = async () => {
     try {
+      setLoggingOut(true);
       await logout();
+      setOpen(false);
     } catch (error) {
       console.error("Error closing session:", error);
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -62,8 +67,16 @@ const UserIcon = () => {
             <Button
               className="mt-2 w-full bg-redlogo hover:bg-red2 text-white cursor-pointer"
               onClick={closeSession}
+              disabled={loggingOut}
             >
-              Cerrar sesión
+              {loggingOut ? (
+                <div className="flex items-center gap-2">
+                  <Spinner />
+                  <span>Cerrando...</span>
+                </div>
+              ) : (
+                "Cerrar sesión"
+              )}
             </Button>
           </>
         )}
