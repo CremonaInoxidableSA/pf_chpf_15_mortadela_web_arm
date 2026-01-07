@@ -2,7 +2,7 @@ import type { ChartConfiguration, ChartDataset } from "chart.js";
 
 export function createCiclosConfig(
   labels: string[],
-  datasets: ChartDataset<"line", number[]>[]
+  datasets: ChartDataset<"line", number[]>[],
 ): ChartConfiguration<"line", number[], string> {
   return {
     type: "line",

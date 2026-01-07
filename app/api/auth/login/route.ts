@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { query } from '@/lib/db';
-import { verifyPassword, generateToken } from '@/lib/auth';
-import { ApiResponse } from '@/lib/types';
+import { NextRequest, NextResponse } from "next/server";
+import { query } from "@/lib/db";
+import { verifyPassword, generateToken } from "@/lib/auth";
+import { ApiResponse } from "@/lib/types";
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,21 +10,21 @@ export async function POST(request: NextRequest) {
     // Validaciones básicas
     if (!username || !password) {
       return NextResponse.json<ApiResponse>(
-        { success: false, error: 'Usuario y contraseña son requeridos' },
-        { status: 400 }
+        { success: false, error: "Usuario y contraseña son requeridos" },
+        { status: 400 },
       );
     }
 
     // Buscar usuario por username
-    const users = await query(
-      'SELECT id, email, username, nombre, apellido, password_hash, rol, habilitado, reporte FROM Usuarios WHERE username = ? LIMIT 1',
-      [username]
-    ) as any[];
+    const users = (await query(
+      "SELECT id, email, username, nombre, apellido, password_hash, rol, habilitado, reporte FROM Usuarios WHERE username = ? LIMIT 1",
+      [username],
+    )) as any[];
 
     if (users.length === 0) {
       return NextResponse.json<ApiResponse>(
-        { success: false, error: 'Credenciales inválidas' },
-        { status: 401 }
+        { success: false, error: "Credenciales inválidas" },
+        { status: 401 },
       );
     }
 
@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
     const isValid = await verifyPassword(password, user.password_hash);
     if (!isValid) {
       return NextResponse.json<ApiResponse>(
-        { success: false, error: 'Credenciales inválidas' },
-        { status: 401 }
+        { success: false, error: "Credenciales inválidas" },
+        { status: 401 },
       );
     }
 
@@ -61,27 +61,27 @@ export async function POST(request: NextRequest) {
         user: userWithoutPassword,
         token,
       },
-      message: 'Login exitoso',
+      message: "Login exitoso",
     });
 
-    response.cookies.set('auth_token', token, {
+    response.cookies.set("auth_token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       maxAge: 60 * 60 * 24, // 24 horas
-      path: '/',
+      path: "/",
     });
 
     return response;
-
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
 
-    const message = error instanceof Error ? error.message : 'Error interno del servidor';
+    const message =
+      error instanceof Error ? error.message : "Error interno del servidor";
 
     return NextResponse.json<ApiResponse>(
       { success: false, error: message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

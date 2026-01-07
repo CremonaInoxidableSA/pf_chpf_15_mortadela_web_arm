@@ -78,7 +78,7 @@ const BootstrapPage = () => {
 
   return (
     <section className="flex h-full w-full items-center justify-center">
-      <div className="w-auto gap-3.75 flex flex-col items-center p-6 max-w-md bg-backgroundoscuro rounded-lg">
+      <div className="w-auto gap-3.75 flex flex-col items-center p-6 max-w-md bg-backgroundoscuro rounded-md">
         <h2 className="text-2xl font-semibold">Crear Superadmin inicial</h2>
         <p className="text-sm text-muted-foreground">
           No hay usuarios en la base de datos. Por favor, crea el usuario
@@ -146,7 +146,7 @@ const BootstrapPage = () => {
           </div>
 
           {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
-    
+
           <Button
             type="submit"
             className="btn-primary w-full"

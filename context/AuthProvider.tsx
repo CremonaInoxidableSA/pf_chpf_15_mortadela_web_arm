@@ -43,7 +43,7 @@ interface RegisterData {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!loading) {
       const publicRoutes = ["/login", "/register", "/bootstrap"];
       const isPublicRoute = publicRoutes.some((route) =>
-        pathname?.startsWith(route)
+        pathname?.startsWith(route),
       );
 
       // Si se necesita bootstrap, forzar a /bootstrap
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkSession = async () => {
     try {
       // Si guardamos el token en localStorage como respaldo, enviarlo en el header Authorization
-      let headers: Record<string, string> = {
+      const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };
       try {
@@ -167,7 +167,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (
     username: string,
-    password: string
+    password: string,
   ): Promise<ApiResponse> => {
     try {
       const response = await fetch("/api/auth/login", {

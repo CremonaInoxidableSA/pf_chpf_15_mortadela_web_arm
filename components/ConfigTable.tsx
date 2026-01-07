@@ -71,7 +71,7 @@ export default function ConfigTable() {
   }
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="bg-white shadow-md rounded-md overflow-hidden">
       <div className="px-6 py-4 bg-gray-50 border-b">
         <h3 className="text-lg font-medium text-gray-900">
           Parámetros de Configuración
@@ -85,7 +85,11 @@ export default function ConfigTable() {
 
       {message && (
         <div
-          className={`px-6 py-3 ${message.includes("Error") ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}
+          className={`px-6 py-3 ${
+            message.includes("Error")
+              ? "bg-red-50 text-red-700"
+              : "bg-green-50 text-green-700"
+          }`}
         >
           {message}
         </div>

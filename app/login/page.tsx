@@ -43,7 +43,7 @@ const Login = () => {
 
   return (
     <section className="flex h-full w-full items-center justify-center">
-      <div className="w-auto h-[60vh] gap-3.75 flex flex-col items-center p-[3rem_4rem_2rem_4rem] max-w-480  bg-backgroundoscuro rounded-lg">
+      <div className="w-auto h-[60vh] gap-3.75 flex flex-col items-center p-[3rem_4rem_2rem_4rem] max-w-480  bg-backgroundoscuro rounded-md">
         <LogoBase64 className="flex w-[65%] p-0 h-auto" />
 
         <form
@@ -58,7 +58,7 @@ const Login = () => {
               {t("min.usuario")}
             </label>
             <input
-              className="bg-background2 p-1 rounded-lg w-full h-2/3 flex items-center justify-center border-none px-4"
+              className="bg-background2 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
               id="username"
               name="username"
               type="text"
@@ -77,7 +77,7 @@ const Login = () => {
               {t("min.contra")}
             </label>
             <input
-              className="bg-background2 p-1 rounded-lg w-full h-2/3 flex items-center justify-center border-none px-4"
+              className="bg-background2 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
               id="password"
               name="password"
               type="password"
@@ -93,7 +93,7 @@ const Login = () => {
           )}
 
           <Button
-            className="bg-[#e82a31] mt-1.25 p-1 rounded-lg w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
+            className="bg-[#e82a31] mt-1.25 p-1 rounded-md w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
             disabled={loading}
             onClick={handleSubmit}
           >

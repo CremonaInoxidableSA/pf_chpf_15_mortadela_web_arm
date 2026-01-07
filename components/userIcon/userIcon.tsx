@@ -10,12 +10,15 @@ import { Button } from "@/components/ui/button";
 
 import { VscAccount } from "react-icons/vsc";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthProvider";
 import { Spinner } from "@/components/ui/spinner";
+
+import { useAuth } from "@/context/AuthProvider";
+import { useState } from "react";
 
 const UserIcon = () => {
   const router = useRouter();
   const { logout, nombre, apellido, rol, loading } = useAuth();
+  const [open, setOpen] = useState(false);
 
   const displayName =
     `${nombre ?? ""}${nombre || apellido ? " " : ""}${apellido ?? ""}`.trim() ||
@@ -30,10 +33,10 @@ const UserIcon = () => {
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className="cursor-pointer">
         <div className="group relative flex items-center justify-center w-6.25 h-6.25 ease-in-out">
-          <div className="absolute inset-0 rounded-lg bg-gray-400/0 group-hover:bg-gray-400/20 ease-in-out group-hover:scale-150" />
+          <div className="absolute inset-0 rounded-md bg-gray-400/0 group-hover:bg-gray-400/20 ease-in-out group-hover:scale-150" />
           <VscAccount className="w-6.25 h-6.25 transition-transform ease-in-out group-hover:scale-110" />
         </div>
       </PopoverTrigger>
@@ -49,7 +52,10 @@ const UserIcon = () => {
             <p className="text-xs">{rol}</p>
             <Button
               className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer"
-              onClick={() => router.push("/config_user")}
+              onClick={() => {
+                router.push("/config_user");
+                setOpen(false);
+              }}
             >
               Configuracion del perfil
             </Button>

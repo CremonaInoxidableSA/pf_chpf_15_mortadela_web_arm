@@ -9,7 +9,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-
 interface ProductoRealizado {
   id_recetario: number;
   NombreProducto: string;
@@ -99,7 +98,7 @@ const Productividad = () => {
   const handleDataUpdate = (
     newData: ProductividadData,
     startDate: string,
-    endDate: string
+    endDate: string,
   ): void => {
     setData(newData);
     setDateRange({ start: startDate, end: endDate });
@@ -108,23 +107,23 @@ const Productividad = () => {
   const cantidadCiclosF = isLoading
     ? t("min.cargando")
     : data?.CantidadCiclosCorrectos !== undefined
-    ? data.CantidadCiclosCorrectos.toFixed(2)
-    : t("min.cargando");
+      ? data.CantidadCiclosCorrectos.toFixed(2)
+      : t("min.cargando");
 
   const PesoTotalCiclos = isLoading
     ? t("min.cargando")
     : data?.PesoTotalCiclos !== undefined
-    ? data.PesoTotalCiclos.toFixed(2)
-    : t("min.cargando");
+      ? data.PesoTotalCiclos.toFixed(2)
+      : t("min.cargando");
 
   const Horas_Uso = isLoading
     ? t("min.cargando")
     : data?.ProductosRealizados && Array.isArray(data.ProductosRealizados)
-    ? data.ProductosRealizados.reduce(
-        (acc, prod) => acc + parseTimeToSeconds(prod.tiempoTotal),
-        0
-      )
-    : t("min.cargando");
+      ? data.ProductosRealizados.reduce(
+          (acc, prod) => acc + parseTimeToSeconds(prod.tiempoTotal),
+          0,
+        )
+      : t("min.cargando");
 
   const cantDias =
     dateRange.start && dateRange.end
@@ -136,7 +135,7 @@ const Productividad = () => {
 
   const Promedio_Horas = (
     horasUso: number | string,
-    cantDias: number
+    cantDias: number,
   ): string =>
     horasUso !== t("min.cargando")
       ? formatSecondsToHHMM((horasUso as number) / cantDias)
@@ -167,7 +166,7 @@ const Productividad = () => {
 
   const productos: ProductoVisual[] = isLoading
     ? []
-    : data?.ProductosRealizados?.map((producto) => {
+    : (data?.ProductosRealizados?.map((producto) => {
         const porcentaje = data.PesoTotalCiclos
           ? (producto.pesoTotal * 100) / data.PesoTotalCiclos / 1000
           : 0;
@@ -180,14 +179,14 @@ const Productividad = () => {
           porcentaje: porcentaje.toFixed(2),
           color: getColorById(producto.id_recetario),
         };
-      }) ?? [];
+      }) ?? []);
 
   return (
     <div
       className="flex flex-col-reverse md:flex-row gap-5"
       id="ProductividadSection"
     >
-      <div className="w-full md:w-[78%] flex flex-col bg-background2 rounded-lg p-5 relative">
+      <div className="w-full md:w-[78%] flex flex-col bg-background2 rounded-md p-5 relative">
         <p className="text-left text-xl font-bold mb-[-5]">
           {t("mayus.productividad")}
         </p>
@@ -206,10 +205,10 @@ const Productividad = () => {
             </div>
           ))}
         </div>
-        <hr className="border-t-4 border-texto rounded-lg mx-auto my-5 w-4/5" />
+        <hr className="border-t-4 border-texto rounded-md mx-auto my-5 w-4/5" />
         <div className="relative">
           <p>% {t("min.productoRealizado")}</p>
-          <div className="flex h-5 rounded-lg overflow-hidden bg-background5 mb-3.75">
+          <div className="flex h-5 rounded-md overflow-hidden bg-background5 mb-3.75">
             {productos.map((producto, index) => (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -230,7 +229,7 @@ const Productividad = () => {
             {productos.map((producto, index) => (
               <div key={index} className="flex items-center m-[5px_10px]">
                 <p
-                  className="w-3.75 h-3.75 rounded-lg mr-1.25"
+                  className="w-3.75 h-3.75 rounded-md mr-1.25"
                   style={{ backgroundColor: producto.color }}
                 />
                 <p>{`${producto.nombre} - ${producto.porcentaje}% (${producto.peso})`}</p>

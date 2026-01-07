@@ -22,7 +22,11 @@ export type User = {
   reporte: number;
 };
 
-export const columns: ColumnDef<User>[] = [
+export const columns = (
+  onDisableUser: (username: string) => void,
+  onEnableUser: (username: string) => void,
+  onDeleteUser: (username: string) => void,
+): ColumnDef<User>[] => [
   {
     accessorKey: "email",
     header: "Email",
@@ -80,11 +84,23 @@ export const columns: ColumnDef<User>[] = [
             <DropdownMenuItem>
               <Edit className="mr-2 h-4 w-4" /> Editar
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Trash2 className="mr-2 h-4 w-4" /> Eliminar
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Slash className="mr-2 h-4 w-4" /> Deshabilitar
+            {user.habilitado === 1 ? (
+              <DropdownMenuItem onClick={() => onDisableUser(user.username)}>
+                <Slash className="mr-2 h-4 w-4" />
+                Deshabilitar
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem onClick={() => onEnableUser(user.username)}>
+                <Slash className="mr-2 h-4 w-4" />
+                Habilitar
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem
+              onClick={() => onDeleteUser(user.username)}
+              className="text-red-600 focus:text-red-600"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

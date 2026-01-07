@@ -14,7 +14,7 @@ export async function hashPassword(password: string): Promise<string> {
 // Verificar contraseña
 export async function verifyPassword(
   password: string,
-  hashedPassword: string
+  hashedPassword: string,
 ): Promise<boolean> {
   return bcrypt.compare(password, hashedPassword);
 }
@@ -71,7 +71,7 @@ export async function getCurrentUser(): Promise<UserSession | null> {
 // Verificar rol
 export function hasRole(
   user: UserSession | null,
-  requiredRole: "superadmin" | "admin" | "user"
+  requiredRole: "superadmin" | "admin" | "user",
 ): boolean {
   if (!user) return false;
   // superadmin tiene todos los permisos
@@ -82,7 +82,7 @@ export function hasRole(
 // Middleware de autenticación (para usar en endpoints API)
 export function withAuth(
   handler: Function,
-  requiredRole?: "superadmin" | "admin" | "user"
+  requiredRole?: "superadmin" | "admin" | "user",
 ) {
   return async (req: Request) => {
     try {
@@ -91,7 +91,7 @@ export function withAuth(
       if (!user) {
         return Response.json(
           { success: false, error: "No autorizado" },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
@@ -102,7 +102,7 @@ export function withAuth(
       ) {
         return Response.json(
           { success: false, error: "Permisos insuficientes" },
-          { status: 403 }
+          { status: 403 },
         );
       }
 
@@ -111,7 +111,7 @@ export function withAuth(
       console.error("Auth error:", error);
       return Response.json(
         { success: false, error: "Error de autenticación" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   };

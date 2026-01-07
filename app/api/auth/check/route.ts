@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     // Chequear si existen usuarios en la DB
     try {
       const result = (await query(
-        "SELECT COUNT(*) AS count FROM Usuarios"
+        "SELECT COUNT(*) AS count FROM Usuarios",
       )) as any[];
       const count = result?.[0]?.count ?? 0;
 
@@ -52,13 +52,13 @@ export async function GET(request: NextRequest) {
     // Si llegamos aquí, no hay sesión válida
     return NextResponse.json<ApiResponse>(
       { success: false, error: "No autenticado" },
-      { status: 401 }
+      { status: 401 },
     );
   } catch (error) {
     console.error("Check session error:", error);
     return NextResponse.json<ApiResponse>(
       { success: false, error: "Error al verificar sesión" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

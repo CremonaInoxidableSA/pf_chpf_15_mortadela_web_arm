@@ -62,19 +62,19 @@
   --color-textodesac: var(--textodesac);
   --color-datosblueback: var(--datosblueback);
   --color-datosbluebackhover: var(--datosbluebackhover);
-  --color-orange: #EF8225;
-  --color-oranget: #F826;
-  --color-blue: #30A0F0;
-  --color-bluet: #06E5;
-  --color-water: #33A7FD;
-  --color-red: #F00;
+  --color-orange: #ef8225;
+  --color-oranget: #f826;
+  --color-blue: #30a0f0;
+  --color-bluet: #06e5;
+  --color-water: #33a7fd;
+  --color-red: #f00;
   --color-red2: #dd1e1eff;
   --color-redlogo: #ed292e;
-  --color-green: #54C42D;
-  --color-lightgrey: #8C8C8C;
-  --color-grey: #1F1F1F;
+  --color-green: #54c42d;
+  --color-lightgrey: #8c8c8c;
+  --color-grey: #1f1f1f;
   --color-black: #131313;
-  --color-footerbg: #2C2C2C;
+  --color-footerbg: #2c2c2c;
   --color-datorRed: #581420;
   --color-datosgrey: #5a5a5a;
   --color-cerrarsesion: #f15b5f;
@@ -83,8 +83,8 @@
   --color-botonredhover: #ed292e11;
   --color-botonred: #ed292e33;
 
-  --color-botonblueborder: #30A0F0;
-  --color-botonblue: #30A0F044;
+  --color-botonblueborder: #30a0f0;
+  --color-botonblue: #30a0f044;
 }
 
 :root {
@@ -123,13 +123,13 @@
   /*Colores personalizados*/
   --header-bg: #a4deff;
   --texto-header: #111;
-  --backgroundoscuro: #EDEDED;
-  --background: #FDFDFD;
-  --background2: #EDEDED;
-  --background3: #E0E0E0;
-  --background4: #D8D8D8;
-  --background5: #D3D3D3;
-  --background6: #CECECE;
+  --backgroundoscuro: #ededed;
+  --background: #fdfdfd;
+  --background2: #ededed;
+  --background3: #e0e0e0;
+  --background4: #d8d8d8;
+  --background5: #d3d3d3;
+  --background6: #cecece;
   --headerbg: #a4deffff;
   --texto: #222;
   --texto2: #555;
@@ -173,18 +173,18 @@
 
   /*Colores personalizados*/
   --header-bg: #111;
-  --texto-header: #FAFAFA;
+  --texto-header: #fafafa;
   --backgroundoscuro: #111;
-  --background: #1B1B1B;
+  --background: #1b1b1b;
   --background2: #222;
   --background3: #292929;
   --background4: #333;
   --background5: #393939;
-  --background6: #3E3E3E;
+  --background6: #3e3e3e;
   --headerbg: #111;
-  --texto: #EEE;
-  --texto2: #AAA;
-  --textohover: #DDD;
+  --texto: #eee;
+  --texto2: #aaa;
+  --textohover: #ddd;
   --textodesac: #585858;
   --datosblueback: #073753ff;
   --datosbluebackhover: #0c4566ff;

@@ -89,8 +89,8 @@ const DatosLaterales: React.FC = () => {
         estadoMaquina === "CICLO INACTIVO"
           ? "0 kg"
           : PesoActualDesmoldado != null
-          ? `${PesoActualDesmoldado} kg`
-          : null,
+            ? `${PesoActualDesmoldado} kg`
+            : null,
       icono: FaWeightHanging,
       isReactIcon: true,
     },
@@ -196,12 +196,12 @@ const DatosLaterales: React.FC = () => {
   };
 
   return (
-    <div className="fixed left-0 w-67.5 bg-background2 p-5 z-850 flex flex-col h-[calc(100vh-112px)] overflow-auto">
+    <div className="fixed left-0 w-67.5 bg-background2 p-5 z-550 flex flex-col h-[calc(100vh-112px)] overflow-auto">
       <ul className="flex flex-col gap-2 list-none">
         {opcionesAlarma.map(({ id, nombre }) => (
           <li key={id} className="gap-2.5">
             <Link
-              className={`block p-1.25 text-center  no-underline rounded-lg font-semibold border ${
+              className={`block p-1.25 text-center  no-underline rounded-md font-semibold border ${
                 activeSection === id
                   ? " border-blue bg-datosblueback hover:bg-datosbluebackhover"
                   : "bg-background3 hover:bg-background4 border-background6"
@@ -227,7 +227,7 @@ const DatosLaterales: React.FC = () => {
         <ul className="flex flex-col gap-2" lang="es">
           {datosTiempoReal.map(({ id, nombre, dato, icono }) => (
             <Link key={id} className="block" href="/desmoldeo/equipos">
-              <li className="flex flex-row items-center justify-between border border-background6 bg-background3 rounded-lg p-1.25">
+              <li className="flex flex-row items-center justify-between border border-background6 bg-background3 rounded-md p-1.25">
                 <p className="flex flex-col text-md font-bold">
                   {nombre}{" "}
                   {dato != null && <span className="text-sm">{dato}</span>}

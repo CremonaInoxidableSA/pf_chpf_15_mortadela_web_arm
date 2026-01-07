@@ -2,7 +2,7 @@ import type { ChartConfiguration, ChartDataset } from "chart.js";
 
 export function createProductosConfig(
   labels: string[],
-  datasets: ChartDataset<"bar", number[]>[]
+  datasets: ChartDataset<"bar", number[]>[],
 ): ChartConfiguration<"bar", number[], string> {
   return {
     type: "bar",

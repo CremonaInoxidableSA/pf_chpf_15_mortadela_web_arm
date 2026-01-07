@@ -18,13 +18,13 @@ export default function Desarmado() {
           <Productividad />
         </section>
         <section id="section3" className="flex flex-col gap-5">
-          <div className="p-5 bg-background2 rounded-lg">
+          <div className="p-5 bg-background2 rounded-md">
             <h1 className="text-2xl font-bold">Torres por dia</h1>
             <h2 className="text-orange">23/11/2025 - 23/12/2025</h2>
             <GraficoCiclos />
           </div>
 
-          <div className="p-5 bg-background2 rounded-lg">
+          <div className="p-5 bg-background2 rounded-md">
             <h1 className="text-2xl font-bold">Productos Realizados</h1>
             <h2 className="text-orange">23/11/2025 - 23/12/2025</h2>
             <GraficoProductos />
