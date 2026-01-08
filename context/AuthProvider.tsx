@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { UserSession } from "@/lib/types";
+import Cookies from "js-cookie";
 
 interface AuthContextType {
   user: UserSession | null;
@@ -44,7 +45,7 @@ interface RegisterData {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -70,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!loading) {
       const publicRoutes = ["/login", "/register", "/bootstrap"];
       const isPublicRoute = publicRoutes.some((route) =>
-        pathname?.startsWith(route),
+        pathname?.startsWith(route)
       );
 
       if (needBootstrap && pathname !== "/bootstrap") {
@@ -109,9 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const checkSession = async () => {
-    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP ?? "localhost"}:${
-      process.env.NEXT_PUBLIC_API_PORT ?? "8000"
-    }`;
+    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}`;
 
     try {
       const token =
@@ -146,9 +145,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             atob(b64)
               .split("")
               .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
-              .join(""),
+              .join("")
           );
-          return JSON.parse(json);
+          const decoded = JSON.parse(json);
+          // No verificar exp
+          // if (decoded.exp && decoded.exp * 1000 < Date.now()) return null;
+          return decoded;
         } catch (e) {
           return null;
         }
@@ -165,6 +167,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setLoading(false);
             return;
           }
+        } else {
+          // Token inválido
+          setUser(null);
+          setLoading(false);
+          return;
         }
       }
 
@@ -204,7 +211,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               } catch (e) {
                 console.warn(
                   "Could not persist user from /check to localStorage",
-                  e,
+                  e
                 );
               }
               setLoading(false);
@@ -214,7 +221,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (err) {}
 
-      setUser(null);
+      // No setear user a null si fetch falla, mantener si hay token válido
+      // if (!hydratedFromStorage) {
+      //   setUser(null);
+      // }
     } catch (error) {
       console.error("Session check error:", error);
       setUser(null);
@@ -225,11 +235,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (
     username: string,
-    password: string,
+    password: string
   ): Promise<ApiResponse> => {
-    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP ?? "localhost"}:${
-      process.env.NEXT_PUBLIC_API_PORT ?? "8000"
-    }`;
+    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}`;
 
     try {
       const body = { username, password };
@@ -262,8 +270,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (token) {
         try {
-          if (typeof window !== "undefined")
+          if (typeof window !== "undefined") {
             localStorage.setItem("access_token", token);
+            Cookies.set("access_token", token);
+          }
         } catch (e) {
           console.warn("Could not store access_token in localStorage", e);
         }
@@ -278,9 +288,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               atob(b64)
                 .split("")
                 .map(
-                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`,
+                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`
                 )
-                .join(""),
+                .join("")
             );
             return JSON.parse(json);
           } catch (e) {
@@ -302,7 +312,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   username: payload.sub,
                   rol: payload.rol ?? undefined,
                   token,
-                }),
+                })
               );
           } catch (e) {
             console.warn("Could not store user in localStorage", e);
@@ -325,7 +335,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         setNeedBootstrap(false);
-        router.push("/");
+        // Redirigir pasando el token en la query para que el middleware lo pueda validar y setear la cookie
+        if (token) {
+          router.push(`/?token=${encodeURIComponent(token)}`);
+        } else {
+          router.push("/");
+        }
 
         return { success: true, data };
       }
@@ -348,9 +363,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async (): Promise<boolean> => {
-    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP ?? "localhost"}:${
-      process.env.NEXT_PUBLIC_API_PORT ?? "8000"
-    }`;
+    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}`;
 
     try {
       // Call backend logout to remove server-side cookie
@@ -373,6 +386,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (typeof window !== "undefined") {
           localStorage.removeItem("access_token");
           localStorage.removeItem("user");
+          Cookies.remove("access_token");
         }
       } catch (e) {
         console.warn("Could not remove access_token/user from localStorage", e);

@@ -63,7 +63,7 @@ const Footer: React.FC = () => {
               alt="Creminox logo"
               className="h-1/2 w-auto"
               height={2000}
-              src="/logo/creminox-logo.png"
+              src="/public/logo/creminox-logo.png"
               width={2000}
             />
           </Link>

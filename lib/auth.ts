@@ -11,7 +11,12 @@ export function verifyToken(token?: string | null) {
     const pad = payloadB64.length % 4;
     const padded = pad === 0 ? payloadB64 : payloadB64 + "=".repeat(4 - pad);
 
-    const json = Buffer.from(padded, "base64").toString("utf8");
+    const json = decodeURIComponent(
+      atob(padded)
+        .split("")
+        .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+        .join("")
+    );
     const payload = JSON.parse(json);
 
     if (payload.exp && typeof payload.exp === "number") {

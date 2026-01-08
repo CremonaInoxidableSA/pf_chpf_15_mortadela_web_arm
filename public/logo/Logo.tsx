@@ -20,7 +20,7 @@ export default function Logo({ className }: { className?: string }) {
         fill
         priority
         alt="Creminox Logo"
-        src="/logo/creminox-logo.png"
+        src="@/public/logo/creminox-logo.png"
         style={{ objectFit: "contain" }}
       />
     </div>

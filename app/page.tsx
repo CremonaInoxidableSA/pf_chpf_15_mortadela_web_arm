@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import General from "@/public/designs/General.png";
 import { useTranslation } from "react-i18next";

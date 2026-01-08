@@ -147,7 +147,7 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
               alt="Creminox"
               className="h-full w-26.25"
               height={25}
-              src="/logo/creminox.png"
+              src="/public/logo/creminox.png"
               width={105}
             />
           </Link>

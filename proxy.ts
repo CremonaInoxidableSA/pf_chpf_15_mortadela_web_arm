@@ -9,7 +9,22 @@ const adminRoutes = ["/config_user", "/api/config"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
+  // If a token is provided in the query string (e.g. after login redirect), accept it,
+  // validate it, set it as a cookie and redirect to the same path without the token.
+  const tokenFromQuery = request.nextUrl.searchParams.get("token");
+  if (tokenFromQuery) {
+    const verified = verifyToken(tokenFromQuery);
+    if (verified) {
+      const cleanUrl = new URL(request.nextUrl.pathname, request.url);
+      const response = NextResponse.redirect(cleanUrl);
+      // Set the cookie so subsequent requests include it (path=/ so it's sent for all routes)
+      response.cookies.set("access_token", tokenFromQuery, { path: "/" });
+      return response;
+    } else {
+      // Invalid token: redirect to login without token
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
   // Accept token from multiple places: legacy `auth_token` cookie, new `access_token` cookie,
   // or Authorization header. Prefer cookie when present.
   let token =
