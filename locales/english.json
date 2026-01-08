@@ -12,6 +12,7 @@
     "generarReclamo": "CREATE CLAIM"
   },
   "min": {
+    "crearUsuario": "Create User",
     "titulo": "PF-MORTADELA",
     "home": "Home",
     "camaras": "Cameras",
@@ -82,4 +83,4 @@
     "ingreseContraseñaUsuario": "Enter a password for the user",
     "errorCrearUsuario": "Error creating user"
   }
-}  
+}

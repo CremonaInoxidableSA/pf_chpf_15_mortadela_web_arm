@@ -60,7 +60,7 @@ export default function FormUsuario({ onUserCreated }: Props) {
       {
         method: "POST",
         body: JSON.stringify(payload),
-      }
+      },
     );
 
     if (!res.ok) {
@@ -75,7 +75,7 @@ export default function FormUsuario({ onUserCreated }: Props) {
   return (
     <DialogContent className="sm:max-w-150 bg-background3 z-800">
       <DialogHeader>
-        <DialogTitle>{t("min.agregarUsuario")}</DialogTitle>
+        <DialogTitle>{t("min.crearUsuario")}</DialogTitle>
         <DialogDescription>
           {t("min.completaDatosCrearUsuario")}
         </DialogDescription>
@@ -174,7 +174,7 @@ export default function FormUsuario({ onUserCreated }: Props) {
         <DialogClose asChild>
           <Button variant="outline">{t("min.cancelar")}</Button>
         </DialogClose>
-        <Button onClick={handleSubmit}>{t("min.agregarUsuario")}</Button>
+        <Button onClick={handleSubmit}>{t("min.crearUsuario")}</Button>
       </DialogFooter>
     </DialogContent>
   );

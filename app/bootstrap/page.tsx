@@ -110,7 +110,7 @@ const BootstrapPage = () => {
           </div>
 
           <div className="flex flex-col gap-2 mb-2">
-            <label>{t('nombre')}</label>
+            <label>{t("nombre")}</label>
             <input
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}

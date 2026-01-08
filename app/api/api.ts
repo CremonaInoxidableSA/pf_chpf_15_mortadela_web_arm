@@ -21,7 +21,7 @@ export async function authFetch(url: string, options: RequestInit = {}) {
   // If there's a body and no Content-Type provided, assume JSON (unless FormData)
   const body = (options as any).body;
   const hasContentType = Array.from(headers.keys()).some(
-    (k) => k.toLowerCase() === "content-type"
+    (k) => k.toLowerCase() === "content-type",
   );
 
   if (!hasContentType && body != null && !(body instanceof FormData)) {

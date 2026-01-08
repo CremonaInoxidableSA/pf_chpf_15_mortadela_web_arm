@@ -26,7 +26,7 @@ export const columns = (
   t: (k: string) => string,
   onDisableUser: (username: string) => void,
   onEnableUser: (username: string) => void,
-  onDeleteUser: (username: string) => void
+  onDeleteUser: (username: string) => void,
 ): ColumnDef<User>[] => [
   {
     accessorKey: "email",

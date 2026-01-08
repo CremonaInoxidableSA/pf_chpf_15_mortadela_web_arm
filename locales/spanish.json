@@ -12,6 +12,7 @@
     "generarReclamo": "GENERAR RECLAMO"
   },
   "min": {
+    "crearUsuario": "Crear Usuario",
     "titulo": "PF-MORTADELA",
     "home": "Home",
     "camaras": "Camaras",

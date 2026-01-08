@@ -27,7 +27,7 @@ const CambioPass = () => {
 
   const handleChange = (
     key: "current_password" | "new_password",
-    value: string
+    value: string,
   ) => {
     setForm((s) => ({ ...s, [key]: value }));
   };

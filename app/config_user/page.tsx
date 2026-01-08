@@ -19,7 +19,7 @@ export default function ConfiguracionUsuario() {
   const { t } = useTranslation();
   const refetchUsuarios = async () => {
     const res = await authFetch(
-      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`
+      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`,
     );
     const users = await res.json();
     setData(users);
@@ -32,7 +32,7 @@ export default function ConfiguracionUsuario() {
         {
           method: "POST",
           body: JSON.stringify({ username }),
-        }
+        },
       );
 
       const result = await res.json();
@@ -43,7 +43,9 @@ export default function ConfiguracionUsuario() {
       }
 
       setData((prev) =>
-        prev.map((u) => (u.username === username ? { ...u, habilitado: 0 } : u))
+        prev.map((u) =>
+          u.username === username ? { ...u, habilitado: 0 } : u,
+        ),
       );
     } catch (err) {
       console.error(err);
@@ -57,21 +59,21 @@ export default function ConfiguracionUsuario() {
       {
         method: "POST",
         body: JSON.stringify({ username }),
-      }
+      },
     );
 
     if (!res.ok) return;
 
     setData((prev: User[]) =>
       prev.map((u: User) =>
-        u.username === username ? { ...u, habilitado: 1 } : u
-      )
+        u.username === username ? { ...u, habilitado: 1 } : u,
+      ),
     );
   };
 
   const eliminarUsuario = async (username: string) => {
     const confirmar = confirm(
-      "¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer."
+      "¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer.",
     );
 
     if (!confirmar) return;
@@ -83,7 +85,7 @@ export default function ConfiguracionUsuario() {
         {
           method: "DELETE",
           body: JSON.stringify({ username }),
-        }
+        },
       );
 
       // Parse JSON only when possible
@@ -101,7 +103,7 @@ export default function ConfiguracionUsuario() {
       }
 
       setData((prev: User[]) =>
-        prev.filter((u: User) => u.username !== username)
+        prev.filter((u: User) => u.username !== username),
       );
     } catch (error) {
       console.error(error);
@@ -117,7 +119,7 @@ export default function ConfiguracionUsuario() {
     let mounted = true;
     setIsLoading(true);
     authFetch(
-      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`
+      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`,
     )
       .then((res) => res.json())
       .then((users: User[]) => {
@@ -176,20 +178,20 @@ export default function ConfiguracionUsuario() {
         <div className="flex flex-col gap-4">
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
+              <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
                 {t("mayus.crearUsuario")}
               </Button>
             </DialogTrigger>
 
             <FormUsuario onUserCreated={refetchUsuarios} />
           </Dialog>
-          <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
+          <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
             {t("mayus.importarBDD")}
           </Button>
-          <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
+          <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
             {t("mayus.exportarBDD")}
           </Button>
-          <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
+          <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
             {t("mayus.generarReclamo")}
           </Button>
         </div>
@@ -212,7 +214,7 @@ export default function ConfiguracionUsuario() {
             t,
             deshabilitarUsuario,
             habilitarUsuario,
-            eliminarUsuario
+            eliminarUsuario,
           )}
           data={data}
         />
