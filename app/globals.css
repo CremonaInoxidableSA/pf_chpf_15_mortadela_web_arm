@@ -83,8 +83,9 @@
   --color-botonredhover: #ed292e11;
   --color-botonred: #ed292e33;
 
-  --color-botonblueborder: #30a0f0;
-  --color-botonblue: #30a0f044;
+  --color-botonblueborder: #77ccff;
+  --color-botonbluehover: #58abee11;
+  --color-botonblue: #58abee66;
 }
 
 :root {

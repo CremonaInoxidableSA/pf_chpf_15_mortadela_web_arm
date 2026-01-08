@@ -3,9 +3,9 @@ import type { NextRequest } from "next/server";
 import { verifyToken } from "./lib/auth";
 
 // Rutas públicas que no requieren autenticación
-const publicRoutes = ["/login", "/register", "/"];
+const publicRoutes = ["/login", "/register"];
 // Rutas que requieren rol de admin
-const adminRoutes = ["/admin", "/api/config"];
+const adminRoutes = ["/config_user", "/api/config"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -27,10 +27,10 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // Verificar si es una ruta pública
-  const isPublicRoute = publicRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
+  // Verificar si es una ruta pública (nota: '/' se compara por igualdad)
+  const isPublicRoute =
+    pathname === "/" ||
+    publicRoutes.some((route) => pathname.startsWith(route));
 
   if (isPublicRoute) {
     // Si ya está autenticado y trata de acceder a login/register, redirigir a root
@@ -69,7 +69,7 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Configurar en qué rutas se ejecuta el middleware
+// Configurar en qué rutas se ejecuta el proxy
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

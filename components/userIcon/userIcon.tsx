@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/popover";
 
 import { Button } from "@/components/ui/button";
+import CambioPass from "@/components/userIcon/cambioPass";
 
 import { VscAccount } from "react-icons/vsc";
 import { useRouter } from "next/navigation";
@@ -55,15 +56,20 @@ const UserIcon = () => {
           <>
             <p className="text-lg">{displayName}</p>
             <p className="text-xs">{rol}</p>
-            <Button
-              className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer"
-              onClick={() => {
-                router.push("/config_user");
-                setOpen(false);
-              }}
-            >
-              Configuracion del perfil
-            </Button>
+
+            {rol === "admin" || rol === "superadmin" ? (
+              <Button
+                className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer"
+                onClick={() => {
+                  router.push("/config_user");
+                  setOpen(false);
+                }}
+              >
+                Configuracion de usuarios
+              </Button>
+            ) : (
+              <CambioPass />
+            )}
             <Button
               className="mt-2 w-full bg-redlogo hover:bg-red2 text-white cursor-pointer"
               onClick={closeSession}

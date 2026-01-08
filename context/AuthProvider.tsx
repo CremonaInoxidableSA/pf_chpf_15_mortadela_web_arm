@@ -119,6 +119,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           localStorage.getItem("access_token")) ||
         undefined;
 
+      // Hydrate user from localStorage (optimistic) to avoid missing profile data in UI
+      let hydratedFromStorage = false;
+      let storedUserRaw: string | null = null;
+      if (typeof window !== "undefined") {
+        storedUserRaw = localStorage.getItem("user");
+        if (storedUserRaw) {
+          try {
+            const parsed = JSON.parse(storedUserRaw);
+            setUser(parsed);
+            hydratedFromStorage = true;
+          } catch (e) {
+            console.warn("Failed to parse stored user", e);
+          }
+        }
+      }
+
       const decodeToken = (t?: string) => {
         if (!t) return null;
         try {
@@ -141,12 +157,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (token) {
         const payload = decodeToken(token);
         if (payload && payload.sub) {
-          setUser({
-            username: payload.sub,
-            rol: payload.rol ?? undefined,
-          } as any);
-          setLoading(false);
-          return;
+          if (!hydratedFromStorage) {
+            setUser({
+              username: payload.sub,
+              rol: payload.rol ?? undefined,
+            } as any);
+            setLoading(false);
+            return;
+          }
         }
       }
 
@@ -175,10 +193,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             if (data.data && data.data.user) {
               const incomingUser = data.data.user;
-              if (Array.isArray(incomingUser) && incomingUser.length > 0) {
-                setUser(incomingUser[0]);
-              } else {
-                setUser(incomingUser);
+              const normalized =
+                Array.isArray(incomingUser) && incomingUser.length > 0
+                  ? incomingUser[0]
+                  : incomingUser;
+              setUser(normalized);
+              try {
+                if (typeof window !== "undefined")
+                  localStorage.setItem("user", JSON.stringify(normalized));
+              } catch (e) {
+                console.warn(
+                  "Could not persist user from /check to localStorage",
+                  e
+                );
               }
               setLoading(false);
               return;
@@ -205,14 +232,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }`;
 
     try {
-      const form = new URLSearchParams();
-      form.set("username", username);
-      form.set("password", password);
+      const body = { username, password };
 
       const response = await fetch(`${apiBase}/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: form.toString(),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
         credentials: "include",
       });
 
@@ -269,6 +294,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             username: payload.sub,
             rol: payload.rol ?? undefined,
           } as any);
+          try {
+            if (typeof window !== "undefined")
+              localStorage.setItem(
+                "user",
+                JSON.stringify({
+                  username: payload.sub,
+                  rol: payload.rol ?? undefined,
+                  token,
+                })
+              );
+          } catch (e) {
+            console.warn("Could not store user in localStorage", e);
+          }
         }
 
         const incomingUser = data.data?.user ?? data.user;
@@ -276,7 +314,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const u = Array.isArray(incomingUser)
             ? incomingUser[0]
             : incomingUser;
-          setUser({ ...(u || {}), token });
+          const userToStore = { ...(u || {}), token };
+          setUser(userToStore);
+          try {
+            if (typeof window !== "undefined")
+              localStorage.setItem("user", JSON.stringify(userToStore));
+          } catch (e) {
+            console.warn("Could not store user in localStorage", e);
+          }
         }
 
         setNeedBootstrap(false);
@@ -285,7 +330,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: true, data };
       }
 
-      return data;
+      return {
+        success: false,
+        error: data?.error ?? data?.message ?? "Login fallido",
+      };
     } catch (error) {
       console.error("Login error:", error);
       return { success: false, error: "Error de conexión" };
@@ -322,10 +370,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Clear client state regardless, but signal success only if backend accepted
       setUser(null);
       try {
-        if (typeof window !== "undefined")
+        if (typeof window !== "undefined") {
           localStorage.removeItem("access_token");
+          localStorage.removeItem("user");
+        }
       } catch (e) {
-        console.warn("Could not remove access_token from localStorage", e);
+        console.warn("Could not remove access_token/user from localStorage", e);
       }
 
       router.push("/login");
@@ -336,10 +386,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Ensure client cleanup even if backend call failed
       setUser(null);
       try {
-        if (typeof window !== "undefined")
+        if (typeof window !== "undefined") {
           localStorage.removeItem("access_token");
+          localStorage.removeItem("user");
+        }
       } catch (e) {
-        console.warn("Could not remove access_token from localStorage", e);
+        console.warn("Could not remove access_token/user from localStorage", e);
       }
       router.push("/login");
       return false;
