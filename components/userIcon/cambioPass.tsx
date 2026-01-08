@@ -41,9 +41,7 @@ const CambioPass = () => {
     setLoading(true);
 
     try {
-      const apiBase = `http://${
-        process.env.NEXT_PUBLIC_API_IP ?? "localhost"
-      }:${process.env.NEXT_PUBLIC_API_PORT ?? "8000"}`;
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL;
 
       const token =
         (typeof window !== "undefined" &&

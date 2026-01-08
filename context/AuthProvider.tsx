@@ -45,7 +45,7 @@ interface RegisterData {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!loading) {
       const publicRoutes = ["/login", "/register", "/bootstrap"];
       const isPublicRoute = publicRoutes.some((route) =>
-        pathname?.startsWith(route)
+        pathname?.startsWith(route),
       );
 
       if (needBootstrap && pathname !== "/bootstrap") {
@@ -110,7 +110,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const checkSession = async () => {
-    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}`;
+    const apiBase =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
     try {
       const token =
@@ -145,7 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             atob(b64)
               .split("")
               .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
-              .join("")
+              .join(""),
           );
           const decoded = JSON.parse(json);
           // No verificar exp
@@ -211,7 +212,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               } catch (e) {
                 console.warn(
                   "Could not persist user from /check to localStorage",
-                  e
+                  e,
                 );
               }
               setLoading(false);
@@ -235,9 +236,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (
     username: string,
-    password: string
+    password: string,
   ): Promise<ApiResponse> => {
-    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}`;
+    const apiBase =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
     try {
       const body = { username, password };
@@ -288,9 +290,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               atob(b64)
                 .split("")
                 .map(
-                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`
+                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`,
                 )
-                .join("")
+                .join(""),
             );
             return JSON.parse(json);
           } catch (e) {
@@ -312,7 +314,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   username: payload.sub,
                   rol: payload.rol ?? undefined,
                   token,
-                })
+                }),
               );
           } catch (e) {
             console.warn("Could not store user in localStorage", e);
@@ -363,7 +365,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async (): Promise<boolean> => {
-    const apiBase = `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}`;
+    const apiBase =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
     try {
       // Call backend logout to remove server-side cookie

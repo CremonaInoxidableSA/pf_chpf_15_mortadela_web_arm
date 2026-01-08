@@ -19,7 +19,7 @@ export default function ConfiguracionUsuario() {
   const { t } = useTranslation();
   const refetchUsuarios = async () => {
     const res = await authFetch(
-      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/usuarios`,
     );
     const users = await res.json();
     setData(users);
@@ -28,7 +28,7 @@ export default function ConfiguracionUsuario() {
   const deshabilitarUsuario = async (username: string) => {
     try {
       const res = await authFetch(
-        `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/deshabilitar_usuario`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/deshabilitar_usuario`,
         {
           method: "POST",
           body: JSON.stringify({ username }),
@@ -55,7 +55,7 @@ export default function ConfiguracionUsuario() {
 
   const habilitarUsuario = async (username: string) => {
     const res = await authFetch(
-      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/habilitar_usuario`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/habilitar_usuario`,
       {
         method: "POST",
         body: JSON.stringify({ username }),
@@ -81,7 +81,7 @@ export default function ConfiguracionUsuario() {
     try {
       // Use POST to delete for compatibility with servers that don't accept bodies on DELETE
       const res = await authFetch(
-        `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/eliminar_usuario`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/eliminar_usuario`,
         {
           method: "DELETE",
           body: JSON.stringify({ username }),
@@ -118,9 +118,7 @@ export default function ConfiguracionUsuario() {
   useEffect(() => {
     let mounted = true;
     setIsLoading(true);
-    authFetch(
-      `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`,
-    )
+    authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/usuarios`)
       .then((res) => res.json())
       .then((users: User[]) => {
         if (mounted) setData(users);
