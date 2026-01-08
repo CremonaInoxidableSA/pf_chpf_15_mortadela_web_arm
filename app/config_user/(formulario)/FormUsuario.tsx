@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { authFetch } from "@/app/api/api";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   DialogClose,
@@ -29,6 +30,8 @@ type Props = {
 };
 
 export default function FormUsuario({ onUserCreated }: Props) {
+  const { t } = useTranslation();
+
   const [form, setForm] = useState({
     email: "",
     username: "",
@@ -46,7 +49,7 @@ export default function FormUsuario({ onUserCreated }: Props) {
 
   const handleSubmit = async () => {
     if (!form.email.includes("@")) {
-      alert("Email inválido");
+      alert(t("min.emailInvalido"));
       return;
     }
 
@@ -62,7 +65,7 @@ export default function FormUsuario({ onUserCreated }: Props) {
 
     if (!res.ok) {
       const err = await res.json();
-      alert(err.detail || "Error al crear usuario");
+      alert(err.detail || t("min.errorCrearUsuario"));
       return;
     }
 
@@ -72,69 +75,69 @@ export default function FormUsuario({ onUserCreated }: Props) {
   return (
     <DialogContent className="sm:max-w-150 bg-background3 z-800">
       <DialogHeader>
-        <DialogTitle>Crear usuario</DialogTitle>
+        <DialogTitle>{t("min.agregarUsuario")}</DialogTitle>
         <DialogDescription>
-          Completá los datos para crear un nuevo usuario.
+          {t("min.completaDatosCrearUsuario")}
         </DialogDescription>
       </DialogHeader>
 
       <div className="grid gap-4 py-4">
         <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t("min.email")}</Label>
           <Input
             id="email"
             type="email"
             value={form.email}
             onChange={(e) => handleChange("email", e.target.value)}
-            placeholder="Ingrese el correo electrónico del usuario"
+            placeholder={t("min.ingreseCorreoUsuario")}
             required
           />
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="username">Usuario</Label>
+          <Label htmlFor="username">{t("min.usuario")}</Label>
           <Input
             id="username"
             value={form.username}
             onChange={(e) => handleChange("username", e.target.value)}
-            placeholder="Asigne un usuario unico"
+            placeholder={t("min.asigneUsuarioUnico")}
             required
           />
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="name">Nombre</Label>
+          <Label htmlFor="name">{t("min.nombre")}</Label>
           <Input
             id="name"
             value={form.nombre}
             onChange={(e) => handleChange("nombre", e.target.value)}
-            placeholder="Ingrese el nombre del usuario"
+            placeholder={t("min.ingreseNombreUsuario")}
             required
           />
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="surname">Apellido</Label>
+          <Label htmlFor="surname">{t("min.apellido")}</Label>
           <Input
             id="surname"
             value={form.apellido}
             onChange={(e) => handleChange("apellido", e.target.value)}
-            placeholder="Ingrese el apellido del usuario"
+            placeholder={t("min.ingreseApellidoUsuario")}
             required
           />
         </div>
 
         <div className="grid gap-2">
-          <Label>Rol</Label>
+          <Label>{t("min.rol")}</Label>
           <Select onValueChange={(v) => handleChange("rol", v)}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Seleccione un rol para el usuario" />
+              <SelectValue placeholder={t("min.seleccioneRol")} />
             </SelectTrigger>
             <SelectContent className="z-900">
               <SelectGroup>
-                <SelectLabel>Rol</SelectLabel>
-                <SelectItem value="admin">Administrador</SelectItem>
-                <SelectItem value="user">Usuario</SelectItem>
+                <SelectLabel>{t("min.rol")}</SelectLabel>
+                <SelectItem value="admin">{t("min.admin")}</SelectItem>
+                <SelectItem value="user">{t("min.usuarioNormal")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -142,13 +145,13 @@ export default function FormUsuario({ onUserCreated }: Props) {
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="password">Contraseña</Label>
+        <Label htmlFor="password">{t("min.contra")}</Label>
         <Input
           id="password"
           type="password"
           value={form.password}
           onChange={(e) => handleChange("password", e.target.value)}
-          placeholder="Ingrese una contraseña para el usuario"
+          placeholder={t("min.ingreseContraseñaUsuario")}
         />
       </div>
 
@@ -156,22 +159,22 @@ export default function FormUsuario({ onUserCreated }: Props) {
         defaultValue={form.reporte ? "true" : "false"}
         onValueChange={(v) => handleChange("reporte", v === "true")}
       >
-        <Label className="mb-2 mt-4">Recibe Reportes</Label>
+        <Label className="mb-2 mt-4">{t("min.recibeReportes")}</Label>
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="true" id="option-one" />
-          <Label htmlFor="option-one">Si</Label>
+          <Label htmlFor="option-one">{t("min.si")}</Label>
         </div>
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="false" id="option-two" />
-          <Label htmlFor="option-two">No</Label>
+          <Label htmlFor="option-two">{t("min.no")}</Label>
         </div>
       </RadioGroup>
 
       <DialogFooter>
         <DialogClose asChild>
-          <Button variant="outline">Cancelar</Button>
+          <Button variant="outline">{t("min.cancelar")}</Button>
         </DialogClose>
-        <Button onClick={handleSubmit}>Crear</Button>
+        <Button onClick={handleSubmit}>{t("min.agregarUsuario")}</Button>
       </DialogFooter>
     </DialogContent>
   );

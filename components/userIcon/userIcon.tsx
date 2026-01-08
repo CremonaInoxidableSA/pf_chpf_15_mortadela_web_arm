@@ -16,15 +16,18 @@ import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/context/AuthProvider";
 import { useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 const UserIcon = () => {
   const router = useRouter();
   const { logout, nombre, apellido, rol, loading } = useAuth();
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const { t } = useTranslation();
 
   const displayName =
     `${nombre ?? ""}${nombre || apellido ? " " : ""}${apellido ?? ""}`.trim() ||
-    "Usuario";
+    t("min.usuario");
 
   const closeSession = async () => {
     try {
@@ -50,7 +53,7 @@ const UserIcon = () => {
         {loading ? (
           <div className="flex items-center gap-2">
             <Spinner />
-            <span>Verificando...</span>
+            <span>{t("min.verificando")}</span>
           </div>
         ) : (
           <>
@@ -59,13 +62,15 @@ const UserIcon = () => {
 
             {rol === "admin" || rol === "superadmin" ? (
               <Button
-                className="mt-2 w-full bg-blue hover:bg-water text-white cursor-pointer"
+                className="mt-2 w-full border border-botonblueborder bg-botonblue hover:bg-botonbluehover text-white cursor-pointer"
                 onClick={() => {
                   router.push("/config_user");
                   setOpen(false);
                 }}
               >
-                Configuracion de usuarios
+                <p className="text-botonblueborder font-medium">
+                  {t("min.configUsuarios")}
+                </p>
               </Button>
             ) : (
               <CambioPass />
@@ -78,10 +83,10 @@ const UserIcon = () => {
               {loggingOut ? (
                 <div className="flex items-center gap-2">
                   <Spinner />
-                  <span>Cerrando...</span>
+                  <span>{t("min.cargando")}</span>
                 </div>
               ) : (
-                "Cerrar sesión"
+                t("min.cerrarSesion")
               )}
             </Button>
           </>

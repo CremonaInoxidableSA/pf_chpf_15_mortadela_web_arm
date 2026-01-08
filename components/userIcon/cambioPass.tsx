@@ -17,8 +17,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const CambioPass = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ current_password: "", new_password: "" });
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,7 @@ const CambioPass = () => {
 
   const handleSubmit = async () => {
     if (!form.current_password || !form.new_password) {
-      toast.error("Completa ambos campos");
+      toast.error(t("min.completeCampos"));
       return;
     }
 
@@ -72,20 +74,17 @@ const CambioPass = () => {
       }
 
       if (res.ok && (data.success ?? true)) {
-        toast.success("Contraseña actualizada correctamente");
+        toast.success(t("min.contraseñaCambiada"));
         setOpen(false);
         setForm({ current_password: "", new_password: "" });
       } else {
         const message =
-          data.detail ??
-          data.error ??
-          data.message ??
-          "Error al cambiar la contraseña";
+          data.detail ?? data.error ?? data.message ?? t("min.errorContraseña");
         toast.error(message);
       }
     } catch (error) {
       console.error("Change password error:", error);
-      toast.error("Error de conexión");
+      toast.error(t("min.errorConexion"));
     } finally {
       setLoading(false);
     }
@@ -95,39 +94,41 @@ const CambioPass = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="mt-2 w-full border border-botonblueborder bg-botonblue hover:bg-botonbluehover text-white cursor-pointer">
-          <p className="text-botonblueborder font-medium">Cambiar contraseña</p>
+          <p className="text-botonblueborder font-medium">
+            {t("min.cambiarContraseña")}
+          </p>
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-150 bg-background3 z-800">
         <DialogHeader>
-          <DialogTitle>Cambiar contraseña</DialogTitle>
-          <DialogDescription>
-            Completá los datos para cambiar tu contraseña.
-          </DialogDescription>
+          <DialogTitle>{t("min.cambiarContraseña")}</DialogTitle>
+          <DialogDescription>{t("min.completaDatosCambiar")}</DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="current_password">Contraseña actual</Label>
+            <Label htmlFor="current_password">
+              {t("min.contraseñaActual")}
+            </Label>
             <Input
               id="current_password"
               type="password"
               value={form.current_password}
               onChange={(e) => handleChange("current_password", e.target.value)}
-              placeholder="Ingrese su contraseña actual"
+              placeholder={t("min.ingreseContraseñaActual")}
               required
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="new_password">Nueva contraseña</Label>
+            <Label htmlFor="new_password">{t("min.nuevaContraseña")}</Label>
             <Input
               id="new_password"
               type="password"
               value={form.new_password}
               onChange={(e) => handleChange("new_password", e.target.value)}
-              placeholder="Ingrese la nueva contraseña"
+              placeholder={t("min.ingreseNuevaContraseña")}
               required
             />
           </div>
@@ -135,17 +136,17 @@ const CambioPass = () => {
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancelar</Button>
+            <Button variant="outline">{t("min.cancelar")}</Button>
           </DialogClose>
 
           <Button onClick={handleSubmit} disabled={loading}>
             {loading ? (
               <div className="flex items-center gap-2">
                 <Spinner />
-                <span>Cambiando...</span>
+                <span>{t("min.cambiando")}</span>
               </div>
             ) : (
-              "Cambiar"
+              t("min.cambiar")
             )}
           </Button>
         </DialogFooter>

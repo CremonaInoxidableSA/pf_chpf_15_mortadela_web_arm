@@ -80,12 +80,12 @@
   --color-cerrarsesion: #f15b5f;
 
   --color-botonredborder: #ee2255;
-  --color-botonredhover: #ed292e11;
+  --color-botonredhover: #ed292e22;
   --color-botonred: #ed292e33;
 
-  --color-botonblueborder: #77ccff;
-  --color-botonbluehover: #58abee11;
-  --color-botonblue: #58abee66;
+  --color-botonblueborder: #0bb7ff;
+  --color-botonbluehover: #0070ba22;
+  --color-botonblue: #0070ba3f;
 }
 
 :root {

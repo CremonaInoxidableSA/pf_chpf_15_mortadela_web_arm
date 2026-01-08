@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { authFetch } from "@/app/api/api";
 import { useAuth } from "@/context/AuthProvider";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const BootstrapPage = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const BootstrapPage = () => {
   const [secret, setSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Verificar que realmente se necesite bootstrap
@@ -108,7 +110,7 @@ const BootstrapPage = () => {
           </div>
 
           <div className="flex flex-col gap-2 mb-2">
-            <label>Nombre</label>
+            <label>{t('nombre')}</label>
             <input
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}

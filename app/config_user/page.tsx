@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { VscAccount } from "react-icons/vsc";
 import { authFetch } from "@/app/api/api";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -15,6 +16,7 @@ import { DataTable } from "./(table)/data-table";
 import { useAuth } from "@/context/AuthProvider";
 
 export default function ConfiguracionUsuario() {
+  const { t } = useTranslation();
   const refetchUsuarios = async () => {
     const res = await authFetch(
       `http://${process.env.NEXT_PUBLIC_API_IP}:${process.env.NEXT_PUBLIC_API_PORT}/usuarios`
@@ -36,7 +38,7 @@ export default function ConfiguracionUsuario() {
       const result = await res.json();
 
       if (!res.ok) {
-        alert(result.detail || "Error al deshabilitar usuario");
+        alert(result.detail || t("min.errorDeshabilitarUsuario"));
         return;
       }
 
@@ -45,7 +47,7 @@ export default function ConfiguracionUsuario() {
       );
     } catch (err) {
       console.error(err);
-      alert("Error de conexión con la API");
+      alert(t("min.errorConexionAPI"));
     }
   };
 
@@ -94,7 +96,7 @@ export default function ConfiguracionUsuario() {
       }
 
       if (!res.ok) {
-        alert(result.detail || "Error al eliminar usuario");
+        alert(result.detail || t("min.errorEliminarUsuario"));
         return;
       }
 
@@ -151,23 +153,23 @@ export default function ConfiguracionUsuario() {
 
         <div className="flex flex-col gap-5 text-left">
           <div>
-            <p className="font-semibold text-xl">Nombre</p>
+            <p className="font-semibold text-xl">{t("min.nombre")}</p>
             <p>{fullname || "—"}</p>
           </div>
 
           <div>
-            <p className="font-semibold text-lg">Email</p>
+            <p className="font-semibold text-lg">{t("min.email")}</p>
             <p>{email || "—"}</p>
           </div>
 
           <div>
-            <p className="font-semibold text-lg">Rol</p>
+            <p className="font-semibold text-lg">{t("min.rol")}</p>
             <p>{rol ? getRoleName(rol) : "—"}</p>
           </div>
 
           <div>
-            <p className="font-semibold text-lg">Recibe Reportes</p>
-            <p>{reporte ? "Sí" : "No"}</p>
+            <p className="font-semibold text-lg">{t("min.recibeReportes")}</p>
+            <p>{reporte ? t("min.si") : "No"}</p>
           </div>
         </div>
 
@@ -175,36 +177,39 @@ export default function ConfiguracionUsuario() {
           <Dialog>
             <DialogTrigger asChild>
               <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
-                CREAR USUARIO
+                {t("mayus.crearUsuario")}
               </Button>
             </DialogTrigger>
 
             <FormUsuario onUserCreated={refetchUsuarios} />
           </Dialog>
           <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
-            IMPORTAR BDD
+            {t("mayus.importarBDD")}
           </Button>
           <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
-            EXPORTAR BDD
+            {t("mayus.exportarBDD")}
           </Button>
           <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md">
-            GENERAR RECLAMO
+            {t("mayus.generarReclamo")}
           </Button>
         </div>
       </div>
       <div className="flex flex-col h-full w-4/5 gap-4">
         <div className="flex items-center justify-between">
-          <p className="text-2xl">Lista de Usuarios</p>
+          <p className="text-2xl w-full flex justify-center">
+            {t("min.listaUsuarios")}
+          </p>
           {isLoading && (
             <div className="flex items-center gap-2">
               <Spinner />
-              <span>Cargando...</span>
+              <span>{t("min.cargando")}</span>
             </div>
           )}
         </div>
 
         <DataTable
           columns={columns(
+            t,
             deshabilitarUsuario,
             habilitarUsuario,
             eliminarUsuario
