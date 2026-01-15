@@ -63,7 +63,7 @@
     "errorEliminarUsuario": "Error al eliminar usuario",
     "importarBDD": "IMPORTAR BDD",
     "exportarBDD": "EXPORTAR BDD",
-    "generarReclamo": "GENERAR RECLAMO",
+    "generarReclamo": "Generar Reclamo",
     "habilitado": "Habilitado",
     "editar": "Editar",
     "deshabilitar": "Deshabilitar",
@@ -87,6 +87,10 @@
     "seleccioneArea": "Seleccione un área",
     "reportes": "Reportes",
     "visual": "Visual",
-    "exportacion": "Exportación"
+    "exportacion": "Exportación",
+    "completeAllFields": "Por favor completa todos los campos",
+    "errorEmail": "Error: No se pudo obtener el email del usuario",
+    "errorConexion": "Error de conexión. Por favor, intenta de nuevo.",
+    "errorReclamo": "Error al generar el reclamo"
   }
 }

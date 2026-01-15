@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -25,14 +24,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { authFetch } from "@/app/api/api";
+import { useAuth } from "@/context/AuthProvider";
+import { toast } from "sonner";
 
 export default function GenerarReclamo() {
   const { t } = useTranslation();
+  const { email } = useAuth();
 
   const [form, setForm] = useState({
-      nombre: "",
-      apellido: "",
-      reporte: "",
+    nombre: "",
+    apellido: "",
+    area: "",
+    reporte: "",
   });
 
   const handleChange = (key: string, value: any) => {
@@ -40,9 +43,64 @@ export default function GenerarReclamo() {
   };
 
   const handleSubmit = async () => {
-    
+    if (!form.nombre || !form.apellido || !form.area || !form.reporte) {
+      toast.error(
+        t("min.completeAllFields") || "Por favor completa todos los campos",
+        {
+          position: "top-center",
+        }
+      );
+      return;
+    }
+
+    if (!email) {
+      toast.error(
+        t("min.errorEmail") || "Error: No se pudo obtener el email del usuario",
+        {
+          position: "top-center",
+        }
+      );
+      return;
+    }
+
+    try {
+      const response = await authFetch("/api/reclamos", {
+        method: "POST",
+        body: JSON.stringify({
+          nombre: form.nombre,
+          apellido: form.apellido,
+          area: form.area,
+          reporte: form.reporte,
+          email: email,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast.success(
+          t("min.reclamoEnviado"),
+          {
+            position: "top-center",
+          }
+        );
+        setForm({ nombre: "", apellido: "", area: "", reporte: "" });
+      } else {
+        toast.error(t("min.errorReclamo"),
+        {
+          position: "top-center",
+        }
+      );
+      }
+    } catch (error) {
+      console.error("Error al enviar reclamo:", error);
+      toast.error(t("min.errorReclamo"),
+      {
+        position: "top-center",
+      }
+      );
+    }
   };
-  
+
   return (
     <DialogContent className="sm:max-w-150 bg-background3 z-800">
       <DialogHeader>
@@ -77,33 +135,43 @@ export default function GenerarReclamo() {
 
         <div className="grid gap-2">
           <Label>{t("min.dondeProblema")}</Label>
-          <Select onValueChange={(v) => handleChange("rol", v)}>
+          <Select
+            value={form.area}
+            onValueChange={(v) => handleChange("area", v)}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder={t("min.seleccioneArea")} />
             </SelectTrigger>
             <SelectContent className="z-900">
               <SelectGroup>
                 <SelectLabel>{t("min.rol")}</SelectLabel>
-                <SelectItem value="admin">{t("min.exportacion")}</SelectItem>
-                <SelectItem value="user">{t("min.visual")}</SelectItem>
-                <SelectItem value="user">{t("min.reportes")}</SelectItem>
+                <SelectItem value="exportacion">
+                  {t("min.exportacion")}
+                </SelectItem>
+                <SelectItem value="visual">{t("min.visual")}</SelectItem>
+                <SelectItem value="reportes">{t("min.reportes")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <Textarea
-        className="w-full mt-4"
-        placeholder={t("min.detalleReclamo")}
-        rows={5}
-      ></Textarea>
+      <div className="grid gap-2">
+        <Label>{t("min.detalleReclamo")}</Label>
+        <Textarea
+          className="w-full"
+          placeholder={t("min.detalleReclamo")}
+          rows={5}
+          value={form.reporte}
+          onChange={(e) => handleChange("reporte", e.target.value)}
+        ></Textarea>
+      </div>
 
       <DialogFooter>
         <DialogClose asChild>
           <Button variant="outline">{t("min.cancelar")}</Button>
         </DialogClose>
-        <Button onClick={handleSubmit}>{t("min.crearUsuario")}</Button>
+        <Button onClick={handleSubmit}>{t("min.generarReclamo")}</Button>
       </DialogFooter>
     </DialogContent>
   );

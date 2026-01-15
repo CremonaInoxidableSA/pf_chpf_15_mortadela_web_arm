@@ -87,6 +87,10 @@
     "seleccioneArea": "Select an area",
     "reportes": "Reports",
     "visual": "Visual",
-    "exportacion": "Exportation"
+    "exportacion": "Exportation",
+    "completeAllFields": "Please complete all fields",
+    "errorEmail": "Error: Could not retrieve user's email",
+    "errorConexion": "Connection error. Please try again.",
+    "errorReclamo": "Error generating claim"
   }
 }

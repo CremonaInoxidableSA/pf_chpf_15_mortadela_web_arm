@@ -34,7 +34,9 @@ const CambioPass = () => {
 
   const handleSubmit = async () => {
     if (!form.current_password || !form.new_password) {
-      toast.error(t("min.completeCampos"));
+      toast.error(t("min.completeCampos"), {
+        position: "top-center",
+      });
       return;
     }
 
@@ -73,17 +75,23 @@ const CambioPass = () => {
       }
 
       if (res.ok && (data.success ?? true)) {
-        toast.success(t("min.contraseñaCambiada"));
+        toast.success(t("min.contraseñaCambiada"), {
+          position: "top-center",
+        });
         setOpen(false);
         setForm({ current_password: "", new_password: "" });
       } else {
         const message =
           data.detail ?? data.error ?? data.message ?? t("min.errorContraseña");
-        toast.error(message);
+        toast.error(message, {
+          position: "top-center",
+        });
       }
     } catch (error) {
       console.error("Change password error:", error);
-      toast.error(t("min.errorConexion"));
+      toast.error(t("min.errorConexion"), {
+        position: "top-center",
+      });
     } finally {
       setLoading(false);
     }
