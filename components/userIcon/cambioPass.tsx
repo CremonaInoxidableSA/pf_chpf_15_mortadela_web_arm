@@ -27,7 +27,7 @@ const CambioPass = () => {
 
   const handleChange = (
     key: "current_password" | "new_password",
-    value: string,
+    value: string
   ) => {
     setForm((s) => ({ ...s, [key]: value }));
   };
@@ -41,8 +41,6 @@ const CambioPass = () => {
     setLoading(true);
 
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL;
-
       const token =
         (typeof window !== "undefined" &&
           (localStorage.getItem("access_token") ||
@@ -54,15 +52,18 @@ const CambioPass = () => {
       };
       if (token) headers["Authorization"] = `Bearer ${token}`;
 
-      const res = await fetch(`${apiBase}/cambiar_password`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          current_password: form.current_password,
-          new_password: form.new_password,
-        }),
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/cambiar_password`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            current_password: form.current_password,
+            new_password: form.new_password,
+          }),
+          credentials: "include",
+        }
+      );
 
       let data: any = {};
       try {

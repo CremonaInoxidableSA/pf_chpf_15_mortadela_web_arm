@@ -16,13 +16,12 @@ import { columns, User } from "./(table)/columns";
 import { DataTable } from "./(table)/data-table";
 
 import { useAuth } from "@/context/AuthProvider";
-import { RE } from "country-flag-icons/react/3x2";
 
 export default function ConfiguracionUsuario() {
   const { t } = useTranslation();
   const refetchUsuarios = async () => {
     const res = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/usuarios`,
+      `${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`
     );
     const users = await res.json();
     setData(users);
@@ -31,11 +30,11 @@ export default function ConfiguracionUsuario() {
   const deshabilitarUsuario = async (username: string) => {
     try {
       const res = await authFetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/deshabilitar_usuario`,
+        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/deshabilitar_usuario`,
         {
           method: "POST",
           body: JSON.stringify({ username }),
-        },
+        }
       );
 
       const result = await res.json();
@@ -46,9 +45,7 @@ export default function ConfiguracionUsuario() {
       }
 
       setData((prev) =>
-        prev.map((u) =>
-          u.username === username ? { ...u, habilitado: 0 } : u,
-        ),
+        prev.map((u) => (u.username === username ? { ...u, habilitado: 0 } : u))
       );
     } catch (err) {
       console.error(err);
@@ -58,45 +55,42 @@ export default function ConfiguracionUsuario() {
 
   const habilitarUsuario = async (username: string) => {
     const res = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/habilitar_usuario`,
+      `${process.env.NEXT_PUBLIC_API_AUTH_URL}/habilitar_usuario`,
       {
         method: "POST",
         body: JSON.stringify({ username }),
-      },
+      }
     );
 
     if (!res.ok) return;
 
     setData((prev: User[]) =>
       prev.map((u: User) =>
-        u.username === username ? { ...u, habilitado: 1 } : u,
-      ),
+        u.username === username ? { ...u, habilitado: 1 } : u
+      )
     );
   };
 
   const eliminarUsuario = async (username: string) => {
     const confirmar = confirm(
-      "¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer.",
+      "¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer."
     );
 
     if (!confirmar) return;
 
     try {
-      // Use POST to delete for compatibility with servers that don't accept bodies on DELETE
       const res = await authFetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/eliminar_usuario`,
+        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/eliminar_usuario`,
         {
           method: "DELETE",
           body: JSON.stringify({ username }),
-        },
+        }
       );
 
-      // Parse JSON only when possible
       let result: any = {};
       try {
         result = await res.json();
       } catch (e) {
-        // no JSON response
         result = { detail: res.statusText || "Error" };
       }
 
@@ -106,7 +100,7 @@ export default function ConfiguracionUsuario() {
       }
 
       setData((prev: User[]) =>
-        prev.filter((u: User) => u.username !== username),
+        prev.filter((u: User) => u.username !== username)
       );
     } catch (error) {
       console.error(error);
@@ -121,7 +115,7 @@ export default function ConfiguracionUsuario() {
   useEffect(() => {
     let mounted = true;
     setIsLoading(true);
-    authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/usuarios`)
+    authFetch(`${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`)
       .then((res) => res.json())
       .then((users: User[]) => {
         if (mounted) setData(users);
@@ -193,7 +187,7 @@ export default function ConfiguracionUsuario() {
           <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
             {t("mayus.exportarBDD")}
           </Button>
-          
+
           <Dialog>
             <DialogTrigger asChild>
               <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">

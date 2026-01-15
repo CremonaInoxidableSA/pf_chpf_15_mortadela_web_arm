@@ -27,8 +27,7 @@ export default function LayoutClient({
 
   const isDesarmadoPage =
     pathname === "/armado" ||
-    pathname === "/desarmado" ||
-    pathname === "/paletizado";
+    pathname === "/desarmado";
 
   useEffect(() => {
     const saved =

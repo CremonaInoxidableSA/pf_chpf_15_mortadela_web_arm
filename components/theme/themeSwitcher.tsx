@@ -9,7 +9,6 @@ export const ThemeSwitcher = () => {
     toggleTheme();
   };
 
-  // If theme is null during hydration, show the current default (avoid layout shift)
   const isLight = theme === "light";
 
   return (

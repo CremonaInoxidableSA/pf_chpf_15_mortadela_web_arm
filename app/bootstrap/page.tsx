@@ -2,40 +2,39 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { authFetch } from "@/app/api/api";
-import { useAuth } from "@/context/AuthProvider";
-import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
 
 const BootstrapPage = () => {
   const router = useRouter();
-  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [password, setPassword] = useState("");
-  const [secret, setSecret] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { t } = useTranslation();
+  const [success, setSuccess] = useState(false);
+  const [needsSetup, setNeedsSetup] = useState(false);
 
   useEffect(() => {
-    // Verificar que realmente se necesite bootstrap
-    (async () => {
+    const checkSetup = async () => {
       try {
-        const res = await authFetch("/api/auth/check");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_AUTH_URL}/needs-setup`);
         const data = await res.json();
 
-        if (!(data?.success && data?.data?.needBootstrap)) {
-          // Ya no se necesita bootstrap, redirigir a login
+        if (data.needs_setup) {
+          setNeedsSetup(true);
+        } else {
           router.push("/login");
         }
       } catch (err) {
-        console.error("Check bootstrap error:", err);
+        console.error("Error checking setup:", err);
         router.push("/login");
+      } finally {
+        setLoading(false);
       }
-    })();
+    };
+
+    checkSetup();
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,122 +43,226 @@ const BootstrapPage = () => {
     setLoading(true);
 
     try {
-      const body: any = { email, password, username, nombre, apellido };
-
-      const headers: any = { "Content-Type": "application/json" };
-      if (secret) headers["x-bootstrap-secret"] = secret;
-
-      const res = await authFetch("/api/auth/bootstrap", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_AUTH_URL}/create-superadmin`, {
         method: "POST",
-        headers,
-        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          username,
+          nombre,
+          apellido,
+          password,
+        }),
       });
 
       const result = await res.json();
 
-      if (!result.success) {
-        setError(result.error || result.message || "Error al crear usuario");
+      if (!res.ok || !result.success) {
+        setError(result.message || "Error al crear superadmin");
         setLoading(false);
         return;
       }
 
-      // Intentar login automático usando AuthProvider para que el estado se actualice
-      const loginResult = await login(username, password);
+      setSuccess(true);
+      setLoading(false);
 
-      if (loginResult.success) {
-        // AuthProvider limpia la necesidad de bootstrap y redirige
-        router.push("/");
-      } else {
+      setTimeout(() => {
         router.push("/login");
-      }
+      }, 2000);
     } catch (err) {
       console.error(err);
-      setError("Error al crear superadmin");
+      setError("Error al conectarse con el servidor");
       setLoading(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <p>Verificando estado del sistema...</p>
+      </div>
+    );
+  }
+
+  if (!needsSetup) {
+    return null;
+  }
+
   return (
-    <section className="flex h-full w-full items-center justify-center">
-      <div className="w-auto gap-3.75 flex flex-col items-center p-6 max-w-md bg-backgroundoscuro rounded-md">
-        <h2 className="text-2xl font-semibold">Crear Superadmin inicial</h2>
-        <p className="text-sm text-muted-foreground">
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        padding: "20px",
+      }}
+    >
+      <div style={{ maxWidth: "500px", width: "100%" }}>
+        <h1>Crear Superadmin Inicial</h1>
+        <p>
           No hay usuarios en la base de datos. Por favor, crea el usuario
-          administrador de Creminox.
+          administrador.
         </p>
 
-        <form className="w-full mt-4" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-2 mb-2">
-            <label>User</label>
+        {success && (
+          <div
+            style={{
+              color: "green",
+              marginBottom: "20px",
+              padding: "10px",
+              border: "1px solid green",
+            }}
+          >
+            ✅ {success} Superadmin creado exitosamente. Redirigiendo al
+            login...
+          </div>
+        )}
+
+        {error && (
+          <div
+            style={{
+              color: "red",
+              marginBottom: "20px",
+              padding: "10px",
+              border: "1px solid red",
+            }}
+          >
+            ❌ {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: "15px" }}>
+            <label
+              htmlFor="username"
+              style={{
+                display: "block",
+                marginBottom: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Usuario:
+            </label>
             <input
+              id="username"
+              type="text"
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="input"
+              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
             />
           </div>
 
-          <div className="flex flex-col gap-2 mb-2">
-            <label>Email</label>
+          <div style={{ marginBottom: "15px" }}>
+            <label
+              htmlFor="email"
+              style={{
+                display: "block",
+                marginBottom: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Email:
+            </label>
             <input
+              id="email"
+              type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="input"
+              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
             />
           </div>
 
-          <div className="flex flex-col gap-2 mb-2">
-            <label>{t("nombre")}</label>
+          <div style={{ marginBottom: "15px" }}>
+            <label
+              htmlFor="nombre"
+              style={{
+                display: "block",
+                marginBottom: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Nombre:
+            </label>
             <input
+              id="nombre"
+              type="text"
+              required
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              className="input"
+              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
             />
           </div>
 
-          <div className="flex flex-col gap-2 mb-2">
-            <label>Apellido</label>
+          <div style={{ marginBottom: "15px" }}>
+            <label
+              htmlFor="apellido"
+              style={{
+                display: "block",
+                marginBottom: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Apellido:
+            </label>
             <input
+              id="apellido"
+              type="text"
+              required
               value={apellido}
               onChange={(e) => setApellido(e.target.value)}
-              className="input"
+              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
             />
           </div>
 
-          <div className="flex flex-col gap-2 mb-2">
-            <label>Password</label>
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              htmlFor="password"
+              style={{
+                display: "block",
+                marginBottom: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Contraseña:
+            </label>
             <input
-              required
+              id="password"
               type="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input"
+              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
             />
           </div>
 
-          <div className="flex flex-col gap-2 mb-4">
-            <label>Bootstrap Secret (si aplica)</label>
-            <input
-              placeholder="Si BOOTSTRAP_SECRET está configurado"
-              value={secret}
-              onChange={(e) => setSecret(e.target.value)}
-              className="input"
-            />
-          </div>
-
-          {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
-
-          <Button
+          <button
             type="submit"
-            className="btn-primary w-full"
             disabled={loading}
+            style={{
+              width: "100%",
+              padding: "10px",
+              fontSize: "16px",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.6 : 1,
+            }}
           >
             {loading ? "Creando..." : "Crear Superadmin"}
-          </Button>
+          </button>
         </form>
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -33,7 +33,6 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
   const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
-  // Updated useEffect to avoid synchronous setState
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 0);
     return () => clearTimeout(timer);

@@ -45,7 +45,7 @@ interface RegisterData {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!loading) {
       const publicRoutes = ["/login", "/register", "/bootstrap"];
       const isPublicRoute = publicRoutes.some((route) =>
-        pathname?.startsWith(route),
+        pathname?.startsWith(route)
       );
 
       if (needBootstrap && pathname !== "/bootstrap") {
@@ -110,16 +110,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const checkSession = async () => {
-    const apiBase =
-      process.env.NEXT_PUBLIC_API_BASE_URL;
-
     try {
       const token =
         (typeof window !== "undefined" &&
           localStorage.getItem("access_token")) ||
         undefined;
 
-      // Hydrate user from localStorage (optimistic) to avoid missing profile data in UI
       let hydratedFromStorage = false;
       let storedUserRaw: string | null = null;
       if (typeof window !== "undefined") {
@@ -146,11 +142,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             atob(b64)
               .split("")
               .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
-              .join(""),
+              .join("")
           );
           const decoded = JSON.parse(json);
-          // No verificar exp
-          // if (decoded.exp && decoded.exp * 1000 < Date.now()) return null;
           return decoded;
         } catch (e) {
           return null;
@@ -169,7 +163,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             return;
           }
         } else {
-          // Token inválido
           setUser(null);
           setLoading(false);
           return;
@@ -177,10 +170,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const res = await fetch(`${apiBase}/check`, {
-          credentials: "include",
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_AUTH_URL}/check`,
+          {
+            credentials: "include",
+            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          }
+        );
 
         if (res.ok) {
           let data: any = {};
@@ -212,7 +208,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               } catch (e) {
                 console.warn(
                   "Could not persist user from /check to localStorage",
-                  e,
+                  e
                 );
               }
               setLoading(false);
@@ -221,11 +217,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
       } catch (err) {}
-
-      // No setear user a null si fetch falla, mantener si hay token válido
-      // if (!hydratedFromStorage) {
-      //   setUser(null);
-      // }
     } catch (error) {
       console.error("Session check error:", error);
       setUser(null);
@@ -236,20 +227,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (
     username: string,
-    password: string,
+    password: string
   ): Promise<ApiResponse> => {
-    const apiBase =
-      process.env.NEXT_PUBLIC_API_BASE_URL;
-
     try {
       const body = { username, password };
 
-      const response = await fetch(`${apiBase}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          credentials: "include",
+        }
+      );
 
       let data: any = {};
       try {
@@ -290,9 +281,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               atob(b64)
                 .split("")
                 .map(
-                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`,
+                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`
                 )
-                .join(""),
+                .join("")
             );
             return JSON.parse(json);
           } catch (e) {
@@ -314,7 +305,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   username: payload.sub,
                   rol: payload.rol ?? undefined,
                   token,
-                }),
+                })
               );
           } catch (e) {
             console.warn("Could not store user in localStorage", e);
@@ -337,7 +328,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         setNeedBootstrap(false);
-        // Redirigir pasando el token en la query para que el middleware lo pueda validar y setear la cookie
         if (token) {
           router.push(`/?token=${encodeURIComponent(token)}`);
         } else {
@@ -365,17 +355,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async (): Promise<boolean> => {
-    const apiBase =
-      process.env.NEXT_PUBLIC_API_BASE_URL;
-
     try {
-      // Call backend logout to remove server-side cookie
-      const res = await fetch(`${apiBase}/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
 
-      // Try to read body safely
       let data: any = {};
       try {
         data = await res.json();
@@ -383,7 +371,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data = {};
       }
 
-      // Clear client state regardless, but signal success only if backend accepted
       setUser(null);
       try {
         if (typeof window !== "undefined") {
@@ -400,7 +387,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return res.ok && (data.success ?? true);
     } catch (error) {
       console.error("Logout error:", error);
-      // Ensure client cleanup even if backend call failed
       setUser(null);
       try {
         if (typeof window !== "undefined") {
