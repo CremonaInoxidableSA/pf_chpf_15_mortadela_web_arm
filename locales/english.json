@@ -81,6 +81,12 @@
     "ingreseApellidoUsuario": "Enter the user's last name",
     "seleccioneRol": "Select a role for the user",
     "ingreseContraseñaUsuario": "Enter a password for the user",
-    "errorCrearUsuario": "Error creating user"
+    "errorCrearUsuario": "Error creating user",
+    "detalleReclamo": "Claim Details",
+    "dondeProblema": "Where is the problem",
+    "seleccioneArea": "Select an area",
+    "reportes": "Reports",
+    "visual": "Visual",
+    "exportacion": "Exportation"
   }
 }

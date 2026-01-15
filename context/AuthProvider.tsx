@@ -111,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkSession = async () => {
     const apiBase =
-      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      process.env.NEXT_PUBLIC_API_BASE_URL;
 
     try {
       const token =
@@ -239,7 +239,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
   ): Promise<ApiResponse> => {
     const apiBase =
-      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      process.env.NEXT_PUBLIC_API_BASE_URL;
 
     try {
       const body = { username, password };
@@ -366,7 +366,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async (): Promise<boolean> => {
     const apiBase =
-      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      process.env.NEXT_PUBLIC_API_BASE_URL;
 
     try {
       // Call backend logout to remove server-side cookie

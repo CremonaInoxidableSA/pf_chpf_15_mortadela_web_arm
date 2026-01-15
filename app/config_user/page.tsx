@@ -8,12 +8,15 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+
 import FormUsuario from "./(formulario)/FormUsuario";
+import Reclamo from "./(reclamo)/reclamo";
 
 import { columns, User } from "./(table)/columns";
 import { DataTable } from "./(table)/data-table";
 
 import { useAuth } from "@/context/AuthProvider";
+import { RE } from "country-flag-icons/react/3x2";
 
 export default function ConfiguracionUsuario() {
   const { t } = useTranslation();
@@ -183,15 +186,22 @@ export default function ConfiguracionUsuario() {
 
             <FormUsuario onUserCreated={refetchUsuarios} />
           </Dialog>
+
           <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
             {t("mayus.importarBDD")}
           </Button>
           <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
             {t("mayus.exportarBDD")}
           </Button>
-          <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
-            {t("mayus.generarReclamo")}
-          </Button>
+          
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
+                {t("mayus.generarReclamo")}
+              </Button>
+            </DialogTrigger>
+            <Reclamo />
+          </Dialog>
         </div>
       </div>
       <div className="flex flex-col h-full w-4/5 gap-4">
@@ -212,7 +222,7 @@ export default function ConfiguracionUsuario() {
             t,
             deshabilitarUsuario,
             habilitarUsuario,
-            eliminarUsuario,
+            eliminarUsuario
           )}
           data={data}
         />

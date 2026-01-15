@@ -81,6 +81,12 @@
     "ingreseApellidoUsuario": "Ingrese el apellido del usuario",
     "seleccioneRol": "Seleccione un rol para el usuario",
     "ingreseContraseñaUsuario": "Ingrese una contraseña para el usuario",
-    "errorCrearUsuario": "Error al crear usuario"
+    "errorCrearUsuario": "Error al crear usuario",
+    "detalleReclamo": "Detalle el problema",
+    "dondeProblema": "¿Dónde se encuentra el problema?",
+    "seleccioneArea": "Seleccione un área",
+    "reportes": "Reportes",
+    "visual": "Visual",
+    "exportacion": "Exportación"
   }
 }
