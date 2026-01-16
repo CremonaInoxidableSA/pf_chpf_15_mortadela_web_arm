@@ -123,7 +123,7 @@ const BootstrapPage = () => {
               border: "1px solid green",
             }}
           >
-            ✅ {success} Superadmin creado exitosamente. Redirigiendo al
+            {success} Superadmin creado exitosamente. Redirigiendo al
             login...
           </div>
         )}

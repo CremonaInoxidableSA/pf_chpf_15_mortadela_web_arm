@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Logo from "@/public/logo/creminox-logo.webp";
 import { FiMapPin } from "react-icons/fi";
 import { CiMail } from "react-icons/ci";
 
@@ -60,11 +61,8 @@ const Footer: React.FC = () => {
             target="_blank"
           >
             <Image
+              src={Logo}
               alt="Creminox logo"
-              className="h-1/2 w-auto"
-              height={2000}
-              src="/logo/creminox-logo.webp"
-              width={2000}
             />
           </Link>
         </div>

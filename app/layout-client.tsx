@@ -44,7 +44,7 @@ export default function LayoutClient({
   return (
     <I18nextProvider i18n={i18n}>
       <div className="flex flex-col min-h-screen">
-        <div className="sticky top-0 left-0 w-full z-500">
+        <div className="sticky top-0 left-0 w-full z-551">
           {!hideHeaderFooter && <HeaderPrincipal currentPath={pathname} />}
           {!hideHeaderFooter && <HeaderSecundario />}
         </div>

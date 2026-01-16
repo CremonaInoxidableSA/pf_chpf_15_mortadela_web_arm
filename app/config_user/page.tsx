@@ -130,9 +130,9 @@ export default function ConfiguracionUsuario() {
 
   const getRoleName = (role?: string) => {
     const roleMap: Record<string, string> = {
-      superadmin: "Super Administrador",
-      admin: "Administrador",
-      user: "Usuario",
+      superadmin: t("min.superadmin"),
+      admin: t("min.admin"),
+      user: t("min.usuario"),
     };
     return (role && roleMap[role]) || role || "—";
   };
@@ -150,7 +150,7 @@ export default function ConfiguracionUsuario() {
 
         <div className="flex flex-col gap-5 text-left">
           <div>
-            <p className="font-semibold text-xl">{t("min.nombre")}</p>
+            <p className="font-semibold text-xl">{t("min.nom")}</p>
             <p>{fullname || "—"}</p>
           </div>
 
