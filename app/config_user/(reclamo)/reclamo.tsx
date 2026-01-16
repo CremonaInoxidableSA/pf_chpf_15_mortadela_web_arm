@@ -44,60 +44,56 @@ export default function GenerarReclamo() {
 
   const handleSubmit = async () => {
     if (!form.nombre || !form.apellido || !form.area || !form.reporte) {
-      toast.error(
-        t("min.completeAllFields") || "Por favor completa todos los campos",
-        {
-          position: "top-center",
-        }
-      );
+      toast.error(t("min.completeAllFields"), {
+        position: "top-center",
+      });
       return;
     }
 
     if (!email) {
-      toast.error(
-        t("min.errorEmail") || "Error: No se pudo obtener el email del usuario",
-        {
-          position: "top-center",
-        }
-      );
+      toast.error(t("min.errorEmail"), {
+        position: "top-center",
+      });
       return;
     }
 
     try {
-      const response = await authFetch("/api/reclamos", {
-        method: "POST",
-        body: JSON.stringify({
-          nombre: form.nombre,
-          apellido: form.apellido,
-          area: form.area,
-          reporte: form.reporte,
-          email: email,
-        }),
-      });
+      const response = await authFetch(
+        `${process.env.NEXT_PUBLIC_API_MAIL_URL}/reclamos/crear`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            nombre: form.nombre,
+            apellido: form.apellido,
+            area: form.area,
+            reporte: form.reporte,
+            email: email,
+          }),
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
-        toast.success(
-          t("min.reclamoEnviado"),
-          {
+        if (data.enviado) {
+          toast.success(t("min.reclamoEnviado"), {
             position: "top-center",
-          }
-        );
-        setForm({ nombre: "", apellido: "", area: "", reporte: "" });
-      } else {
-        toast.error(t("min.errorReclamo"),
-        {
-          position: "top-center",
+          });
+          setForm({ nombre: "", apellido: "", area: "", reporte: "" });
+        } else {
+          toast.error(t("min.errorReclamo"), {
+            position: "top-center",
+          });
         }
-      );
+      } else {
+        toast.error(t("min.errorReclamo"), {
+          position: "top-center",
+        });
       }
     } catch (error) {
       console.error("Error al enviar reclamo:", error);
-      toast.error(t("min.errorReclamo"),
-      {
+      toast.error(t("min.errorReclamo"), {
         position: "top-center",
-      }
-      );
+      });
     }
   };
 

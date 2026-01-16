@@ -60,7 +60,7 @@ const BootstrapPage = () => {
       const result = await res.json();
 
       if (!res.ok || !result.success) {
-        setError(result.message || "Error al crear superadmin");
+        setError(result.message);
         setLoading(false);
         return;
       }

@@ -91,6 +91,7 @@
     "completeAllFields": "Please complete all fields",
     "errorEmail": "Error: Could not retrieve user's email",
     "errorConexion": "Connection error. Please try again.",
-    "errorReclamo": "Error generating claim"
+    "errorReclamo": "Error generating claim",
+    "reclamoEnviado": "Claim successfully sent"
   }
 }

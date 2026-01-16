@@ -32,10 +32,10 @@ const Login = () => {
       const result = await login(username, password);
 
       if (!result.success) {
-        setError(result.error || "Error en el login");
+        setError(result.error || "Error");
       }
     } catch (err) {
-      setError("Error de conexión");
+      setError("Error");
     } finally {
       setLoading(false);
     }

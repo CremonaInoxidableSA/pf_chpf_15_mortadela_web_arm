@@ -91,6 +91,7 @@
     "completeAllFields": "Por favor completa todos los campos",
     "errorEmail": "Error: No se pudo obtener el email del usuario",
     "errorConexion": "Error de conexión. Por favor, intenta de nuevo.",
-    "errorReclamo": "Error al generar el reclamo"
+    "errorReclamo": "Error al generar el reclamo",
+    "reclamoEnviado": "Reclamo enviado exitosamente"
   }
 }

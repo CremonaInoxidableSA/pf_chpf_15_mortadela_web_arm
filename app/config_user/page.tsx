@@ -91,7 +91,7 @@ export default function ConfiguracionUsuario() {
       try {
         result = await res.json();
       } catch (e) {
-        result = { detail: res.statusText || "Error" };
+        result = { detail: res.statusText};
       }
 
       if (!res.ok) {
