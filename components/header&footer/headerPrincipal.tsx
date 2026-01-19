@@ -137,14 +137,14 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
               )}
             </li>
           ))}
+          <Link
+            href="https://creminox.com"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Image src={Logo} alt="Creminox logo" className="h-6 w-auto" />
+          </Link>
         </ul>
-        <Link
-          href="https://creminox.com"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <Image src={Logo} alt="Creminox logo"/>
-        </Link>
       </div>
     </header>
   );
