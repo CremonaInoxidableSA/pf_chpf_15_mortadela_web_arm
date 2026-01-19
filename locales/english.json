@@ -40,6 +40,19 @@
     "deshabilitar": "Disable",
     "habilitar": "Enable",
     "cargando": "Loading...",
-    "productosRealizados": "Products Made"
+    "productosRealizados": "Products Made",
+    "crearUsuario": "Create User",
+    "editarUsuario": "Edit User",
+    "cambiarContra": "Change Password",
+    "completaDatosCambiar": "Complete the data to change the password",
+    "contraActual": "Current Password",
+    "nuevaContra": "New Password",
+    "ingreseContraActual": "Enter your current password",
+    "ingreseNuevaContra": "Enter the new password",
+    "cancelar": "Cancel",
+    "cambiar": "Change",
+    "completeCampos": "Please complete all fields.",
+    "contraCambiada": "Password changed successfully.",
+    "dejarVacioMantenerContra": "Leave blank to keep current password"
   }
 }

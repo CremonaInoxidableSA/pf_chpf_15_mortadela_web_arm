@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
-import FormUsuario from "./(formulario)/FormUsuario";
+import FormUsuario from "./(formulario)/formUsuario";
+import EditarUsuario from "./(table)/editarUsuario";
 import Reclamo from "./(reclamo)/reclamo";
 
 import { columns, User } from "./(table)/columns";
@@ -21,7 +22,7 @@ export default function ConfiguracionUsuario() {
   const { t } = useTranslation();
   const refetchUsuarios = async () => {
     const res = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`
+      `${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`,
     );
     const users = await res.json();
     setData(users);
@@ -34,7 +35,7 @@ export default function ConfiguracionUsuario() {
         {
           method: "POST",
           body: JSON.stringify({ username }),
-        }
+        },
       );
 
       const result = await res.json();
@@ -45,7 +46,9 @@ export default function ConfiguracionUsuario() {
       }
 
       setData((prev) =>
-        prev.map((u) => (u.username === username ? { ...u, habilitado: 0 } : u))
+        prev.map((u) =>
+          u.username === username ? { ...u, habilitado: 0 } : u,
+        ),
       );
     } catch (err) {
       console.error(err);
@@ -59,21 +62,21 @@ export default function ConfiguracionUsuario() {
       {
         method: "POST",
         body: JSON.stringify({ username }),
-      }
+      },
     );
 
     if (!res.ok) return;
 
     setData((prev: User[]) =>
       prev.map((u: User) =>
-        u.username === username ? { ...u, habilitado: 1 } : u
-      )
+        u.username === username ? { ...u, habilitado: 1 } : u,
+      ),
     );
   };
 
   const eliminarUsuario = async (username: string) => {
     const confirmar = confirm(
-      "¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer."
+      "¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer.",
     );
 
     if (!confirmar) return;
@@ -84,14 +87,14 @@ export default function ConfiguracionUsuario() {
         {
           method: "DELETE",
           body: JSON.stringify({ username }),
-        }
+        },
       );
 
       let result: any = {};
       try {
         result = await res.json();
       } catch (e) {
-        result = { detail: res.statusText};
+        result = { detail: res.statusText };
       }
 
       if (!res.ok) {
@@ -100,7 +103,7 @@ export default function ConfiguracionUsuario() {
       }
 
       setData((prev: User[]) =>
-        prev.filter((u: User) => u.username !== username)
+        prev.filter((u: User) => u.username !== username),
       );
     } catch (error) {
       console.error(error);
@@ -108,9 +111,27 @@ export default function ConfiguracionUsuario() {
     }
   };
 
+  const editarUsuario = (id: number | undefined, username: string) => {
+    setUserIdToEdit(id);
+    setUserToEdit(username);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUserUpdated = () => {
+    setIsEditDialogOpen(false);
+    setUserToEdit(null);
+    setUserIdToEdit(undefined);
+    refetchUsuarios();
+  };
+
   const { nombre, apellido, email, rol, reporte } = useAuth();
   const [data, setData] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userToEdit, setUserToEdit] = useState<string | null>(null);
+  const [userIdToEdit, setUserIdToEdit] = useState<number | undefined>(
+    undefined,
+  );
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -214,12 +235,23 @@ export default function ConfiguracionUsuario() {
         <DataTable
           columns={columns(
             t,
+            editarUsuario,
             deshabilitarUsuario,
             habilitarUsuario,
-            eliminarUsuario
+            eliminarUsuario,
           )}
           data={data}
         />
+
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          {userToEdit && (
+            <EditarUsuario
+              onUserCreated={handleUserUpdated}
+              usernameToEdit={userToEdit}
+              userIdToEdit={userIdToEdit}
+            />
+          )}
+        </Dialog>
 
         <div className="mt-4"></div>
       </div>

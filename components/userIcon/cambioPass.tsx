@@ -75,14 +75,14 @@ const CambioPass = () => {
       }
 
       if (res.ok && (data.success ?? true)) {
-        toast.success(t("min.contraseñaCambiada"), {
+        toast.success(t("min.contraCambiada"), {
           position: "top-center",
         });
         setOpen(false);
         setForm({ current_password: "", new_password: "" });
       } else {
         const message =
-          data.detail ?? data.error ?? data.message ?? t("min.errorContraseña");
+          data.detail ?? data.error ?? data.message ?? t("min.errorContra");
         toast.error(message, {
           position: "top-center",
         });
@@ -102,40 +102,40 @@ const CambioPass = () => {
       <DialogTrigger asChild>
         <Button className="mt-2 w-full border border-botonblueborder bg-botonblue hover:bg-botonbluehover text-white cursor-pointer">
           <p className="text-botonblueborder font-medium">
-            {t("min.cambiarContraseña")}
+            {t("min.cambiarContra")}
           </p>
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-150 bg-background3 z-800">
         <DialogHeader>
-          <DialogTitle>{t("min.cambiarContraseña")}</DialogTitle>
+          <DialogTitle>{t("min.cambiarContra")}</DialogTitle>
           <DialogDescription>{t("min.completaDatosCambiar")}</DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="current_password">
-              {t("min.contraseñaActual")}
+              {t("min.contraActual")}
             </Label>
             <Input
               id="current_password"
               type="password"
               value={form.current_password}
               onChange={(e) => handleChange("current_password", e.target.value)}
-              placeholder={t("min.ingreseContraseñaActual")}
+              placeholder={t("min.ingreseContraActual")}
               required
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="new_password">{t("min.nuevaContraseña")}</Label>
+            <Label htmlFor="new_password">{t("min.nuevaContra")}</Label>
             <Input
               id="new_password"
               type="password"
               value={form.new_password}
               onChange={(e) => handleChange("new_password", e.target.value)}
-              placeholder={t("min.ingreseNuevaContraseña")}
+              placeholder={t("min.ingreseNuevaContra")}
               required
             />
           </div>

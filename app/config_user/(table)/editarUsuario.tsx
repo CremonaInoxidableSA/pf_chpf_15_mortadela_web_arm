@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { authFetch } from "@/app/api/api";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -27,12 +27,19 @@ import { Label } from "@/components/ui/label";
 
 type Props = {
   onUserCreated: () => void;
+  usernameToEdit?: string;
+  userIdToEdit?: number;
 };
 
-export default function FormUsuario({ onUserCreated }: Props) {
+export default function FormUsuario({
+  onUserCreated,
+  usernameToEdit,
+  userIdToEdit,
+}: Props) {
   const { t } = useTranslation();
-
+  const [loading, setLoading] = useState(!!usernameToEdit);
   const [form, setForm] = useState({
+    id: userIdToEdit || undefined,
     email: "",
     username: "",
     nombre: "",
@@ -42,6 +49,45 @@ export default function FormUsuario({ onUserCreated }: Props) {
     reporte: true,
     habilitado: 1,
   });
+
+  const isEditing = !!usernameToEdit;
+
+  // Cargar datos del usuario si estamos editando
+  useEffect(() => {
+    if (!usernameToEdit) return;
+
+    const fetchUserData = async () => {
+      try {
+        const res = await authFetch(
+          `${process.env.NEXT_PUBLIC_API_AUTH_URL}/data_usuario/${usernameToEdit}`,
+          { method: "GET" },
+        );
+
+        if (!res.ok) {
+          throw new Error("Error al cargar datos del usuario");
+        }
+
+        const data = await res.json();
+        setForm({
+          id: data.id || userIdToEdit,
+          email: data.email,
+          username: data.username,
+          nombre: data.nombre,
+          apellido: data.apellido,
+          rol: data.rol,
+          password: "",
+          reporte: data.reporte,
+          habilitado: data.habilitado,
+        });
+      } catch (error) {
+        alert(t("min.errorCargarUsuario") || "Error al cargar usuario");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [usernameToEdit, t]);
 
   const handleChange = (key: string, value: any) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -53,31 +99,61 @@ export default function FormUsuario({ onUserCreated }: Props) {
       return;
     }
 
-    const payload = { ...form, habilitado: form.habilitado ? 1 : 0 };
+    if (!isEditing && !form.password) {
+      alert(t("min.contraRequerida"));
+      return;
+    }
 
+    const payload = {
+      ...form,
+      habilitado: form.habilitado ? 1 : 0,
+      password: isEditing && !form.password ? undefined : form.password,
+    };
+
+    const endpoint = isEditing ? "/editar_usuario" : "/crear_usuario";
     const res = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_AUTH_URL}/crear_usuario`,
+      `${process.env.NEXT_PUBLIC_API_AUTH_URL}${endpoint}`,
       {
         method: "POST",
         body: JSON.stringify(payload),
-      }
+      },
     );
 
     if (!res.ok) {
       const err = await res.json();
-      alert(err.detail || t("min.errorCrearUsuario"));
+      alert(
+        err.detail ||
+          t(isEditing ? "min.errorEditarUsuario" : "min.errorCrearUsuario"),
+      );
       return;
     }
 
     onUserCreated();
   };
 
+  if (loading) {
+    return (
+      <DialogContent className="sm:max-w-150 bg-background3 z-800">
+        <DialogHeader>
+          <DialogTitle>{t("min.cargando") || "Cargando..."}</DialogTitle>
+        </DialogHeader>
+        <div className="flex justify-center items-center py-8">
+          <p>{t("min.cargando") || "Cargando..."}</p>
+        </div>
+      </DialogContent>
+    );
+  }
+
   return (
     <DialogContent className="sm:max-w-150 bg-background3 z-800">
       <DialogHeader>
-        <DialogTitle>{t("min.crearUsuario")}</DialogTitle>
+        <DialogTitle>
+          {isEditing ? t("min.editarUsuario") : t("min.crearUsuario")}
+        </DialogTitle>
         <DialogDescription>
-          {t("min.completaDatosCrearUsuario")}
+          {isEditing
+            ? t("min.modificaDatosUsuario")
+            : t("min.completaDatosCrearUsuario")}
         </DialogDescription>
       </DialogHeader>
 
@@ -129,7 +205,10 @@ export default function FormUsuario({ onUserCreated }: Props) {
 
         <div className="grid gap-2">
           <Label>{t("min.rol")}</Label>
-          <Select onValueChange={(v) => handleChange("rol", v)}>
+          <Select
+            value={form.rol}
+            onValueChange={(v) => handleChange("rol", v)}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder={t("min.seleccioneRol")} />
             </SelectTrigger>
@@ -145,13 +224,19 @@ export default function FormUsuario({ onUserCreated }: Props) {
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="password">{t("min.contra")}</Label>
+        <Label htmlFor="password">
+          {t("min.contra")} {isEditing && `(${t("min.opcional")})`}
+        </Label>
         <Input
           id="password"
           type="password"
           value={form.password}
           onChange={(e) => handleChange("password", e.target.value)}
-          placeholder={t("min.ingreseContraseñaUsuario")}
+          placeholder={
+            isEditing
+              ? t("min.dejarVacioMantenerContra")
+              : t("min.ingreseContraUsuario")
+          }
         />
       </div>
 
@@ -174,7 +259,9 @@ export default function FormUsuario({ onUserCreated }: Props) {
         <DialogClose asChild>
           <Button variant="outline">{t("min.cancelar")}</Button>
         </DialogClose>
-        <Button onClick={handleSubmit}>{t("min.crearUsuario")}</Button>
+        <Button onClick={handleSubmit}>
+          {isEditing ? t("min.guardarCambios") : t("min.crearUsuario")}
+        </Button>
       </DialogFooter>
     </DialogContent>
   );

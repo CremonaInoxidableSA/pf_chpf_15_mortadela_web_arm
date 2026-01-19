@@ -1,8 +1,8 @@
 {
   "mayus": {
     "general": "GENERAL",
-    "armado": "ARMING",
-    "desarmado": "DISASSEMBLY",
+    "armado": "ARMADO",
+    "desarmado": "DESARMADO",
     "titulo": "PF-MORTADELA & CREMONA INOXIDABLE S.A.",
     "crearUsuario": "CREAR USUARIO",
     "importarBDD": "IMPORTAR BDD",
@@ -40,6 +40,22 @@
     "deshabilitar": "Deshabilitar",
     "habilitar": "Habilitar",
     "cargando": "Cargando...",
-    "productosRealizados": "Productos Realizados"
+    "productosRealizados": "Productos Realizados",
+    "crearUsuario": "Crear Usuario",
+    "editarUsuario": "Editar Usuario",
+    "cambiarContra": "Cambiar Contraseña",
+    "completaDatosCambiar": "Complete los datos para cambiar la contraseña",
+    "contraActual": "Contraseña Actual",
+    "nuevaContra": "Nueva Contraseña",
+    "ingreseContraActual": "Ingrese su contraseña actual",
+    "ingreseNuevaContra": "Ingrese la nueva contraseña",
+    "cancelar": "Cancelar",
+    "cambiar": "Cambiar",
+    "completeCampos": "Por favor complete todos los campos.",
+    "contraCambiada": "Contraseña cambiada exitosamente.",
+    "dejarVacioMantenerContra": "Dejar vacío para mantener la contraseña actual",
+    "modificaDatosUsuario": "Modifica los datos del usuario",
+    "ingreseCorreoUsuario": "Ingrese el correo electrónico del usuario",
+    "asigneUsuarioUnico": "Ingrese un nombre de usuario único"
   }
 }

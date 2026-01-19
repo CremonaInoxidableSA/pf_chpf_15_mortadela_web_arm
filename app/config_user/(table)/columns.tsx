@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export type User = {
+  id?: number;
   email: string;
   username: string;
   nombre: string;
@@ -24,6 +25,7 @@ export type User = {
 
 export const columns = (
   t: (k: string) => string,
+  onEditUser: (id: number | undefined, username: string) => void,
   onDisableUser: (username: string) => void,
   onEnableUser: (username: string) => void,
   onDeleteUser: (username: string) => void,
@@ -52,7 +54,7 @@ export const columns = (
       const roleMap: Record<string, string> = {
         superadmin: t("min.superadmin"),
         admin: t("min.admin"),
-        user: t("min.usuarioNormal"),
+        user: t("min.usuario"),
       };
       return roleMap[role] ?? role ?? "—";
     },
@@ -84,7 +86,9 @@ export const columns = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>{t("min.acciones")}</DropdownMenuLabel>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => onEditUser(user.id, user.username)}
+            >
               <Edit className="mr-2 h-4 w-4" /> {t("min.editar")}
             </DropdownMenuItem>
             {user.habilitado === 1 ? (
