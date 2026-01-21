@@ -45,7 +45,7 @@ interface RegisterData {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -67,11 +67,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkSession();
   }, []);
 
+  // Re-verificar el estado de bootstrap cuando se navega a login desde bootstrap
+  useEffect(() => {
+    if (pathname === "/login" && needBootstrap) {
+      checkSession();
+    }
+  }, [pathname, needBootstrap]);
+
   useEffect(() => {
     if (!loading) {
       const publicRoutes = ["/login", "/register", "/bootstrap"];
       const isPublicRoute = publicRoutes.some((route) =>
-        pathname?.startsWith(route)
+        pathname?.startsWith(route),
       );
 
       if (needBootstrap && pathname !== "/bootstrap") {
@@ -111,6 +118,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkSession = async () => {
     try {
+      try {
+        const needsSetupRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_AUTH_URL}/needs-setup`,
+        );
+        if (needsSetupRes.ok) {
+          const needsSetupData = await needsSetupRes.json();
+          if (needsSetupData.needs_setup === true) {
+            setNeedBootstrap(true);
+            setUser(null);
+            setLoading(false);
+            return;
+          } else {
+            // Si no necesita setup, asegurar que needBootstrap sea false
+            setNeedBootstrap(false);
+          }
+        }
+      } catch (needsSetupErr) {
+        console.warn("Could not check needs-setup:", needsSetupErr);
+      }
+
       const token =
         (typeof window !== "undefined" &&
           localStorage.getItem("access_token")) ||
@@ -142,7 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             atob(b64)
               .split("")
               .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
-              .join("")
+              .join(""),
           );
           const decoded = JSON.parse(json);
           return decoded;
@@ -175,7 +202,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           {
             credentials: "include",
             headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-          }
+          },
         );
 
         if (res.ok) {
@@ -189,13 +216,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (data && data.success) {
             if (data.data && data.data.needBootstrap) {
               setNeedBootstrap(true);
+              setUser(null);
               setLoading(false);
               return;
             }
 
-            setNeedBootstrap(false);
-
             if (data.data && data.data.user) {
+              setNeedBootstrap(false);
               const incomingUser = data.data.user;
               const normalized =
                 Array.isArray(incomingUser) && incomingUser.length > 0
@@ -208,7 +235,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               } catch (e) {
                 console.warn(
                   "Could not persist user from /check to localStorage",
-                  e
+                  e,
                 );
               }
               setLoading(false);
@@ -216,7 +243,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
           }
         }
-      } catch (err) {}
+      } catch (err) {
+        console.warn("Error checking session with /check endpoint:", err);
+      }
     } catch (error) {
       console.error("Session check error:", error);
       setUser(null);
@@ -227,7 +256,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (
     username: string,
-    password: string
+    password: string,
   ): Promise<ApiResponse> => {
     try {
       const body = { username, password };
@@ -239,7 +268,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
           credentials: "include",
-        }
+        },
       );
 
       let data: any = {};
@@ -281,9 +310,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               atob(b64)
                 .split("")
                 .map(
-                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`
+                  (c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`,
                 )
-                .join("")
+                .join(""),
             );
             return JSON.parse(json);
           } catch (e) {
@@ -305,7 +334,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   username: payload.sub,
                   rol: payload.rol ?? undefined,
                   token,
-                })
+                }),
               );
           } catch (e) {
             console.warn("Could not store user in localStorage", e);
@@ -361,7 +390,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         {
           method: "POST",
           credentials: "include",
-        }
+        },
       );
 
       let data: any = {};
