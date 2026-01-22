@@ -98,60 +98,34 @@ const BootstrapPage = () => {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        padding: "20px",
-      }}
-    >
-      <div style={{ maxWidth: "500px", width: "100%" }}>
-        <h1>Crear Superadmin Inicial</h1>
-        <p>
+    <div className="w-full h-screen flex flex-col justify-center items-center">
+      <div className="h-auto w-[40vw] flex flex-col bg-background2 p-5 rounded-md">
+        <h1 className="text-4xl font-semibold w-full flex justify-center">
+          Crear Superadmin Inicial
+        </h1>
+        <p className="text-md my-3">
           No hay usuarios en la base de datos. Por favor, crea el usuario
           administrador.
         </p>
 
         {success && (
-          <div
-            style={{
-              color: "green",
-              marginBottom: "20px",
-              padding: "10px",
-              border: "1px solid green",
-            }}
-          >
-            {success} Superadmin creado exitosamente. Redirigiendo al
-            login...
+          <div>
+            {success} Superadmin creado exitosamente. Redirigiendo al login...
           </div>
         )}
 
-        {error && (
-          <div
-            style={{
-              color: "red",
-              marginBottom: "20px",
-              padding: "10px",
-              border: "1px solid red",
-            }}
-          >
-            ❌ {error}
-          </div>
-        )}
+        {error && <div>❌ {error}</div>}
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "15px" }}>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col w-full h-auto gap-2.5"
+        >
+          <div className="flex flex-col gap-1.25 h-1/3">
             <label
               htmlFor="username"
-              style={{
-                display: "block",
-                marginBottom: "5px",
-                fontWeight: "bold",
-              }}
+              className="flex font-semibold text-[17px] tracking-[0.5px]"
             >
-              Usuario:
+              Usuario
             </label>
             <input
               id="username"
@@ -159,20 +133,16 @@ const BootstrapPage = () => {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
+              className="bg-background3 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
             />
           </div>
 
-          <div style={{ marginBottom: "15px" }}>
+          <div className="flex flex-col gap-1.25 h-1/3">
             <label
               htmlFor="email"
-              style={{
-                display: "block",
-                marginBottom: "5px",
-                fontWeight: "bold",
-              }}
+              className="flex font-semibold text-[17px] tracking-[0.5px]"
             >
-              Email:
+              Email
             </label>
             <input
               id="email"
@@ -180,20 +150,16 @@ const BootstrapPage = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
+              className="bg-background3 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
             />
           </div>
 
-          <div style={{ marginBottom: "15px" }}>
+          <div className="flex flex-col gap-1.25 h-1/3">
             <label
               htmlFor="nombre"
-              style={{
-                display: "block",
-                marginBottom: "5px",
-                fontWeight: "bold",
-              }}
+              className="flex font-semibold text-[17px] tracking-[0.5px]"
             >
-              Nombre:
+              Nombre
             </label>
             <input
               id="nombre"
@@ -201,20 +167,16 @@ const BootstrapPage = () => {
               required
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
+              className="bg-background3 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
             />
           </div>
 
-          <div style={{ marginBottom: "15px" }}>
+          <div className="flex flex-col gap-1.25 h-1/3">
             <label
               htmlFor="apellido"
-              style={{
-                display: "block",
-                marginBottom: "5px",
-                fontWeight: "bold",
-              }}
+              className="flex font-semibold text-[17px] tracking-[0.5px]"
             >
-              Apellido:
+              Apellido
             </label>
             <input
               id="apellido"
@@ -222,20 +184,16 @@ const BootstrapPage = () => {
               required
               value={apellido}
               onChange={(e) => setApellido(e.target.value)}
-              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
+              className="bg-background3 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
             />
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
+          <div className="flex flex-col gap-1.25 h-1/3">
             <label
               htmlFor="password"
-              style={{
-                display: "block",
-                marginBottom: "5px",
-                fontWeight: "bold",
-              }}
+              className="flex font-semibold text-[17px] tracking-[0.5px]"
             >
-              Contraseña:
+              Contraseña
             </label>
             <input
               id="password"
@@ -243,20 +201,14 @@ const BootstrapPage = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
+              className="bg-background3 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            style={{
-              width: "100%",
-              padding: "10px",
-              fontSize: "16px",
-              cursor: loading ? "not-allowed" : "pointer",
-              opacity: loading ? 0.6 : 1,
-            }}
+            className="bg-[#e82a31] mt-4 p-1 rounded-md w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
           >
             {loading ? "Creando..." : "Crear Superadmin"}
           </button>

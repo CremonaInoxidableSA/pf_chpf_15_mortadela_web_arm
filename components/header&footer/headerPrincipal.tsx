@@ -10,7 +10,7 @@ import { JSX, useEffect, useState } from "react";
 
 import DropdownBanderas from "@/components/translate/dropdownBanderas";
 import UserIcon from "@/components/userIcon/userIcon";
-import Logo from "@/public/logo/creminox.webp";
+import Logo from "@/public/logo/creminox_innovate.webp";
 
 interface Header {
   currentPath: string;

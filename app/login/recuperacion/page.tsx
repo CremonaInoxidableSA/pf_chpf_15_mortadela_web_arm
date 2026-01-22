@@ -1,50 +1,54 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/context/AuthProvider";
 
 import LogoBase64 from "@/public/logo/LogoBase64";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 const Spinner = () => (
   <div className="border border-solid border-[#f3f3f3] border-t-[#e82a31] rounded-[100%] w-6 h-6 animate-spin" />
 );
 
-const Login = () => {
+const Recuperacion = () => {
   const { t } = useTranslation();
 
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error, {
-        position: "top-center",
-      });
-    }
-  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess(false);
     setLoading(true);
 
     try {
-      const result = await login(username, password);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/recuperacionCheck`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email }),
+          credentials: "include",
+        },
+      );
 
-      if (!result.success) {
-        setError(result.error || "Error");
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSuccess(true);
+        setError("");
+      } else {
+        setError(data.error || data.message || "Error al enviar la solicitud");
       }
     } catch (err) {
-      setError("Error");
+      setError("Error de conexión con el servidor");
     } finally {
       setLoading(false);
     }
@@ -54,10 +58,30 @@ const Login = () => {
     <section className="flex h-full w-full items-center justify-center">
       <div className="w-auto h-[60vh] gap-3.75 flex flex-col items-center p-[3rem_4rem_2rem_4rem] max-w-480  bg-backgroundoscuro rounded-md">
         <LogoBase64 className="flex w-[65%] p-0 h-auto" />
+
         <form
           className="flex flex-col w-full justify-between h-[60%] gap-2.5"
           onSubmit={handleSubmit}
         >
+          <div className="flex flex-col gap-1.25 h-1/3">
+            <label
+              htmlFor="email"
+              className="flex font-semibold text-[17px] tracking-[0.5px]"
+            >
+              {t("min.email")}
+            </label>
+            <input
+              className="bg-background2 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
           <div className="flex flex-col gap-1.25 h-1/3">
             <label
               htmlFor="email"
@@ -77,43 +101,35 @@ const Login = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-1.25 h-1/3">
-            <label
-              htmlFor="password"
-              className="flex font-semibold text-[17px] tracking-[0.5px]"
-            >
-              {t("min.contra")}
-            </label>
-            <input
-              className="bg-background2 p-1 rounded-md w-full h-2/3 flex items-center justify-center border-none px-4"
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+          {error && (
+            <div className="text-red-600 text-sm text-center">{error}</div>
+          )}
+
+          {success && (
+            <div className="text-green-600 text-sm text-center">
+              {t("min.correoEnviado") ||
+                "Correo de recuperación enviado exitosamente"}
+            </div>
+          )}
 
           <Button
             className="bg-[#e82a31] mt-1.25 p-1 rounded-md w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
             disabled={loading}
             onClick={handleSubmit}
           >
-            {loading ? <Spinner /> : t("min.acceder")}
+            {loading ? <Spinner /> : t("min.enviarCorreoRecuperacion")}
           </Button>
         </form>
 
         <Link
           className="w-full flex text-center justify-center text-[#5d5d5d] h-auto text-[14px] font-semibold tracking-[0.5px] cursor-pointer hover:text-[#e82a31] ease-in-out"
-          href="/login/recuperacion"
+          href="/login"
         >
-          {t("min.recuperar")}
+          {t("min.inicieSesion")}
         </Link>
       </div>
     </section>
   );
 };
 
-export default Login;
+export default Recuperacion;

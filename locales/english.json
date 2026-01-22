@@ -53,6 +53,17 @@
     "cambiar": "Change",
     "completeCampos": "Please complete all fields.",
     "contraCambiada": "Password changed successfully.",
-    "dejarVacioMantenerContra": "Leave blank to keep current password"
+    "dejarVacioMantenerContra": "Leave blank to keep current password",
+    "modificaDatosUsuario": "Modify user data",
+    "ingreseCorreoUsuario": "Enter the user's email",
+    "asigneUsuarioUnico": "Enter a unique username",
+    "guardarCambios": "Save Changes",
+    "recuperarContra": "Recover Password",
+    "inicieSesion": "Login",
+    "enviarCorreoRecuperacion": "Send Recovery Email",
+    "ingreseNombreUsuario": "Enter the user's first name",
+    "ingreseApellidoUsuario": "Enter the user's last name",
+    "seleccioneRol": "Select a role for the user",
+    "ingreseContraseñaUsuario": "Enter a password for the user"
   }
 }
