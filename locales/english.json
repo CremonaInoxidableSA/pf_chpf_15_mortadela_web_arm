@@ -64,6 +64,8 @@
     "ingreseNombreUsuario": "Enter the user's first name",
     "ingreseApellidoUsuario": "Enter the user's last name",
     "seleccioneRol": "Select a role for the user",
-    "ingreseContraseñaUsuario": "Enter a password for the user"
+    "ingreseContraseñaUsuario": "Enter a password for the user",
+    "errorEnvioCorreo": "Error sending the request",
+    "correoEnviado": "Recovery email sent successfully."
   }
 }

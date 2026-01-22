@@ -64,6 +64,8 @@
     "ingreseNombreUsuario": "Ingrese el nombre de usuario",
     "ingreseApellidoUsuario": "Ingrese el apellido del usuario",
     "seleccioneRol": "Seleccione un rol para el usuario",
-    "ingreseContraseñaUsuario": "Ingrese una contraseña para el usuario"
+    "ingreseContraseñaUsuario": "Ingrese una contraseña para el usuario",
+    "errorEnvioCorreo": "Error al enviar la solicitud",
+    "correoEnviado": "Correo de recuperación enviado exitosamente."
   }
 }

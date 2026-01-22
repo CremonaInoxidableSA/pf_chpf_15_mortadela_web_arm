@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import LogoBase64 from "@/public/logo/LogoBase64";
 import { Button } from "@/components/ui/button";
@@ -17,38 +18,44 @@ const Recuperacion = () => {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/recuperacionCheck`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email }),
-          credentials: "include",
-        },
-      );
+      const apiUrl = process.env.NEXT_PUBLIC_API_AUTH_URL;
+
+      if (!apiUrl) {
+        toast.error("Error: URL del servidor no configurada");
+        setLoading(false);
+        return;
+      }
+
+      const url = new URL("/recuperacion_check", apiUrl).toString();
+      console.log("Realizando solicitud a:", url);
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email }),
+        credentials: "include",
+      });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setSuccess(true);
-        setError("");
+        toast.success(
+          t("min.correoEnviado")
+        );
       } else {
-        setError(data.error || data.message || "Error al enviar la solicitud");
+        toast.error(data.error || data.message || t("min.errorEnvioCorreo"));
       }
     } catch (err) {
-      setError("Error de conexión con el servidor");
+      console.error("Error en recuperación:", err);
+      toast.error("Error de conexión con el servidor");
     } finally {
       setLoading(false);
     }
@@ -101,21 +108,10 @@ const Recuperacion = () => {
             />
           </div>
 
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
-          )}
-
-          {success && (
-            <div className="text-green-600 text-sm text-center">
-              {t("min.correoEnviado") ||
-                "Correo de recuperación enviado exitosamente"}
-            </div>
-          )}
-
           <Button
-            className="bg-[#e82a31] mt-1.25 p-1 rounded-md w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
             disabled={loading}
             onClick={handleSubmit}
+            className="bg-[#e82a31] mt-1.25 p-1 rounded-md w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
           >
             {loading ? <Spinner /> : t("min.enviarCorreoRecuperacion")}
           </Button>
