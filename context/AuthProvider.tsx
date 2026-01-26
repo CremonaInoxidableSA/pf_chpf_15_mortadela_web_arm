@@ -67,7 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkSession();
   }, []);
 
-  // Re-verificar el estado de bootstrap cuando se navega a login desde bootstrap
   useEffect(() => {
     if (pathname === "/login" && needBootstrap) {
       checkSession();
@@ -76,17 +75,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!loading) {
-      const publicRoutes = ["/login", "/register", "/bootstrap"];
+      if (!pathname) {
+        return;
+      }
+
+      const publicRoutes = [
+        "/login",
+        "/register",
+        "/bootstrap",
+        "/login/recuperacion",
+        "/login/recuperacion/reset_pass",
+      ];
+
       const isPublicRoute = publicRoutes.some((route) =>
-        pathname?.startsWith(route),
+        pathname.startsWith(route),
       );
+
+      if (isPublicRoute) {
+        return;
+      }
 
       if (needBootstrap && pathname !== "/bootstrap") {
         router.push("/bootstrap");
         return;
       }
 
-      if (!user && !isPublicRoute && pathname !== "/") {
+      if (!user && pathname !== "/") {
         router.push("/login");
       }
 

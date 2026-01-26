@@ -22,12 +22,11 @@ export default function LayoutClient({
     "/signup",
     "/login",
     "/login/recuperacion",
+    "/login/recuperacion/reset_pass",
     "/bootstrap",
   ].includes(pathname);
 
-  const isDesarmadoPage =
-    pathname === "/armado" ||
-    pathname === "/desarmado";
+  const isDesarmadoPage = pathname === "/armado" || pathname === "/desarmado";
 
   useEffect(() => {
     const saved =
@@ -50,7 +49,9 @@ export default function LayoutClient({
         </div>
         <main
           className={`grow flex ${
-            pathname === "/login" || pathname === "/login/recuperacion"
+            pathname === "/login" ||
+            pathname === "/login/recuperacion" ||
+            pathname === "/login/recuperacion/reset_pass"
               ? "flex justify-center items-center"
               : ""
           }`}

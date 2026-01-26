@@ -4,11 +4,19 @@ import { verifyToken } from "./lib/auth";
 
 const publicRoutes = ["/login", "/register", "/bootstrap"];
 const adminRoutes = ["/config_user", "/api/config"];
+// Rutas que usan tokens propios (no JWT de autenticación)
+const routesWithOwnToken = ["/login/recuperacion/reset_pass"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // No interceptar tokens en rutas que manejan sus propios tokens (ej: reset password)
+  const usesOwnToken = routesWithOwnToken.some((route) =>
+    pathname.startsWith(route),
+  );
+
   const tokenFromQuery = request.nextUrl.searchParams.get("token");
-  if (tokenFromQuery) {
+  if (tokenFromQuery && !usesOwnToken) {
     const verified = verifyToken(tokenFromQuery);
     if (verified) {
       const cleanUrl = new URL(request.nextUrl.pathname, request.url);
@@ -35,7 +43,7 @@ export function proxy(request: NextRequest) {
   }
 
   const isPublicRoute = publicRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   if (isPublicRoute) {
