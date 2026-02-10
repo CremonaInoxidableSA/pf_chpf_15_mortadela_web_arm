@@ -66,6 +66,23 @@
     "seleccioneRol": "Seleccione un rol para el usuario",
     "ingreseContraseñaUsuario": "Ingrese una contraseña para el usuario",
     "errorEnvioCorreo": "Error al enviar la solicitud",
-    "correoEnviado": "Correo de recuperación enviado exitosamente."
+    "correoEnviado": "Correo de recuperación enviado exitosamente.",
+    "tokenInvalidoExpirado": "Token inválido o expirado",
+    "errorConexionServidor": "Error de conexión con el servidor",
+    "contrasNoCoinciden": "Las contraseñas no coinciden",
+    "contraMinima": "La contraseña debe tener al menos 6 caracteres",
+    "errorUrlServidorNoConfigurada": "URL del servidor no configurada",
+    "contraActualizadaExitosamente": "Contraseña actualizada exitosamente",
+    "errorActualizarContra": "Error al actualizar la contraseña",
+    "verificandoToken": "Verificando token...",
+    "solicitarNuevoEnlace": "Solicitar nuevo enlace",
+    "volverInicioSesion": "Volver a inicio de sesión",
+    "restablecerContrasena": "Restablecer contraseña",
+    "para": "Para",
+    "nuevaContrasena": "Nueva contraseña",
+    "minimo6Caracteres": "Mínimo 6 caracteres",
+    "confirmarContrasena": "Confirmar contraseña",
+    "repiteContrasena": "Repite la contraseña",
+    "actualizarContrasena": "Actualizar contraseña"
   }
 }

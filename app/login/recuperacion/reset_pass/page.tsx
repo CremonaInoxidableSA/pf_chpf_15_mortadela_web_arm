@@ -54,12 +54,11 @@ const ResetPassword = () => {
         setTokenValid(true);
         setEmail(data.email);
       } else {
-        toast.error(data.error || "Token inválido o expirado");
+        toast.error(data.error || t("min.tokenInvalidoExpirado"));
         setTokenValid(false);
       }
     } catch (err) {
-      console.error("Error al verificar token:", err);
-      toast.error("Error de conexión con el servidor");
+      toast.error(t("min.errorConexionServidor"));
       setTokenValid(false);
     } finally {
       setValidatingToken(false);
@@ -70,12 +69,12 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      toast.error("Las contraseñas no coinciden");
+      toast.error(t("min.contrasNoCoinciden"));
       return;
     }
 
     if (newPassword.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
+      toast.error(t("min.contraMinima"));
       return;
     }
 
@@ -85,7 +84,7 @@ const ResetPassword = () => {
       const apiUrl = process.env.NEXT_PUBLIC_API_AUTH_URL;
 
       if (!apiUrl) {
-        toast.error("Error: URL del servidor no configurada");
+        toast.error(t("min.errorUrlServidorNoConfigurada"));
         setLoading(false);
         return;
       }
@@ -105,16 +104,15 @@ const ResetPassword = () => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        toast.success("Contraseña actualizada exitosamente");
+        toast.success(t("min.contraActualizadaExitosamente"));
         setTimeout(() => {
           router.push("/login");
         }, 2000);
       } else {
-        toast.error(data.error || "Error al actualizar la contraseña");
+        toast.error(data.error || t("min.errorActualizarContra"));
       }
     } catch (err) {
-      console.error("Error al resetear contraseña:", err);
-      toast.error("Error de conexión con el servidor");
+      toast.error(t("min.errorConexionServidor"));
     } finally {
       setLoading(false);
     }
@@ -127,7 +125,7 @@ const ResetPassword = () => {
           <LogoBase64 className="flex w-[65%] p-0 h-auto" />
           <div className="flex flex-col items-center gap-4">
             <Spinner />
-            <p className="text-center">Verificando token...</p>
+            <p className="text-center">{t("min.verificandoToken")}</p>
           </div>
         </div>
       </section>
@@ -141,19 +139,19 @@ const ResetPassword = () => {
           <LogoBase64 className="flex w-[65%] p-0 h-auto" />
           <div className="flex flex-col items-center gap-4 w-full">
             <p className="text-center text-red-500 font-semibold">
-              Token inválido o expirado
+              {t("min.tokenInvalidoExpirado")}
             </p>
             <Link
               className="w-full flex text-center justify-center text-[#5d5d5d] h-auto text-[14px] font-semibold tracking-[0.5px] cursor-pointer hover:text-[#e82a31] ease-in-out"
               href="/login/recuperacion"
             >
-              Solicitar nuevo enlace
+              {t("min.solicitarNuevoEnlace")}
             </Link>
             <Link
               className="w-full flex text-center justify-center text-[#5d5d5d] h-auto text-[14px] font-semibold tracking-[0.5px] cursor-pointer hover:text-[#e82a31] ease-in-out"
               href="/login"
             >
-              Volver al inicio de sesión
+              {t("min.volverInicioSesion")}
             </Link>
           </div>
         </div>
@@ -167,8 +165,8 @@ const ResetPassword = () => {
         <LogoBase64 className="flex w-[65%] p-0 h-auto" />
 
         <div className="w-full text-center mb-4">
-          <h2 className="text-xl font-semibold mb-2">Restablecer Contraseña</h2>
-          <p className="text-sm text-gray-400">Para: {email}</p>
+          <h2 className="text-xl font-semibold mb-2">{t("min.restablecerContrasena")}</h2>
+          <p className="text-sm text-gray-400">{t("min.para")}: {email}</p>
         </div>
 
         <form
@@ -180,7 +178,7 @@ const ResetPassword = () => {
               htmlFor="newPassword"
               className="flex font-semibold text-[17px] tracking-[0.5px]"
             >
-              Nueva Contraseña
+              {t("min.nuevaContrasena")}
             </label>
             <input
               className="bg-background2 p-3 rounded-md w-full flex items-center justify-center border-none px-4"
@@ -192,7 +190,7 @@ const ResetPassword = () => {
               minLength={6}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Mínimo 6 caracteres"
+              placeholder={t("min.minimo6Caracteres")}
             />
           </div>
 
@@ -201,7 +199,7 @@ const ResetPassword = () => {
               htmlFor="confirmPassword"
               className="flex font-semibold text-[17px] tracking-[0.5px]"
             >
-              Confirmar Contraseña
+              {t("min.confirmarContrasena")}
             </label>
             <input
               className="bg-background2 p-3 rounded-md w-full flex items-center justify-center border-none px-4"
@@ -213,7 +211,7 @@ const ResetPassword = () => {
               minLength={6}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Repite la contraseña"
+              placeholder={t("min.repiteContrasena")}
             />
           </div>
 
@@ -222,7 +220,7 @@ const ResetPassword = () => {
             type="submit"
             className="bg-[#e82a31] mt-1.25 p-3 rounded-md w-full h-13 flex items-center justify-center border-none font-semibold cursor-pointer disabled:bg-[#a82328] disabled:cursor-not-allowed text-white"
           >
-            {loading ? <Spinner /> : "Actualizar Contraseña"}
+            {loading ? <Spinner /> : t("min.actualizarContrasena")}
           </Button>
         </form>
 
@@ -230,7 +228,7 @@ const ResetPassword = () => {
           className="w-full flex text-center justify-center text-[#5d5d5d] h-auto text-[14px] font-semibold tracking-[0.5px] cursor-pointer hover:text-[#e82a31] ease-in-out mt-2"
           href="/login"
         >
-          Volver al inicio de sesión
+          {t("min.volverInicioSesion")}
         </Link>
       </div>
     </section>
