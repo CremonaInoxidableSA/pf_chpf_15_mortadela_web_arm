@@ -17,7 +17,6 @@ interface SelectConfiguracionProps {
 
 const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
   onChange,
-  onClick,
   disabled = false,
 }) => {
   const [recetas, setRecetas] = useState<Receta[]>([]);
@@ -44,6 +43,8 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
             onChange(primerReceta.id.toString());
           }
         }
+      } catch (error) {
+        console.error("Error al cargar recetas:", error);
       } finally {
         setLoading(false);
       }
@@ -81,13 +82,6 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
           <option value="">No hay recetas disponibles</option>
         )}
       </select>
-      <button
-        className="bg-blue flexfjustify-center items-center text-white rounded-sm disabled:opacity-50 w-1/3"
-        disabled={disabled || loading}
-        onClick={onClick}
-      >
-        Aplicar
-      </button>
     </div>
   );
 };

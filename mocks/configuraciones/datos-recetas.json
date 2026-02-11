@@ -1,0 +1,68 @@
+{
+  "receta_1": {
+    "DatosRecetas": [
+      {
+        "nroGripper": 1,
+        "tipoMolde": "Molde A",
+        "anchoProducto": 120,
+        "altoProducto": 85,
+        "largoProducto": 250,
+        "pesoProducto": 2.5,
+        "moldesNivel": 6,
+        "productosMolde": 4,
+        "altoMolde": 100,
+        "largoMolde": 300,
+        "ajusteAltura": 50,
+        "cantidadNiveles": 10,
+        "deltaNiveles": 120,
+        "n1Altura": 350,
+        "bastidorAltura": 1800,
+        "ajusteN1Altura": 380
+      }
+    ]
+  },
+  "receta_2": {
+    "DatosRecetas": [
+      {
+        "nroGripper": 2,
+        "tipoMolde": "Molde B",
+        "anchoProducto": 100,
+        "altoProducto": 70,
+        "largoProducto": 200,
+        "pesoProducto": 1.8,
+        "moldesNivel": 8,
+        "productosMolde": 3,
+        "altoMolde": 90,
+        "largoMolde": 250,
+        "ajusteAltura": 45,
+        "cantidadNiveles": 8,
+        "deltaNiveles": 100,
+        "n1Altura": 300,
+        "bastidorAltura": 1600,
+        "ajusteN1Altura": 320
+      }
+    ]
+  },
+  "receta_3": {
+    "DatosRecetas": [
+      {
+        "nroGripper": 3,
+        "tipoMolde": "Molde C",
+        "anchoProducto": 80,
+        "altoProducto": 60,
+        "largoProducto": 180,
+        "pesoProducto": 1.2,
+        "moldesNivel": 10,
+        "productosMolde": 2,
+        "altoMolde": 75,
+        "largoMolde": 220,
+        "ajusteAltura": 35,
+        "cantidadNiveles": 6,
+        "deltaNiveles": 90,
+        "n1Altura": 280,
+        "bastidorAltura": 1400,
+        "ajusteN1Altura": 300
+      }
+    ]
+  }
+}

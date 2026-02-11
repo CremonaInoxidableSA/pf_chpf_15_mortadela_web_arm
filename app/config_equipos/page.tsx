@@ -1,16 +1,16 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import AppContext from "@/context/AppContext";
+import { useAuth } from "@/context/AuthProvider";
 import { useConfiguracionData } from "@/hooks/configuraciones/useConfiguracionData";
 import RecetasSection from "@/components/configuraciones/RecetasSection";
 import DatosGeneralesSection from "@/components/configuraciones/DatosGeneralesSection";
 import CorreccionesSection from "@/components/configuraciones/CorreccionesSection";
 
 const Configuraciones = () => {
-  const { user } = useContext(AppContext);
+  const { user } = useAuth();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -27,17 +27,21 @@ const Configuraciones = () => {
       return;
     }
 
-    if (user.role !== "ADMIN") {
+    if (user.rol !== "admin" && user.rol !== "superadmin") {
       router.push("/completo");
     }
   }, [user, router]);
 
-  if (!mounted || !user || user.role !== "ADMIN") {
+  if (
+    !mounted ||
+    !user ||
+    (user.rol !== "admin" && user.rol !== "superadmin")
+  ) {
     return null;
   }
 
   return (
-    <div className="flex flex-row justify-between gap-5 p-5 h-[50rem]">
+    <div className="flex flex-row justify-between gap-5 p-5 h-200 w-full">
       <RecetasSection
         datosGeneralesIzq={configuracionData.datosGeneralesIzq}
         loading={configuracionData.loading}

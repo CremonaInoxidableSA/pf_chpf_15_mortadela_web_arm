@@ -5,6 +5,7 @@ import "./globals.css";
 import LayoutClient from "./layout-client";
 import { ThemeProvider } from "@/components/theme/themeProvider";
 import { AuthProvider } from "@/context/AuthProvider";
+import { AppProvider } from "@/context/AppContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +46,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <LayoutClient>{children}</LayoutClient>
+            <AppProvider>
+              <LayoutClient>{children}</LayoutClient>
+            </AppProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

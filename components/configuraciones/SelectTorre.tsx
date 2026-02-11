@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import { configuracionesApi } from "@/services/configuracionesApi";
+import { MOCK_MODE } from "@/services/mockConfiguracionesApi";
 import { useApp } from "../../context/AppContext";
 
 interface Torre {
@@ -29,44 +31,38 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
   const [torres, setTorres] = useState<Torre[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Verificar si podemos hacer llamadas API
+  const canMakeApiCalls = MOCK_MODE || !!targetAddress;
+
   useEffect(() => {
     const loadTorresAndSelectFirst = async () => {
       if (!selectedReceta) {
         setTorres([]);
         onTorresChange([]);
         onChange("");
-
         return;
       }
 
-      if (!targetAddress) {
+      if (!canMakeApiCalls) {
         return;
       }
 
       setLoading(true);
       try {
-        const response = await fetch(
-          `http://${targetAddress}/configuraciones/lista-torres?id_receta=${selectedReceta}`,
-        );
+        const data =
+          await configuracionesApi.obtenerListaTorres(selectedReceta);
+        const torresData = data.ListadoTorres || [];
 
-        if (response.ok) {
-          const data = await response.json();
-          const torresData = data.ListadoTorres || [];
+        setTorres(torresData);
+        onTorresChange(torresData);
 
-          setTorres(torresData);
-          onTorresChange(torresData);
-
-          if (torresData.length > 0) {
-            onChange(torresData[0].id);
-          } else {
-            onChange("");
-          }
+        if (torresData.length > 0) {
+          onChange(torresData[0].id);
         } else {
-          setTorres([]);
-          onTorresChange([]);
           onChange("");
         }
-      } catch {
+      } catch (error) {
+        console.error("Error al cargar torres:", error);
         setTorres([]);
         onTorresChange([]);
         onChange("");
@@ -76,7 +72,8 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
     };
 
     loadTorresAndSelectFirst();
-  }, [selectedReceta]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedReceta, canMakeApiCalls]);
 
   useEffect(() => {
     if (refreshTorres) {

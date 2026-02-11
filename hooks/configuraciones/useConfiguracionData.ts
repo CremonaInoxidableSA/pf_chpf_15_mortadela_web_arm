@@ -18,6 +18,7 @@ import { GoDotFill } from "react-icons/go";
 import React from "react";
 
 import { configuracionesApi } from "@/services/configuracionesApi";
+import { MOCK_MODE } from "@/services/mockConfiguracionesApi";
 import { validacionesConfiguraciones } from "@/utils/configuraciones/validaciones";
 import { useApp } from "@/context/AppContext";
 import NGripper from "@/public/equipos/Equipo_Gripper1.png";
@@ -142,13 +143,17 @@ const datosIniciales = {
 export const useConfiguracionData = () => {
   const [loading, setLoading] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [selectedReceta, setSelectedReceta] = useState("1");
+  const [selectedReceta, setSelectedReceta] = useState<string>("");
   const [selectedTorre, setSelectedTorre] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState(1);
   const [selectedNivel, setSelectedNivel] = useState<TipoNivel>("HN");
   const [torres, setTorres] = useState<Torre[]>([]);
+  const [initialized, setInitialized] = useState(false);
 
   const { targetAddress } = useApp();
+
+  // Verificar si podemos hacer llamadas API (mock mode o con targetAddress)
+  const canMakeApiCalls = MOCK_MODE || !!targetAddress;
 
   const [datosGeneralesIzq, setDatosRecetas1] = useState<DatoReceta[]>(
     datosIniciales.datosGeneralesIzq,
@@ -170,7 +175,7 @@ export const useConfiguracionData = () => {
   const [datosCorrecionesNivelesHN, setDatosCorrecionesNivelesHN] = useState<
     DatoCorreccion[]
   >(
-    Array(11)
+    Array(10)
       .fill(null)
       .map((_, index) => ({
         id: index + 1,
@@ -182,7 +187,7 @@ export const useConfiguracionData = () => {
   const [datosCorrecionesNivelesChG, setDatosCorrecionesNivelesChG] = useState<
     DatoCorreccion[]
   >(
-    Array(11)
+    Array(10)
       .fill(null)
       .map((_, index) => ({
         id: index + 1,
@@ -194,7 +199,7 @@ export const useConfiguracionData = () => {
   const [datosCorrecionesNivelesChB, setDatosCorrecionesNivelesChB] = useState<
     DatoCorreccion[]
   >(
-    Array(11)
+    Array(10)
       .fill(null)
       .map((_, index) => ({
         id: index + 1,
@@ -206,7 +211,7 @@ export const useConfiguracionData = () => {
   const [datosCorrecionesNivelesFA, setDatosCorrecionesNivelesFA] = useState<
     DatoCorreccion[]
   >(
-    Array(11)
+    Array(10)
       .fill(null)
       .map((_, index) => ({
         id: index + 1,
@@ -218,7 +223,7 @@ export const useConfiguracionData = () => {
   const [datosCorrecionesNivelesuHN, setDatosCorrecionesNivelesuHN] = useState<
     DatoCorreccion[]
   >(
-    Array(11)
+    Array(10)
       .fill(null)
       .map((_, index) => ({
         id: index + 1,
@@ -374,13 +379,22 @@ export const useConfiguracionData = () => {
   };
 
   const cargarTorres = async (idReceta: string) => {
-    const data = await configuracionesApi.obtenerListaTorres(idReceta);
+    try {
+      const data = await configuracionesApi.obtenerListaTorres(idReceta);
 
-    if (data.ListadoTorres) {
-      setTorres(data.ListadoTorres);
-      if (!selectedTorre && data.ListadoTorres.length > 0) {
-        setSelectedTorre(data.ListadoTorres[0].id);
+      if (data.ListadoTorres) {
+        setTorres(data.ListadoTorres);
+        // Siempre seleccionar la primera torre al cambiar de receta
+        if (data.ListadoTorres.length > 0) {
+          setSelectedTorre(data.ListadoTorres[0].id);
+        } else {
+          setSelectedTorre(null);
+        }
       }
+    } catch (error) {
+      console.error("Error al cargar torres:", error);
+      setTorres([]);
+      setSelectedTorre(null);
     }
   };
 
@@ -426,15 +440,20 @@ export const useConfiguracionData = () => {
         prefijo: string,
       ) => {
         const nivelesArray = Array.isArray(datos) ? datos : [];
+        // Usamos 10 niveles máximo según la estructura definida
+        const maxNiveles = 10;
 
         setter(
-          [...nivelesArray, ...Array(11 - nivelesArray.length).fill(null)].map(
-            (dato, index) => ({
+          [
+            ...nivelesArray,
+            ...Array(Math.max(0, maxNiveles - nivelesArray.length)).fill(null),
+          ]
+            .slice(0, maxNiveles)
+            .map((dato, index) => ({
               id: index + 1,
               texto: `${prefijo}${index + 1}`,
               dato: dato?.toString() ?? "0",
-            }),
-          ),
+            })),
         );
       };
 
@@ -468,18 +487,49 @@ export const useConfiguracionData = () => {
     }
   };
 
+  // Cargar datos iniciales: lista-recetas primero
   useEffect(() => {
-    if (targetAddress && selectedReceta) {
+    const cargarDatosIniciales = async () => {
+      if (!canMakeApiCalls || initialized) return;
+
+      try {
+        setLoading(true);
+        // 1. Primero obtenemos lista de recetas
+        const recetasData = await configuracionesApi.obtenerListaRecetas();
+
+        if (
+          recetasData.ListadoRecetas &&
+          recetasData.ListadoRecetas.length > 0
+        ) {
+          // Seleccionar la primera receta automáticamente
+          const primeraReceta = recetasData.ListadoRecetas[0].id.toString();
+          setSelectedReceta(primeraReceta);
+          setInitialized(true);
+        }
+      } catch (error) {
+        console.error("Error al cargar datos iniciales:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarDatosIniciales();
+  }, [canMakeApiCalls, initialized]);
+
+  // Cuando cambia la receta seleccionada, cargar datos de receta y torres
+  useEffect(() => {
+    if (canMakeApiCalls && selectedReceta) {
       cargarDatosReceta(selectedReceta);
       cargarTorres(selectedReceta);
     }
-  }, [selectedReceta, targetAddress]);
+  }, [selectedReceta, canMakeApiCalls]);
 
+  // Cuando cambia la torre seleccionada, cargar datos de niveles
   useEffect(() => {
-    if (targetAddress && selectedTorre && selectedReceta) {
+    if (canMakeApiCalls && selectedTorre && selectedReceta) {
       cargarDatosTorre(selectedTorre);
     }
-  }, [selectedTorre, selectedReceta, targetAddress]);
+  }, [selectedTorre, selectedReceta, canMakeApiCalls]);
 
   const obtenerDatosActuales = () => {
     if (selectedOption === 1) return datosCorrecionesTorre;

@@ -1,0 +1,23 @@
+{
+  "receta_1": {
+    "ListadoTorres": [
+      { "id": "TORRE_001" },
+      { "id": "TORRE_002" },
+      { "id": "TORRE_003" },
+      { "id": "TORRE_004" }
+    ]
+  },
+  "receta_2": {
+    "ListadoTorres": [
+      { "id": "TORRE_005" },
+      { "id": "TORRE_006" }
+    ]
+  },
+  "receta_3": {
+    "ListadoTorres": [
+      { "id": "TORRE_007" },
+      { "id": "TORRE_008" },
+      { "id": "TORRE_009" }
+    ]
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "TORRE_001": {
+    "DatosTorre": {
+      "hBastidor": 10,
+      "hAjuste": 5,
+      "hAjusteN1": 8,
+      "DisteNivel": 3,
+      "ActualizarTAG": "TORRE_001"
+    },
+    "DatosNivelesHN": [100, 220, 340, 460, 580, 700, 820, 940, 1060, 1180],
+    "DatosNivelesChG": [5, 3, 4, 2, 6, 3, 5, 4, 2, 3],
+    "DatosNivelesChB": [2, 1, 3, 2, 1, 2, 3, 1, 2, 1],
+    "DatosNivelesFallas": [0, 0, 1, 0, 0, 2, 0, 0, 0, 1],
+    "DatosNivelesuHN": [98, 218, 338, 458, 578, 698, 818, 938, 1058, 1178]
+  },
+  "TORRE_002": {
+    "DatosTorre": {
+      "hBastidor": 12,
+      "hAjuste": 7,
+      "hAjusteN1": 10,
+      "DisteNivel": 4,
+      "ActualizarTAG": "TORRE_002"
+    },
+    "DatosNivelesHN": [105, 225, 345, 465, 585, 705, 825, 945, 1065, 1185],
+    "DatosNivelesChG": [4, 5, 3, 4, 5, 3, 4, 5, 3, 4],
+    "DatosNivelesChB": [1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+    "DatosNivelesFallas": [0, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+    "DatosNivelesuHN": [103, 223, 343, 463, 583, 703, 823, 943, 1063, 1183]
+  },
+  "TORRE_003": {
+    "DatosTorre": {
+      "hBastidor": 8,
+      "hAjuste": 4,
+      "hAjusteN1": 6,
+      "DisteNivel": 2,
+      "ActualizarTAG": "TORRE_003"
+    },
+    "DatosNivelesHN": [95, 215, 335, 455, 575, 695, 815, 935, 1055, 1175],
+    "DatosNivelesChG": [3, 2, 4, 3, 2, 4, 3, 2, 4, 3],
+    "DatosNivelesChB": [2, 3, 2, 3, 2, 3, 2, 3, 2, 3],
+    "DatosNivelesFallas": [1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    "DatosNivelesuHN": [93, 213, 333, 453, 573, 693, 813, 933, 1053, 1173]
+  },
+  "TORRE_004": {
+    "DatosTorre": {
+      "hBastidor": 15,
+      "hAjuste": 9,
+      "hAjusteN1": 12,
+      "DisteNivel": 5,
+      "ActualizarTAG": "TORRE_004"
+    },
+    "DatosNivelesHN": [110, 230, 350, 470, 590, 710, 830, 950, 1070, 1190],
+    "DatosNivelesChG": [6, 4, 5, 6, 4, 5, 6, 4, 5, 6],
+    "DatosNivelesChB": [3, 2, 3, 2, 3, 2, 3, 2, 3, 2],
+    "DatosNivelesFallas": [0, 0, 0, 2, 0, 0, 0, 0, 1, 0],
+    "DatosNivelesuHN": [108, 228, 348, 468, 588, 708, 828, 948, 1068, 1188]
+  },
+  "TORRE_005": {
+    "DatosTorre": {
+      "hBastidor": 11,
+      "hAjuste": 6,
+      "hAjusteN1": 9,
+      "DisteNivel": 3,
+      "ActualizarTAG": "TORRE_005"
+    },
+    "DatosNivelesHN": [90, 190, 290, 390, 490, 590, 690, 790],
+    "DatosNivelesChG": [4, 3, 5, 4, 3, 5, 4, 3],
+    "DatosNivelesChB": [2, 1, 2, 1, 2, 1, 2, 1],
+    "DatosNivelesFallas": [0, 0, 0, 0, 0, 0, 0, 0],
+    "DatosNivelesuHN": [88, 188, 288, 388, 488, 588, 688, 788]
+  },
+  "TORRE_006": {
+    "DatosTorre": {
+      "hBastidor": 13,
+      "hAjuste": 8,
+      "hAjusteN1": 11,
+      "DisteNivel": 4,
+      "ActualizarTAG": "TORRE_006"
+    },
+    "DatosNivelesHN": [95, 195, 295, 395, 495, 595, 695, 795],
+    "DatosNivelesChG": [5, 4, 6, 5, 4, 6, 5, 4],
+    "DatosNivelesChB": [1, 2, 1, 2, 1, 2, 1, 2],
+    "DatosNivelesFallas": [1, 0, 0, 0, 0, 1, 0, 0],
+    "DatosNivelesuHN": [93, 193, 293, 393, 493, 593, 693, 793]
+  },
+  "TORRE_007": {
+    "DatosTorre": {
+      "hBastidor": 9,
+      "hAjuste": 5,
+      "hAjusteN1": 7,
+      "DisteNivel": 2,
+      "ActualizarTAG": "TORRE_007"
+    },
+    "DatosNivelesHN": [85, 175, 265, 355, 445, 535],
+    "DatosNivelesChG": [3, 4, 3, 4, 3, 4],
+    "DatosNivelesChB": [2, 2, 2, 2, 2, 2],
+    "DatosNivelesFallas": [0, 0, 0, 0, 0, 0],
+    "DatosNivelesuHN": [83, 173, 263, 353, 443, 533]
+  },
+  "TORRE_008": {
+    "DatosTorre": {
+      "hBastidor": 14,
+      "hAjuste": 7,
+      "hAjusteN1": 10,
+      "DisteNivel": 3,
+      "ActualizarTAG": "TORRE_008"
+    },
+    "DatosNivelesHN": [90, 180, 270, 360, 450, 540],
+    "DatosNivelesChG": [5, 5, 5, 5, 5, 5],
+    "DatosNivelesChB": [3, 3, 3, 3, 3, 3],
+    "DatosNivelesFallas": [0, 1, 0, 0, 1, 0],
+    "DatosNivelesuHN": [88, 178, 268, 358, 448, 538]
+  },
+  "TORRE_009": {
+    "DatosTorre": {
+      "hBastidor": 10,
+      "hAjuste": 6,
+      "hAjusteN1": 8,
+      "DisteNivel": 2,
+      "ActualizarTAG": "TORRE_009"
+    },
+    "DatosNivelesHN": [80, 170, 260, 350, 440, 530],
+    "DatosNivelesChG": [4, 3, 4, 3, 4, 3],
+    "DatosNivelesChB": [1, 1, 1, 1, 1, 1],
+    "DatosNivelesFallas": [0, 0, 2, 0, 0, 0],
+    "DatosNivelesuHN": [78, 168, 258, 348, 438, 528]
+  }
+}

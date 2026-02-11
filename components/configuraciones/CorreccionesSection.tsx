@@ -55,12 +55,24 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   validarTAGDuplicado,
   refreshData,
 }) => {
+  // Función para limpiar los inputs después de aplicar cambios
+  const limpiarInputs = () => {
+    if (inputRefs.current) {
+      inputRefs.current.forEach((input) => {
+        if (input) {
+          input.value = "";
+        }
+      });
+    }
+  };
+
   const handleAplicarTorre = async () => {
     const inputValues = validacionesConfiguraciones.procesarValoresInput(
       inputRefs.current || [],
       5,
     );
 
+    // Estructura para POST /configuraciones/tomar-datos-torre
     const finalData = {
       id: selectedTorre!,
       hBastidor: typeof inputValues[0] === "number" ? inputValues[0] : null,
@@ -68,8 +80,13 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       hAjusteN1: typeof inputValues[2] === "number" ? inputValues[2] : null,
       DisteNivel: typeof inputValues[3] === "number" ? inputValues[3] : null,
       ActualizarTAG: (inputValues[4] as string) || "",
-      id_recetario: selectedReceta,
+      id_recetario: parseInt(selectedReceta, 10) || 1,
     };
+
+    console.log(
+      "[APLICAR TORRE] Estructura a enviar:",
+      JSON.stringify(finalData, null, 2),
+    );
 
     const intentarEnvio = async (reintentos: number = 5) => {
       for (let i = 1; i <= reintentos; i++) {
@@ -79,6 +96,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
           toast.success("Datos de la torre corregidos exitosamente", {
             position: "bottom-center",
           });
+          limpiarInputs();
           refreshData();
 
           return;
@@ -98,12 +116,28 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   const handleAplicarNiveles = async () => {
     const inputValues = validacionesConfiguraciones.procesarValoresInput(
       inputRefs.current || [],
-      11,
+      10,
     );
 
+    // Mapear selectedNivel a tipo string ("1" o "2")
+    // HN = "1" (Altura), ChG = "2" (Guardado), ChB puede ser otro tipo
+    const getTipoFromNivel = (nivel: TipoNivel): string => {
+      switch (nivel) {
+        case "HN":
+          return "1"; // Tipo 1: Correcciones de altura
+        case "ChG":
+          return "2"; // Tipo 2: Correcciones de guardado
+        case "ChB":
+          return "2"; // Tipo 2: Correcciones de búsqueda (temporal)
+        default:
+          return "1";
+      }
+    };
+
+    // Estructura para POST /configuraciones/tomar-datos-niveles
     const finalData = {
       id: selectedTorre!,
-      tipo: selectedNivel,
+      tipo: getTipoFromNivel(selectedNivel),
       Correccion1: typeof inputValues[0] === "number" ? inputValues[0] : null,
       Correccion2: typeof inputValues[1] === "number" ? inputValues[1] : null,
       Correccion3: typeof inputValues[2] === "number" ? inputValues[2] : null,
@@ -114,15 +148,19 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       Correccion8: typeof inputValues[7] === "number" ? inputValues[7] : null,
       Correccion9: typeof inputValues[8] === "number" ? inputValues[8] : null,
       Correccion10: typeof inputValues[9] === "number" ? inputValues[9] : null,
-      Correccion11:
-        typeof inputValues[10] === "number" ? inputValues[10] : null,
     };
+
+    console.log(
+      "[APLICAR NIVELES] Estructura a enviar:",
+      JSON.stringify(finalData, null, 2),
+    );
 
     try {
       await configuracionesApi.enviarDatosNiveles(finalData);
       toast.success("Datos de la torre corregidos exitosamente", {
         position: "bottom-center",
       });
+      limpiarInputs();
       refreshData();
     } catch {
       toast.error("Error al enviar los datos de niveles", {
@@ -132,17 +170,24 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   };
 
   const handleAplicarReset = async (index: number) => {
-    const correcciones = validacionesConfiguraciones.crearObjetoCorrecciones(
-      11,
-      index,
-      0,
-    );
+    // Crear objeto con todas las correcciones en null excepto la que se resetea (valor 0)
+    const correcciones: { [key: string]: number | null } = {};
+    for (let i = 1; i <= 10; i++) {
+      correcciones[`Correccion${i}`] = i === index + 1 ? 0 : null;
+    }
 
+    // Estructura para POST /configuraciones/reset-datos-niveles
+    // tipo siempre es "3" para reset de fallas
     const datos = {
       id: selectedTorre!,
-      tipo: "Fallas",
+      tipo: "3",
       ...correcciones,
     };
+
+    console.log(
+      "[RESET FALLAS] Estructura a enviar:",
+      JSON.stringify(datos, null, 2),
+    );
 
     try {
       await configuracionesApi.resetearFallasNivel(datos);
@@ -219,7 +264,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
                         inputRefs.current[index] = el;
                       }
                     }}
-                    className="bg-background4 rounded-lg px-[0.5rem] w-[100%]"
+                    className="bg-background4 rounded-lg px-2 w-full"
                     pattern="\d+"
                     type="number"
                     onInput={(e) =>
@@ -283,7 +328,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
                       inputRefs.current[index] = el;
                     }
                   }}
-                  className="bg-background4 rounded-lg w-[100%] px-[0.5rem]"
+                  className="bg-background4 rounded-lg w-full px-2"
                   pattern={index === 4 ? undefined : "\\d+"}
                   type={index === 4 ? "text" : "number"}
                   onInput={(e) =>

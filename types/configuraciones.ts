@@ -67,6 +67,49 @@ export interface RecetasResponse {
 
 export type TipoNivel = "HN" | "ChG" | "ChB" | "FA" | "uHN";
 
+// Estructura para POST /configuraciones/tomar-datos-torre
+export interface TorreDataPayload {
+  id: string;
+  hBastidor: number | null;
+  hAjuste: number | null;
+  hAjusteN1: number | null;
+  DisteNivel: number | null;
+  ActualizarTAG: string;
+  id_recetario: number;
+}
+
+// Estructura para POST /configuraciones/tomar-datos-niveles (tipo: "1" o "2")
+export interface NivelDataPayload {
+  id: string;
+  tipo: string; // "1" para Altura, "2" para Guardado
+  Correccion1: number | null;
+  Correccion2: number | null;
+  Correccion3: number | null;
+  Correccion4: number | null;
+  Correccion5: number | null;
+  Correccion6: number | null;
+  Correccion7: number | null;
+  Correccion8: number | null;
+  Correccion9: number | null;
+  Correccion10: number | null;
+}
+
+// Estructura para POST /configuraciones/reset-datos-niveles (tipo: "3")
+export interface ResetFallasPayload {
+  id: string;
+  tipo: "3"; // Siempre "3" para reset de fallas
+  Correccion1: number | null;
+  Correccion2: number | null;
+  Correccion3: number | null;
+  Correccion4: number | null;
+  Correccion5: number | null;
+  Correccion6: number | null;
+  Correccion7: number | null;
+  Correccion8: number | null;
+  Correccion9: number | null;
+  Correccion10: number | null;
+}
+
 export interface ConfiguracionData {
   datosGeneralesIzq: DatoReceta[];
   datosGeneralesDer: DatoReceta[];
