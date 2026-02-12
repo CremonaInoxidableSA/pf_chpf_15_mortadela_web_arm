@@ -47,9 +47,7 @@ const Recuperacion = () => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        toast.success(
-          t("min.correoEnviado")
-        );
+        toast.success(t("min.correoEnviado"));
       } else {
         toast.error(data.error || data.message || t("min.errorEnvioCorreo"));
       }

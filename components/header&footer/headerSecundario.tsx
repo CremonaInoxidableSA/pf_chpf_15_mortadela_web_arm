@@ -37,7 +37,7 @@ const HeaderSecundario = () => {
       path: "/desarmado",
       text: t("mayus.desarmado"),
       styleClass: "desac",
-    }
+    },
   ];
 
   return (

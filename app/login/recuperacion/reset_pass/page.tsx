@@ -165,8 +165,12 @@ const ResetPassword = () => {
         <LogoBase64 className="flex w-[65%] p-0 h-auto" />
 
         <div className="w-full text-center mb-4">
-          <h2 className="text-xl font-semibold mb-2">{t("min.restablecerContrasena")}</h2>
-          <p className="text-sm text-gray-400">{t("min.para")}: {email}</p>
+          <h2 className="text-xl font-semibold mb-2">
+            {t("min.restablecerContrasena")}
+          </h2>
+          <p className="text-sm text-gray-400">
+            {t("min.para")}: {email}
+          </p>
         </div>
 
         <form

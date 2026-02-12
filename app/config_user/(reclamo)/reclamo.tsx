@@ -69,7 +69,7 @@ export default function GenerarReclamo() {
             reporte: form.reporte,
             email: email,
           }),
-        }
+        },
       );
 
       if (response.ok) {

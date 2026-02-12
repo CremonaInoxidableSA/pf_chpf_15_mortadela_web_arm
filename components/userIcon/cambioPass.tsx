@@ -27,7 +27,7 @@ const CambioPass = () => {
 
   const handleChange = (
     key: "current_password" | "new_password",
-    value: string
+    value: string,
   ) => {
     setForm((s) => ({ ...s, [key]: value }));
   };
@@ -64,7 +64,7 @@ const CambioPass = () => {
             new_password: form.new_password,
           }),
           credentials: "include",
-        }
+        },
       );
 
       let data: any = {};
@@ -115,9 +115,7 @@ const CambioPass = () => {
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="current_password">
-              {t("min.contraActual")}
-            </Label>
+            <Label htmlFor="current_password">{t("min.contraActual")}</Label>
             <Input
               id="current_password"
               type="password"

@@ -60,10 +60,7 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             target="_blank"
           >
-            <Image
-              src={Logo}
-              alt="Creminox logo"
-            />
+            <Image src={Logo} alt="Creminox logo" />
           </Link>
         </div>
 

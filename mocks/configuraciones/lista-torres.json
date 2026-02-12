@@ -8,10 +8,7 @@
     ]
   },
   "receta_2": {
-    "ListadoTorres": [
-      { "id": "TORRE_005" },
-      { "id": "TORRE_006" }
-    ]
+    "ListadoTorres": [{ "id": "TORRE_005" }, { "id": "TORRE_006" }]
   },
   "receta_3": {
     "ListadoTorres": [

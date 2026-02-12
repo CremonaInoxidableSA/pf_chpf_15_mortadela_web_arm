@@ -237,52 +237,54 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
         selectedNivel === "ChB")
     ) {
       return (
-        <ul
-          className="rounded-lg h-full grid gap-5"
-          style={{
-            gridTemplateColumns: "repeat(2, 1fr)",
-          }}
-        >
-          {datosActuales.map(({ id, texto, dato }, index) => (
-            <li
-              key={id}
-              className={`bg-background3 p-2 rounded-lg flex flex-col ${
-                index === datosActuales.length - 1 &&
-                datosActuales.length % 2 !== 0
-                  ? "col-span-2"
-                  : ""
-              }`}
-            >
-              <label className="flex flex-col w-full">
-                <p className="w-full">{texto}</p>
-                <p className="flex flex-row items-center w-full gap-2">
-                  {dato}
-                  -
-                  <input
-                    ref={(el) => {
-                      if (inputRefs.current) {
-                        inputRefs.current[index] = el;
+        <>
+          <ul
+            className="rounded-lg h-full grid gap-5"
+            style={{
+              gridTemplateColumns: "repeat(2, 1fr)",
+            }}
+          >
+            {datosActuales.map(({ id, texto, dato }, index) => (
+              <li
+                key={id}
+                className={`bg-background3 p-2 rounded-lg flex flex-col ${
+                  index === datosActuales.length - 1 &&
+                  datosActuales.length % 2 !== 0
+                    ? "col-span-2"
+                    : ""
+                }`}
+              >
+                <label className="flex flex-col w-full">
+                  <p className="w-full">{texto}</p>
+                  <p className="flex flex-row items-center w-full gap-2">
+                    {dato}
+                    -
+                    <input
+                      ref={(el) => {
+                        if (inputRefs.current) {
+                          inputRefs.current[index] = el;
+                        }
+                      }}
+                      className="bg-background4 rounded-lg px-2 w-full"
+                      pattern="\d+"
+                      type="number"
+                      onInput={(e) =>
+                        handleInputChange(
+                          e as React.ChangeEvent<HTMLInputElement>,
+                          index,
+                        )
                       }
-                    }}
-                    className="bg-background4 rounded-lg px-2 w-full"
-                    pattern="\d+"
-                    type="number"
-                    onInput={(e) =>
-                      handleInputChange(
-                        e as React.ChangeEvent<HTMLInputElement>,
-                        index,
-                      )
-                    }
-                  />
-                </p>
-              </label>
-            </li>
-          ))}
+                    />
+                  </p>
+                </label>
+              </li>
+            ))}
+          </ul>
           <div className="col-span-2 flex flex-col gap-2">
             <BotonAplicar2 className="p-2" onClick={handleAplicarNiveles} />
             <BotonRefresh className="p-2" onClick={refreshData} />
           </div>
-        </ul>
+        </>
       );
     } else if (selectedOption === 2 && selectedNivel === "FA") {
       return (
@@ -387,7 +389,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
           <li key={id} className="flex flex-col flex-1">
             <button
               className={`flex flex-col rounded-sm transition-all p-2 ${
-                selectedOption === id ? "bg-blue text-white" : "bg-background5"
+                selectedOption === id ? "bg-blue text-white" : "bg-background3"
               }`}
               onClick={() => handleOptionChange(id)}
             >

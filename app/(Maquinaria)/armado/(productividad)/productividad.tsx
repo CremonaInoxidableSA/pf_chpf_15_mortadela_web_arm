@@ -98,7 +98,7 @@ const Productividad = () => {
   const handleDataUpdate = (
     newData: ProductividadData,
     startDate: string,
-    endDate: string
+    endDate: string,
   ): void => {
     setData(newData);
     setDateRange({ start: startDate, end: endDate });
@@ -107,23 +107,23 @@ const Productividad = () => {
   const cantidadCiclosF = isLoading
     ? t("min.cargando")
     : data?.CantidadCiclosCorrectos !== undefined
-    ? data.CantidadCiclosCorrectos.toFixed(2)
-    : t("min.cargando");
+      ? data.CantidadCiclosCorrectos.toFixed(2)
+      : t("min.cargando");
 
   const PesoTotalCiclos = isLoading
     ? t("min.cargando")
     : data?.PesoTotalCiclos !== undefined
-    ? data.PesoTotalCiclos.toFixed(2)
-    : t("min.cargando");
+      ? data.PesoTotalCiclos.toFixed(2)
+      : t("min.cargando");
 
   const Horas_Uso = isLoading
     ? t("min.cargando")
     : data?.ProductosRealizados && Array.isArray(data.ProductosRealizados)
-    ? data.ProductosRealizados.reduce(
-        (acc, prod) => acc + parseTimeToSeconds(prod.tiempoTotal),
-        0
-      )
-    : t("min.cargando");
+      ? data.ProductosRealizados.reduce(
+          (acc, prod) => acc + parseTimeToSeconds(prod.tiempoTotal),
+          0,
+        )
+      : t("min.cargando");
 
   const cantDias =
     dateRange.start && dateRange.end
@@ -135,7 +135,7 @@ const Productividad = () => {
 
   const Promedio_Horas = (
     horasUso: number | string,
-    cantDias: number
+    cantDias: number,
   ): string =>
     horasUso !== t("min.cargando")
       ? formatSecondsToHHMM((horasUso as number) / cantDias)
@@ -166,7 +166,7 @@ const Productividad = () => {
 
   const productos: ProductoVisual[] = isLoading
     ? []
-    : data?.ProductosRealizados?.map((producto) => {
+    : (data?.ProductosRealizados?.map((producto) => {
         const porcentaje = data.PesoTotalCiclos
           ? (producto.pesoTotal * 100) / data.PesoTotalCiclos / 1000
           : 0;
@@ -179,7 +179,7 @@ const Productividad = () => {
           porcentaje: porcentaje.toFixed(2),
           color: getColorById(producto.id_recetario),
         };
-      }) ?? [];
+      }) ?? []);
 
   return (
     <div

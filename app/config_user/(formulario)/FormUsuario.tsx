@@ -60,7 +60,7 @@ export default function FormUsuario({ onUserCreated }: Props) {
       {
         method: "POST",
         body: JSON.stringify(payload),
-      }
+      },
     );
 
     if (!res.ok) {
