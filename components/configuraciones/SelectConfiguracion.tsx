@@ -5,8 +5,15 @@ import { useState, useEffect } from "react";
 import { configuracionesApi } from "@/services/configuracionesApi";
 
 interface Receta {
-  id: number;
-  codigoProducto: string;
+  id_receta: number;
+  codigo_producto: string;
+  peso_producto: number;
+  tipo_corte: number;
+  alto_producto: number;
+  largo_producto: number;
+  ancho_producto: number;
+  productos_fila: number;
+  productos_columna: number;
 }
 
 interface SelectConfiguracionProps {
@@ -28,10 +35,10 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
       try {
         const data = await configuracionesApi.obtenerListaRecetas();
 
-        if (data.ListadoRecetas && Array.isArray(data.ListadoRecetas)) {
-          const recetasFiltradas = data.ListadoRecetas.filter(
+        if (data && Array.isArray(data)) {
+          const recetasFiltradas = data.filter(
             (receta: Receta) =>
-              receta.codigoProducto && receta.codigoProducto.trim() !== "",
+              receta.codigo_producto && receta.codigo_producto.trim() !== "",
           );
 
           setRecetas(recetasFiltradas);
@@ -39,8 +46,8 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
           if (recetasFiltradas.length > 0) {
             const primerReceta = recetasFiltradas[0];
 
-            setSelectedKey(primerReceta.id.toString());
-            onChange(primerReceta.id.toString());
+            setSelectedKey(primerReceta.id_receta.toString());
+            onChange(primerReceta.id_receta.toString());
           }
         }
       } catch (error) {
@@ -71,11 +78,11 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
         ) : recetas.length > 0 ? (
           recetas.map((receta) => (
             <option
-              key={receta.id}
+              key={receta.id_receta}
               className="text-texto bg-background4 hover:bg-background5"
-              value={receta.id}
+              value={receta.id_receta.toString()}
             >
-              {receta.codigoProducto}
+              {receta.codigo_producto}
             </option>
           ))
         ) : (

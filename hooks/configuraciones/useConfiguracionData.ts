@@ -152,8 +152,8 @@ export const useConfiguracionData = () => {
 
   const { targetAddress } = useApp();
 
-  // Verificar si podemos hacer llamadas API (mock mode o con targetAddress)
-  const canMakeApiCalls = MOCK_MODE || !!targetAddress;
+  // Permitir llamadas API siempre (el proxy las maneja)
+  const canMakeApiCalls = true;
 
   const [datosGeneralesIzq, setDatosRecetas1] = useState<DatoReceta[]>(
     datosIniciales.datosGeneralesIzq,
@@ -252,127 +252,118 @@ export const useConfiguracionData = () => {
 
     setLoading(true);
     try {
-      const data: RecetaResponse =
-        await configuracionesApi.obtenerDatosRecetas(idReceta);
-      const receta = data.DatosRecetas[0];
+      // Obtener datos de la receta desde lista-recetas
+      const listaRecetas = await configuracionesApi.obtenerListaRecetas();
+      const receta = listaRecetas.find(
+        (r) => r.id_receta === parseInt(idReceta),
+      );
 
+      if (!receta) {
+        throw new Error("Receta no encontrada");
+      }
+
+      // LADO IZQUIERDO - Datos de la receta (solo los que devuelve la API)
       setDatosRecetas1([
         {
           id: 1,
-          texto: "NUMERO DE GRIPPER",
-          dato: receta.nroGripper?.toString() ?? "null",
+          texto: "CÓDIGO DE PRODUCTO",
+          dato: receta.codigo_producto || "N/A",
           icono: NGripper,
         },
         {
           id: 2,
-          texto: "TIPO DE MOLDE",
-          dato: receta.tipoMolde ?? "null",
-          icono: obtenerIconoTipoMolde(receta.tipoMolde || ""),
+          texto: "TIPO DE CORTE",
+          dato: `Tipo ${receta.tipo_corte}`,
+          icono: obtenerIconoTipoMolde(
+            `Molde ${String.fromCharCode(64 + receta.tipo_corte)}`,
+          ),
         },
         {
           id: 3,
           texto: "ANCHO DEL PRODUCTO",
-          dato:
-            receta.anchoProducto != null
-              ? `${receta.anchoProducto} mm`
-              : "null",
+          dato: `${receta.ancho_producto} mm`,
           icono: Ancho,
         },
         {
           id: 4,
           texto: "ALTO DEL PRODUCTO",
-          dato:
-            receta.altoProducto != null ? `${receta.altoProducto} mm` : "null",
+          dato: `${receta.alto_producto} mm`,
           icono: Alto,
         },
         {
           id: 5,
           texto: "LARGO DEL PRODUCTO",
-          dato:
-            receta.largoProducto != null
-              ? `${receta.largoProducto} mm`
-              : "null",
+          dato: `${receta.largo_producto} mm`,
           icono: Largo,
         },
         {
           id: 6,
           texto: "PESO DEL PRODUCTO",
-          dato:
-            receta.pesoProducto != null ? `${receta.pesoProducto} kg` : "null",
+          dato: `${receta.peso_producto} kg`,
           icono: Peso,
         },
         {
           id: 7,
-          texto: "MOLDES POR NIVEL",
-          dato: receta.moldesNivel?.toString() ?? "null",
+          texto: "PRODUCTOS POR FILA",
+          dato: receta.productos_fila?.toString() || "N/A",
           icono: MoldesNivel,
         },
         {
           id: 8,
-          texto: "PRODUCTOS POR MOLDE",
-          dato: receta.productosMolde?.toString() ?? "null",
+          texto: "PRODUCTOS POR COLUMNA",
+          dato: receta.productos_columna?.toString() || "N/A",
           icono: ProductosMolde,
         },
       ]);
 
+      // LADO DERECHO - Estos se completarán cuando se carguen datos de la torre
       setDatosRecetas2([
         {
           id: 1,
           texto: "ALTURA DE MOLDE",
-          dato: receta.altoMolde != null ? `${receta.altoMolde} mm` : "null",
+          dato: `${receta.alto_producto} mm`,
           icono: AlturaMolde,
         },
         {
           id: 2,
           texto: "LARGO DE MOLDE",
-          dato: receta.largoMolde != null ? `${receta.largoMolde} mm` : "null",
+          dato: `${receta.largo_producto} mm`,
           icono: LargoMolde,
         },
         {
           id: 3,
-          texto: "ALTURA AJUSTE",
-          dato:
-            receta.ajusteAltura != null ? `${receta.ajusteAltura} mm` : "null",
+          texto: "AJUSTE ALTURA",
+          dato: "Cargando...",
           icono: AlturaAjuste,
         },
         {
           id: 4,
-          texto: "NIVELES POR TORRE",
-          dato: receta.cantidadNiveles?.toString() ?? "null",
-          icono: Niveles,
-        },
-        {
-          id: 5,
           texto: "DELTA ENTRE NIVELES",
-          dato:
-            receta.deltaNiveles != null ? `${receta.deltaNiveles} mm` : "null",
+          dato: "Cargando...",
           icono: DisteNivel,
         },
         {
-          id: 6,
+          id: 5,
           texto: "ALTURA N1",
-          dato: receta.n1Altura != null ? `${receta.n1Altura} mm` : "null",
+          dato: "Cargando...",
           icono: AlturaN1,
         },
         {
-          id: 7,
+          id: 6,
           texto: "ALTURA DE BASTIDOR",
-          dato:
-            receta.bastidorAltura != null
-              ? `${receta.bastidorAltura} mm`
-              : "null",
+          dato: "Cargando...",
           icono: AlturaBastidor,
         },
         {
-          id: 8,
-          texto: "ALTURA AJUSTE N1",
-          dato:
-            receta.ajusteN1Altura != null
-              ? `${receta.ajusteN1Altura} mm`
-              : "null",
+          id: 7,
+          texto: "AJUSTE ALTURA N1",
+          dato: "Cargando...",
           icono: AlturaAjusteN1,
         },
       ]);
+    } catch (error) {
+      console.error("Error al cargar datos de receta:", error);
+      toast.error("Error al cargar datos de la receta");
     } finally {
       setLoading(false);
     }
@@ -382,17 +373,17 @@ export const useConfiguracionData = () => {
     try {
       const data = await configuracionesApi.obtenerListaTorres(idReceta);
 
-      if (data.ListadoTorres) {
-        setTorres(data.ListadoTorres);
+      if (data && data.length > 0) {
+        setTorres(data);
         // Siempre seleccionar la primera torre al cambiar de receta
-        if (data.ListadoTorres.length > 0) {
-          setSelectedTorre(data.ListadoTorres[0].id);
-        } else {
-          setSelectedTorre(null);
-        }
+        setSelectedTorre(data[0].id_torre.toString());
+      } else {
+        setTorres([]);
+        setSelectedTorre(null);
       }
     } catch (error) {
       console.error("Error al cargar torres:", error);
+      toast.error("Error al cargar torres");
       setTorres([]);
       setSelectedTorre(null);
     }
@@ -403,85 +394,97 @@ export const useConfiguracionData = () => {
 
     setLoading(true);
     try {
-      const data: NivelesTorreResponse =
-        await configuracionesApi.obtenerNivelesTorre(idTorre);
+      const data = await configuracionesApi.obtenerNivelesTorre(idTorre);
 
+      if (!data || !data.torre) {
+        throw new Error("Datos de torre no encontrados");
+      }
+
+      const torre = data.torre;
+
+      // Datos de correcciones generales de la torre (solo los que devuelve la API)
       setDatosCorrecionesTorre([
         {
           id: 1,
           texto: "Correccion_hBastidor",
-          dato: data.DatosTorre?.hBastidor?.toString() ?? "0",
+          dato: `${torre.bastidor_altura ?? "0"}`,
         },
         {
           id: 2,
           texto: "Correccion_hAjuste",
-          dato: data.DatosTorre?.hAjuste?.toString() ?? "0",
+          dato: `${torre.ajuste_altura ?? "0"}`,
         },
         {
           id: 3,
-          texto: "Correccion_hAjusteN1",
-          dato: data.DatosTorre?.hAjusteN1?.toString() ?? "0",
+          texto: "Delta_Niveles",
+          dato: `${torre.delta_niveles ?? "0"}`,
         },
         {
           id: 4,
-          texto: "Correccion_DisteNivel",
-          dato: data.DatosTorre?.DisteNivel?.toString() ?? "0",
+          texto: "Altura_N1",
+          dato: `${torre.altura_n1 ?? "0"}`,
         },
         {
           id: 5,
-          texto: "ActualizarTAG",
-          dato: data.DatosTorre?.ActualizarTAG ?? "",
+          texto: "Ajuste_Altura_N1",
+          dato: `${torre.ajuste_altura_n1 ?? "0"}`,
         },
       ]);
 
-      const actualizarNiveles = (
-        datos: number[] | undefined,
-        setter: React.Dispatch<React.SetStateAction<DatoCorreccion[]>>,
-        prefijo: string,
-      ) => {
-        const nivelesArray = Array.isArray(datos) ? datos : [];
-        // Usamos 10 niveles máximo según la estructura definida
-        const maxNiveles = 10;
+      // Para los niveles, inicializar arrays vacíos
+      // La API aún no proporciona datos de niveles en la estructura
+      setDatosCorrecionesNivelesHN([]);
+      setDatosCorrecionesNivelesChG([]);
+      setDatosCorrecionesNivelesChB([]);
+      setDatosCorrecionesNivelesFA([]);
+      setDatosCorrecionesNivelesuHN([]);
 
-        setter(
-          [
-            ...nivelesArray,
-            ...Array(Math.max(0, maxNiveles - nivelesArray.length)).fill(null),
-          ]
-            .slice(0, maxNiveles)
-            .map((dato, index) => ({
-              id: index + 1,
-              texto: `${prefijo}${index + 1}`,
-              dato: dato?.toString() ?? "0",
-            })),
-        );
-      };
+      // Actualizar los datos generales del lado derecho con info de la torre
+      setDatosRecetas2((prev) =>
+        prev.map((dato) => {
+          if (dato.id === 3) {
+            // AJUSTE ALTURA
+            return {
+              ...dato,
+              dato: `${torre.ajuste_altura ?? "N/A"} mm`,
+            };
+          }
+          if (dato.id === 4) {
+            // DELTA ENTRE NIVELES
+            return {
+              ...dato,
+              dato: `${torre.delta_niveles ?? "N/A"} mm`,
+            };
+          }
+          if (dato.id === 5) {
+            // ALTURA N1
+            return {
+              ...dato,
+              dato: `${torre.altura_n1 ?? "N/A"} mm`,
+            };
+          }
+          if (dato.id === 6) {
+            // ALTURA DE BASTIDOR
+            return {
+              ...dato,
+              dato: `${torre.bastidor_altura ?? "N/A"} mm`,
+            };
+          }
+          if (dato.id === 7) {
+            // AJUSTE ALTURA N1
+            return {
+              ...dato,
+              dato: `${torre.ajuste_altura_n1 ?? "N/A"} mm`,
+            };
+          }
+          return dato;
+        }),
+      );
 
-      actualizarNiveles(
-        data.DatosNivelesHN,
-        setDatosCorrecionesNivelesHN,
-        "Correcion_hN",
-      );
-      actualizarNiveles(
-        data.DatosNivelesChG,
-        setDatosCorrecionesNivelesChG,
-        "Correccion_hguardado_N",
-      );
-      actualizarNiveles(
-        data.DatosNivelesChB,
-        setDatosCorrecionesNivelesChB,
-        "Correccion_hbusqueda_N",
-      );
-      actualizarNiveles(
-        data.DatosNivelesFallas,
-        setDatosCorrecionesNivelesFA,
-        "FallasN",
-      );
-      actualizarNiveles(
-        data.DatosNivelesuHN,
-        setDatosCorrecionesNivelesuHN,
-        "ultimo_hNivel",
-      );
+      toast.success("Datos de torre cargados correctamente");
+    } catch (error) {
+      console.error("Error al cargar datos de torre:", error);
+      toast.error("Error al cargar datos de la torre");
     } finally {
       setLoading(false);
     }
@@ -497,17 +500,15 @@ export const useConfiguracionData = () => {
         // 1. Primero obtenemos lista de recetas
         const recetasData = await configuracionesApi.obtenerListaRecetas();
 
-        if (
-          recetasData.ListadoRecetas &&
-          recetasData.ListadoRecetas.length > 0
-        ) {
+        if (recetasData && recetasData.length > 0) {
           // Seleccionar la primera receta automáticamente
-          const primeraReceta = recetasData.ListadoRecetas[0].id.toString();
+          const primeraReceta = recetasData[0].id_receta.toString();
           setSelectedReceta(primeraReceta);
           setInitialized(true);
         }
       } catch (error) {
         console.error("Error al cargar datos iniciales:", error);
+        toast.error("Error al cargar la lista de recetas");
       } finally {
         setLoading(false);
       }

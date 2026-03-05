@@ -15,7 +15,8 @@ export interface DatoCorreccion {
 }
 
 export interface Torre {
-  id: string;
+  id_torre: number;
+  nombre_torre: string;
 }
 
 export interface RecetaResponse {

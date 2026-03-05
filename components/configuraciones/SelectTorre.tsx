@@ -5,7 +5,8 @@ import { MOCK_MODE } from "@/services/mockConfiguracionesApi";
 import { useApp } from "../../context/AppContext";
 
 interface Torre {
-  id: string;
+  id_torre: number;
+  nombre_torre: string;
 }
 
 interface SelectTorreProps {
@@ -31,8 +32,8 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
   const [torres, setTorres] = useState<Torre[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Verificar si podemos hacer llamadas API
-  const canMakeApiCalls = MOCK_MODE || !!targetAddress;
+  // Siempre permitir API calls (el proxy las maneja)
+  const canMakeApiCalls = true;
 
   useEffect(() => {
     const loadTorresAndSelectFirst = async () => {
@@ -51,13 +52,13 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
       try {
         const data =
           await configuracionesApi.obtenerListaTorres(selectedReceta);
-        const torresData = data.ListadoTorres || [];
+        const torresData = data || [];
 
         setTorres(torresData);
         onTorresChange(torresData);
 
         if (torresData.length > 0) {
-          onChange(torresData[0].id);
+          onChange(torresData[0].id_torre.toString());
         } else {
           onChange("");
         }
@@ -97,11 +98,11 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
       </option>
       {torres.map((torre) => (
         <option
-          key={torre.id}
+          key={torre.id_torre}
           className="text-texto bg-background4 hover:bg-background5"
-          value={torre.id}
+          value={torre.id_torre}
         >
-          {torre.id}
+          {torre.nombre_torre}
         </option>
       ))}
     </select>

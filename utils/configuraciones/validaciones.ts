@@ -1,10 +1,11 @@
 interface Torre {
-  id: string;
+  id_torre: number;
+  nombre_torre: string;
 }
 
 export const validacionesConfiguraciones = {
   existeTorreConTAG: (tag: string, torres: Torre[]): boolean => {
-    return torres.some((torre) => torre.id === tag);
+    return torres.some((torre) => torre.id_torre.toString() === tag);
   },
   validarNumeroEntero: (valor: string): number | null => {
     const numero = parseInt(valor);

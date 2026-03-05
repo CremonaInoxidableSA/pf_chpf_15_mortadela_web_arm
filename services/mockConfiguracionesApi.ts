@@ -101,8 +101,8 @@ const mockDataStore = {
 // Simulate network delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Mock mode flag - set to true for development
-export const MOCK_MODE = true;
+// Mock mode flag - set to false to use real API
+export const MOCK_MODE = false;
 
 // Función para resetear los datos al estado original (útil para testing)
 export const resetMockData = () => {
