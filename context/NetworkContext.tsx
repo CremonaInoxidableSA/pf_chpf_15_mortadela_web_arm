@@ -121,7 +121,7 @@ export const NetworkProvider = ({ children }: NetworkProviderProps) => {
         storedCamaras &&
         storedMediaMTX
       ) {
-        setBaseURL(storedBase);
+        setBaseURL(storedBase); // eslint-disable-line react-hooks/set-state-in-effect
         setLoginURL(storedLogin);
         setRedirectURL(storedRedirect);
         setCamarasURL(storedCamaras);
@@ -133,7 +133,7 @@ export const NetworkProvider = ({ children }: NetworkProviderProps) => {
         determineNetworkConfig();
       }
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const contextValue: NetworkContextType = {
     clientIP,

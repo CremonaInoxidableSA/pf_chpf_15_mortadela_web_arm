@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
@@ -26,6 +26,37 @@ const ResetPassword = () => {
   const [validatingToken, setValidatingToken] = useState(true);
   const [tokenValid, setTokenValid] = useState(false);
 
+  const verificarToken = useCallback(
+    async (tokenToVerify: string) => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_MAIL_URL}/verificar-token-recuperacion?token=${tokenToVerify}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          setTokenValid(true);
+          setEmail(data.email);
+        } else {
+          toast.error(data.error || t("min.tokenInvalidoExpirado"));
+          setTokenValid(false);
+        }
+      } catch {
+        toast.error(t("min.errorConexionServidor"));
+        setTokenValid(false);
+      } finally {
+        setValidatingToken(false);
+      }
+    },
+    [t],
+  );
+
   useEffect(() => {
     const tokenFromUrl = searchParams.get("token");
     if (tokenFromUrl) {
@@ -35,35 +66,7 @@ const ResetPassword = () => {
       toast.error("Token no encontrado");
       setValidatingToken(false);
     }
-  }, [searchParams]);
-
-  const verificarToken = async (tokenToVerify: string) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_MAIL_URL}/verificar-token-recuperacion?token=${tokenToVerify}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        },
-      );
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setTokenValid(true);
-        setEmail(data.email);
-      } else {
-        toast.error(data.error || t("min.tokenInvalidoExpirado"));
-        setTokenValid(false);
-      }
-    } catch (err) {
-      toast.error(t("min.errorConexionServidor"));
-      setTokenValid(false);
-    } finally {
-      setValidatingToken(false);
-    }
-  };
+  }, [searchParams, verificarToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,7 +114,7 @@ const ResetPassword = () => {
       } else {
         toast.error(data.error || t("min.errorActualizarContra"));
       }
-    } catch (err) {
+    } catch {
       toast.error(t("min.errorConexionServidor"));
     } finally {
       setLoading(false);

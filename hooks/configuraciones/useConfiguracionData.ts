@@ -3,8 +3,6 @@ import type {
   DatoCorreccion,
   Torre,
   TipoNivel,
-  RecetaResponse,
-  NivelesTorreResponse,
 } from "@/types/configuraciones";
 
 import { useState, useEffect, useRef } from "react";
@@ -19,7 +17,6 @@ import React from "react";
 
 import { configuracionesApi } from "@/services/configuracionesApi";
 import { validacionesConfiguraciones } from "@/utils/configuraciones/validaciones";
-import { useApp } from "@/context/AppContext";
 import NGripper from "@/public/equipos/Equipo_Gripper1.png";
 import Ancho from "@/public/correcciones/ancho.png";
 import Alto from "@/public/correcciones/alto.png";
@@ -34,7 +31,6 @@ import AlturaN1 from "@/public/correcciones/AJUSTEN1.png";
 import AlturaBastidor from "@/public/correcciones/ALTURABASTIDOR.png";
 import DisteNivel from "@/public/correcciones/DISTENIVEL.png";
 import Peso from "@/public/equipos/Equipo_Robot1.png";
-import Niveles from "@/public/equipos/Equipo_Torre1.png";
 
 const datosIniciales = {
   datosGeneralesIzq: [
@@ -149,8 +145,6 @@ export const useConfiguracionData = () => {
   const [torres, setTorres] = useState<Torre[]>([]);
   const [initialized, setInitialized] = useState(false);
 
-  const { targetAddress } = useApp();
-
   // Permitir llamadas API siempre (el proxy las maneja)
   const canMakeApiCalls = true;
 
@@ -254,7 +248,7 @@ export const useConfiguracionData = () => {
       // Obtener datos de la receta desde lista-recetas
       const listaRecetas = await configuracionesApi.obtenerListaRecetas();
       const receta = listaRecetas.find(
-        (r: any) => r.id_receta === parseInt(idReceta),
+        (r) => r.id_receta === parseInt(idReceta),
       );
 
       if (!receta) {
@@ -522,6 +516,7 @@ export const useConfiguracionData = () => {
       cargarDatosReceta(selectedReceta);
       cargarTorres(selectedReceta);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedReceta, canMakeApiCalls]);
 
   // Cuando cambia la torre seleccionada, cargar datos de niveles

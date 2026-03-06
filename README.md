@@ -1,14 +1,17 @@
 ## Runear proyecto
 
 ### Con camaras
+
 ```bash
 npm run dev:cameras
 ```
 
 ### Sin camaras
+
 ```bash
 npm run dev
 ```
+
 ## Iconos y banderas
 
 ```bash

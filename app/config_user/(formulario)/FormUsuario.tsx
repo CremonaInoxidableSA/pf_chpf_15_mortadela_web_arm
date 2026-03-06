@@ -43,7 +43,7 @@ export default function FormUsuario({ onUserCreated }: Props) {
     habilitado: 1,
   });
 
-  const handleChange = (key: string, value: any) => {
+  const handleChange = (key: string, value: string | boolean | number) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 

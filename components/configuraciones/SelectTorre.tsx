@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import { configuracionesApi } from "@/services/configuracionesApi";
-import { useApp } from "../../context/AppContext";
 
 interface Torre {
   id_torre: number;
@@ -10,7 +9,7 @@ interface Torre {
 
 interface SelectTorreProps {
   onChange: (torre: string) => void;
-  onTorresChange: (torres: any[]) => void;
+  onTorresChange: (torres: Torre[]) => void;
   selectedReceta: string;
   refreshTorres: (tag?: string) => void;
   refreshTorres2: () => void;
@@ -27,7 +26,6 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
   selectedTorre,
   disabled = false,
 }) => {
-  const { targetAddress } = useApp();
   const [torres, setTorres] = useState<Torre[]>([]);
   const [loading, setLoading] = useState(false);
 

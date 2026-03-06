@@ -1,6 +1,11 @@
 "use client";
 
-import type { DatoCorreccion, Torre, TipoNivel } from "@/types/configuraciones";
+import type {
+  DatoCorreccion,
+  DatoReceta,
+  Torre,
+  TipoNivel,
+} from "@/types/configuraciones";
 
 import React from "react";
 import { toast } from "sonner";
@@ -23,7 +28,7 @@ interface CorreccionesSectionProps {
   loading: boolean;
   isButtonDisabled: boolean;
   inputRefs: React.RefObject<(HTMLInputElement | null)[]>;
-  datosGeneralesIzq: any[];
+  datosGeneralesIzq: DatoReceta[];
 
   handleOptionChange: (option: number) => void;
   handleNivelChange: (nivel: TipoNivel) => void;

@@ -79,7 +79,7 @@ export default function FormUsuario({
           reporte: data.reporte,
           habilitado: data.habilitado,
         });
-      } catch (error) {
+      } catch {
         alert(t("min.errorCargarUsuario") || "Error al cargar usuario");
       } finally {
         setLoading(false);
@@ -87,9 +87,9 @@ export default function FormUsuario({
     };
 
     fetchUserData();
-  }, [usernameToEdit, t]);
+  }, [usernameToEdit, t, userIdToEdit]);
 
-  const handleChange = (key: string, value: any) => {
+  const handleChange = (key: string, value: string | boolean | number) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 

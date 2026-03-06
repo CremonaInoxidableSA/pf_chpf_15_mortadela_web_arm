@@ -68,20 +68,6 @@ interface NivelesTorreResponse {
   configuraciones: Configuracion[];
 }
 
-interface DatosReceta {
-  id: number;
-  codigoProducto: string;
-  pesoProducto: number;
-  tipoCorte: number;
-  altoProducto: number;
-  largoProducto: number;
-  anchoProducto: number;
-}
-
-interface DatosRecetasResponse {
-  DatosRecetas: DatosReceta[];
-}
-
 // API real para producción
 const realConfiguracionesApi = {
   obtenerListaRecetas: async (): Promise<Receta[]> => {
@@ -133,7 +119,10 @@ const realConfiguracionesApi = {
     }
   },
 
-  enviarDatosTorre: async (datos: any, intento: number = 1): Promise<void> => {
+  enviarDatosTorre: async (
+    datos: Record<string, unknown>,
+    intento: number = 1,
+  ): Promise<void> => {
     const url = getProxyUrl("tomar-datos-torre");
     console.log(
       `[DEBUG] POST tomar-datos-torre (intento ${intento}) →`,
@@ -156,7 +145,7 @@ const realConfiguracionesApi = {
     }
   },
 
-  enviarDatosNiveles: async (datos: any): Promise<void> => {
+  enviarDatosNiveles: async (datos: Record<string, unknown>): Promise<void> => {
     const url = getProxyUrl("tomar-datos-niveles");
     console.log("[DEBUG] POST tomar-datos-niveles →", url, datos);
     try {
@@ -175,7 +164,9 @@ const realConfiguracionesApi = {
     }
   },
 
-  resetearFallasNivel: async (datos: any): Promise<void> => {
+  resetearFallasNivel: async (
+    datos: Record<string, unknown>,
+  ): Promise<void> => {
     const url = getProxyUrl("reset-datos-niveles");
     console.log("[DEBUG] POST reset-datos-niveles →", url, datos);
     try {

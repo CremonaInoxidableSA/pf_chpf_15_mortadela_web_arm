@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthProvider";
@@ -22,7 +21,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     if (error) {
@@ -43,7 +41,7 @@ const Login = () => {
       if (!result.success) {
         setError(result.error || "Error");
       }
-    } catch (err) {
+    } catch {
       setError("Error");
     } finally {
       setLoading(false);

@@ -15,4 +15,5 @@ export const datasets: ChartDataset<"bar", number[]>[] = [
   },
 ];
 
-export default { labels, datasets };
+const chartData = { labels, datasets };
+export default chartData;

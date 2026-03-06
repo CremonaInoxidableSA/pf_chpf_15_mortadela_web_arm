@@ -67,10 +67,15 @@ const CambioPass = () => {
         },
       );
 
-      let data: any = {};
+      let data: {
+        success?: boolean;
+        detail?: string;
+        error?: string;
+        message?: string;
+      } = {};
       try {
         data = await res.json();
-      } catch (e) {
+      } catch {
         data = {};
       }
 

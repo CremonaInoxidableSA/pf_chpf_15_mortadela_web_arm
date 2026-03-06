@@ -48,9 +48,7 @@ Sistema de gestión de producción para línea de mortadela desarrollado con **N
 <ThemeProvider>
   <AuthProvider>
     <AppProvider>
-      <LayoutClient>
-        {children}
-      </LayoutClient>
+      <LayoutClient>{children}</LayoutClient>
     </AppProvider>
   </AuthProvider>
 </ThemeProvider>
@@ -66,17 +64,19 @@ Gestiona la dirección del servidor target (IP:Puerto del PLC/backend de producc
 
 ```typescript
 interface AppContextType {
-  targetAddress: string | null;    // Ej: "192.168.1.100:8080"
+  targetAddress: string | null; // Ej: "192.168.1.100:8080"
   setTargetAddress: (address: string | null) => void;
 }
 ```
 
 **Funcionalidad:**
+
 - Almacena `targetAddress` en `localStorage` para persistencia
 - Se usa para construir URLs de API de configuraciones y WebSocket
 - Todas las llamadas a la API de producción dependen de este valor
 
 **Uso:**
+
 ```typescript
 const { targetAddress, setTargetAddress } = useApp();
 ```
@@ -89,17 +89,17 @@ Maneja la autenticación, sesión de usuario y protección de rutas.
 
 ```typescript
 interface AuthContextType {
-  user: UserSession | null;        // Datos completos del usuario
+  user: UserSession | null; // Datos completos del usuario
   email: string | null;
   username: string | null;
   nombre: string | null;
   apellido: string | null;
-  rol: string | null;              // "superadmin" | "admin" | "user"
-  habilitado: boolean | null;      // Usuario activo/inactivo
-  reporte: boolean | null;         // Recibe reportes por email
-  loading: boolean;                // Estado de carga de sesión
+  rol: string | null; // "superadmin" | "admin" | "user"
+  habilitado: boolean | null; // Usuario activo/inactivo
+  reporte: boolean | null; // Recibe reportes por email
+  loading: boolean; // Estado de carga de sesión
   login: (username, password) => Promise<ApiResponse>;
-  register: (data) => Promise<ApiResponse>;  // Deshabilitado actualmente
+  register: (data) => Promise<ApiResponse>; // Deshabilitado actualmente
   logout: () => Promise<boolean>;
 }
 ```
@@ -115,11 +115,13 @@ interface AuthContextType {
 7. Actualiza estado del usuario
 
 **Almacenamiento de Token:**
+
 - `localStorage.access_token`: Token JWT
 - `localStorage.user`: Objeto JSON con datos del usuario
 - `Cookies.access_token`: Cookie para requests
 
 **Rutas Públicas (sin autenticación):**
+
 - `/login`
 - `/register`
 - `/bootstrap`
@@ -132,23 +134,26 @@ interface AuthContextType {
 
 ### Endpoints de Autenticación
 
-| Endpoint | Método | Descripción |
-|----------|--------|-------------|
-| `/needs-setup` | GET | Verifica si hay usuarios en BD |
-| `/create-superadmin` | POST | Crea primer superadmin |
-| `/login` | POST | Autenticación de usuario |
-| `/logout` | POST | Cierra sesión |
-| `/check` | GET | Valida sesión activa |
+| Endpoint             | Método | Descripción                    |
+| -------------------- | ------ | ------------------------------ |
+| `/needs-setup`       | GET    | Verifica si hay usuarios en BD |
+| `/create-superadmin` | POST   | Crea primer superadmin         |
+| `/login`             | POST   | Autenticación de usuario       |
+| `/logout`            | POST   | Cierra sesión                  |
+| `/check`             | GET    | Valida sesión activa           |
 
 ### Función `authFetch` (`app/api/api.ts`)
 
 Wrapper de `fetch()` que:
+
 - Añade header `Authorization: Bearer {token}` automáticamente
 - Configura `Content-Type: application/json`
 - Incluye `credentials: "include"` para cookies
 
 ```typescript
-const response = await authFetch(`${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`);
+const response = await authFetch(
+  `${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`,
+);
 ```
 
 ### Verificación de Token (`lib/auth.ts`)
@@ -156,6 +161,7 @@ const response = await authFetch(`${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuari
 ```typescript
 verifyToken(token): payload | null
 ```
+
 - Decodifica JWT sin validación criptográfica
 - Verifica expiración (`exp`)
 - Retorna payload o null si inválido/expirado
@@ -166,11 +172,11 @@ verifyToken(token): payload | null
 
 ### Tipos de Rol
 
-| Rol | Descripción | Permisos |
-|-----|-------------|----------|
-| `superadmin` | Administrador principal | Acceso total, gestión de admins |
-| `admin` | Administrador | Gestión de usuarios normales |
-| `user` | Usuario operador | Solo visualización y operación básica |
+| Rol          | Descripción             | Permisos                              |
+| ------------ | ----------------------- | ------------------------------------- |
+| `superadmin` | Administrador principal | Acceso total, gestión de admins       |
+| `admin`      | Administrador           | Gestión de usuarios normales          |
+| `user`       | Usuario operador        | Solo visualización y operación básica |
 
 ### Estructura de Usuario
 
@@ -178,29 +184,32 @@ verifyToken(token): payload | null
 interface User {
   id: number;
   email: string;
-  username: string;           // Único, usado para login
+  username: string; // Único, usado para login
   nombre: string;
   apellido: string;
   rol: "superadmin" | "admin" | "user";
-  habilitado: boolean;        // 1 = activo, 0 = inactivo
-  reporte: boolean;           // Recibe reportes automáticos
+  habilitado: boolean; // 1 = activo, 0 = inactivo
+  reporte: boolean; // Recibe reportes automáticos
 }
 ```
 
 ### Acciones por Rol
 
 **Superadmin:**
+
 - Crear usuarios de cualquier rol
 - Editar/eliminar cualquier usuario
 - Habilitar/deshabilitar usuarios
 - Acceso a configuración de equipos
 
 **Admin:**
+
 - Crear usuarios con rol `user`
 - Editar usuarios de su creación
 - Acceso a configuraciones
 
 **User:**
+
 - Solo visualización
 - Operación de maquinaria
 - Sin acceso a configuración de usuarios
@@ -208,6 +217,7 @@ interface User {
 ### Gestión de Usuarios (`config_user/page.tsx`)
 
 Funciones disponibles:
+
 - `refetchUsuarios()`: Recarga lista de usuarios
 - `deshabilitarUsuario(username)`: Desactiva usuario
 - `habilitarUsuario(username)`: Reactiva usuario
@@ -229,38 +239,39 @@ NEXT_PUBLIC_CAMARAS_URL=       # URL para sistema de cámaras externo
 
 Base URL: `process.env.NEXT_PUBLIC_API_AUTH_URL`
 
-| Endpoint | Método | Body | Descripción |
-|----------|--------|------|-------------|
-| `/usuarios` | GET | - | Lista todos los usuarios |
-| `/crear_usuario` | POST | User object | Crea nuevo usuario |
-| `/eliminar_usuario` | DELETE | `{username}` | Elimina usuario |
-| `/habilitar_usuario` | POST | `{username}` | Activa usuario |
-| `/deshabilitar_usuario` | POST | `{username}` | Desactiva usuario |
+| Endpoint                | Método | Body         | Descripción              |
+| ----------------------- | ------ | ------------ | ------------------------ |
+| `/usuarios`             | GET    | -            | Lista todos los usuarios |
+| `/crear_usuario`        | POST   | User object  | Crea nuevo usuario       |
+| `/eliminar_usuario`     | DELETE | `{username}` | Elimina usuario          |
+| `/habilitar_usuario`    | POST   | `{username}` | Activa usuario           |
+| `/deshabilitar_usuario` | POST   | `{username}` | Desactiva usuario        |
 
 ### APIs de Configuraciones
 
 Base URL: `http://{targetAddress}`
 
-| Endpoint | Método | Params/Body | Descripción |
-|----------|--------|-------------|-------------|
-| `/configuraciones/lista-recetas` | GET | - | Lista de recetas disponibles |
-| `/configuraciones/datos-recetas` | GET | `?id_receta=X` | Datos de una receta |
-| `/configuraciones/lista-torres` | GET | `?id_receta=X` | Torres de una receta |
-| `/configuraciones/niveles-torre` | GET | `?id_torre=X` | Niveles de una torre |
-| `/configuraciones/tomar-datos-torre` | POST | TorreData | Envía configuración de torre |
-| `/configuraciones/tomar-datos-niveles` | POST | NivelData | Envía correcciones de niveles |
-| `/configuraciones/reset-datos-niveles` | POST | ResetFallasData | Resetea fallas |
+| Endpoint                               | Método | Params/Body     | Descripción                   |
+| -------------------------------------- | ------ | --------------- | ----------------------------- |
+| `/configuraciones/lista-recetas`       | GET    | -               | Lista de recetas disponibles  |
+| `/configuraciones/datos-recetas`       | GET    | `?id_receta=X`  | Datos de una receta           |
+| `/configuraciones/lista-torres`        | GET    | `?id_receta=X`  | Torres de una receta          |
+| `/configuraciones/niveles-torre`       | GET    | `?id_torre=X`   | Niveles de una torre          |
+| `/configuraciones/tomar-datos-torre`   | POST   | TorreData       | Envía configuración de torre  |
+| `/configuraciones/tomar-datos-niveles` | POST   | NivelData       | Envía correcciones de niveles |
+| `/configuraciones/reset-datos-niveles` | POST   | ResetFallasData | Resetea fallas                |
 
 ### Servicio de Configuraciones (`services/configuracionesApi.ts`)
 
 ```typescript
 // Soporta modo MOCK para desarrollo
-export const configuracionesApi = MOCK_MODE 
-  ? mockConfiguracionesApi 
+export const configuracionesApi = MOCK_MODE
+  ? mockConfiguracionesApi
   : realConfiguracionesApi;
 ```
 
 **Métodos disponibles:**
+
 - `obtenerListaRecetas()`
 - `obtenerDatosRecetas(idReceta)`
 - `obtenerListaTorres(idReceta)`
@@ -282,6 +293,7 @@ const { data, isConnected, error, reconnect } = useWebSocket(pollId);
 ```
 
 **URL de Conexión:**
+
 ```
 ws://{targetAddress}/ws/{pollId}
 ```
@@ -290,15 +302,16 @@ ws://{targetAddress}/ws/{pollId}
 
 ```typescript
 interface WebSocketResponse {
-  machineStatus: MachineStatus;   // Estado de la máquina
-  processData: ProcessData;        // Datos del proceso
-  technicalData: TechnicalData;    // Datos técnicos
-  alarms: Alarm[];                 // Alarmas activas
-  extraData: any[];                // Datos adicionales
+  machineStatus: MachineStatus; // Estado de la máquina
+  processData: ProcessData; // Datos del proceso
+  technicalData: TechnicalData; // Datos técnicos
+  alarms: Alarm[]; // Alarmas activas
+  extraData: any[]; // Datos adicionales
 }
 ```
 
 **Formato de mensaje recibido:**
+
 ```json
 [MachineStatus, ProcessData, TechnicalData, Alarms[], ExtraData[]]
 ```
@@ -315,25 +328,25 @@ interface WebSocketResponse {
 
 ### Tipos de Correcciones
 
-| Tipo | ID | Descripción |
-|------|-----|-------------|
-| HN | 1 | Altura de niveles |
-| ChG | 2 | Corrección de guardado |
-| ChB | - | Corrección de bajada |
-| FA | 3 | Reset de fallas |
-| uHN | - | Micro-altura de niveles |
+| Tipo | ID  | Descripción             |
+| ---- | --- | ----------------------- |
+| HN   | 1   | Altura de niveles       |
+| ChG  | 2   | Corrección de guardado  |
+| ChB  | -   | Corrección de bajada    |
+| FA   | 3   | Reset de fallas         |
+| uHN  | -   | Micro-altura de niveles |
 
 ### Estructura de Datos de Torre
 
 ```typescript
 interface TorreData {
   id: string;
-  hBastidor?: number | null;      // Altura de bastidor
-  hAjuste?: number | null;        // Altura de ajuste
-  hAjusteN1?: number | null;      // Ajuste nivel 1
-  DisteNivel?: number | null;     // Distancia entre niveles
-  ActualizarTAG?: string;         // Tag de actualización
-  id_recetario: number;           // ID de receta asociada
+  hBastidor?: number | null; // Altura de bastidor
+  hAjuste?: number | null; // Altura de ajuste
+  hAjusteN1?: number | null; // Ajuste nivel 1
+  DisteNivel?: number | null; // Distancia entre niveles
+  ActualizarTAG?: string; // Tag de actualización
+  id_recetario: number; // ID de receta asociada
 }
 ```
 
@@ -342,7 +355,7 @@ interface TorreData {
 ```typescript
 interface NivelData {
   id: string;
-  tipo: string;                   // "1" = Altura, "2" = Guardado, "3" = Fallas
+  tipo: string; // "1" = Altura, "2" = Guardado, "3" = Fallas
   Correccion1?: number | null;
   Correccion2?: number | null;
   // ... hasta Correccion10
@@ -352,6 +365,7 @@ interface NivelData {
 ### Hook `useConfiguracionData`
 
 Custom hook que centraliza toda la lógica de configuraciones:
+
 - Carga de recetas, torres y niveles
 - Estado de formularios
 - Validaciones
@@ -366,7 +380,7 @@ Custom hook que centraliza toda la lógica de configuraciones:
 ```typescript
 i18n.init({
   resources: { es: spanish, en: english },
-  lng: "es",                    // Idioma por defecto
+  lng: "es", // Idioma por defecto
   fallbackLng: "es",
   ns: ["locales"],
 });
@@ -414,15 +428,15 @@ const { t } = useTranslation();
 
 ### Rutas Principales
 
-| Ruta | Componente | Descripción |
-|------|------------|-------------|
-| `/` | Home | Vista general |
-| `/login` | Login | Autenticación |
-| `/bootstrap` | BootstrapPage | Setup inicial |
-| `/armado` | Armado | Proceso de armado |
-| `/desarmado` | Desarmado | Proceso de desarmado |
-| `/config_user` | ConfiguracionUsuario | Gestión de usuarios |
-| `/config_equipos` | ConfigEquipos | Configuración de equipos |
+| Ruta              | Componente           | Descripción              |
+| ----------------- | -------------------- | ------------------------ |
+| `/`               | Home                 | Vista general            |
+| `/login`          | Login                | Autenticación            |
+| `/bootstrap`      | BootstrapPage        | Setup inicial            |
+| `/armado`         | Armado               | Proceso de armado        |
+| `/desarmado`      | Desarmado            | Proceso de desarmado     |
+| `/config_user`    | ConfiguracionUsuario | Gestión de usuarios      |
+| `/config_equipos` | ConfigEquipos        | Configuración de equipos |
 
 ### Flujo de Inicio
 
@@ -455,6 +469,7 @@ const { t } = useTranslation();
 ### Protección de Rutas
 
 El `AuthProvider` verifica automáticamente:
+
 1. Si el usuario está autenticado
 2. Si está en una ruta pública
 3. Redirige según corresponda
@@ -468,9 +483,9 @@ El `AuthProvider` verifica automáticamente:
 ```typescript
 interface DatoReceta {
   id: number;
-  texto: string;           // Label descriptivo
-  dato: string | null;     // Valor actual
-  icono: StaticImageData | ReactNode;  // Icono asociado
+  texto: string; // Label descriptivo
+  dato: string | null; // Valor actual
+  icono: StaticImageData | ReactNode; // Icono asociado
 }
 ```
 
@@ -479,8 +494,8 @@ interface DatoReceta {
 ```typescript
 interface DatoCorreccion {
   id: number;
-  texto: string;           // Nombre del campo
-  dato: string | null;     // Valor de corrección
+  texto: string; // Nombre del campo
+  dato: string | null; // Valor de corrección
 }
 ```
 
@@ -520,7 +535,7 @@ interface NivelesTorreResponse {
     DisteNivel?: number;
     ActualizarTAG?: string;
   };
-  DatosNivelesHN?: number[];    // Array de 10 valores
+  DatosNivelesHN?: number[]; // Array de 10 valores
   DatosNivelesChG?: number[];
   DatosNivelesChB?: number[];
   DatosNivelesFallas?: number[];
@@ -536,10 +551,11 @@ Para desarrollo sin conexión al backend real:
 
 ```typescript
 // services/mockConfiguracionesApi.ts
-export const MOCK_MODE = true;  // Cambiar a false para producción
+export const MOCK_MODE = true; // Cambiar a false para producción
 ```
 
 Los mocks cargan datos desde `mocks/configuraciones/`:
+
 - `lista-recetas.json`
 - `datos-recetas.json`
 - `lista-torres.json`

@@ -25,7 +25,7 @@ export function verifyToken(token?: string | null) {
     }
 
     return payload;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

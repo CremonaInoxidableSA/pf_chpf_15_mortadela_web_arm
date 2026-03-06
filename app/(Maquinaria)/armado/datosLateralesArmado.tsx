@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { BiReceipt } from "react-icons/bi";
@@ -21,7 +21,7 @@ interface DatoTiempoReal {
   id: number;
   nombre: string;
   dato: string | number | null;
-  icono: any;
+  icono: React.ElementType;
   isReactIcon?: boolean;
 }
 
@@ -40,11 +40,14 @@ const DatosLaterales: React.FC = () => {
   const PesoActualDesmoldado = 10;
   const TorreActual = 11;
 
-  const opcionesAlarma: NavOption[] = [
-    { id: 1, nombre: t("mayus.layout") },
-    { id: 2, nombre: t("mayus.productividad") },
-    { id: 3, nombre: t("mayus.graficosHistoricos") },
-  ];
+  const opcionesAlarma = useMemo<NavOption[]>(
+    () => [
+      { id: 1, nombre: t("mayus.layout") },
+      { id: 2, nombre: t("mayus.productividad") },
+      { id: 3, nombre: t("mayus.graficosHistoricos") },
+    ],
+    [t],
+  );
 
   const datosTiempoReal: DatoTiempoReal[] = [
     {
@@ -175,7 +178,7 @@ const DatosLaterales: React.FC = () => {
         clearTimeout(debounceTimeout.current);
       }
     };
-  }, []);
+  }, [opcionesAlarma]);
 
   const handleScrollClick = (id: number) => {
     const section = document.getElementById(`section${id}`);

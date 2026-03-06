@@ -90,10 +90,10 @@ export default function ConfiguracionUsuario() {
         },
       );
 
-      let result: any = {};
+      let result: { detail?: string } = {};
       try {
         result = await res.json();
-      } catch (e) {
+      } catch {
         result = { detail: res.statusText };
       }
 
@@ -135,7 +135,6 @@ export default function ConfiguracionUsuario() {
 
   useEffect(() => {
     let mounted = true;
-    setIsLoading(true);
     authFetch(`${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`)
       .then((res) => res.json())
       .then((users: User[]) => {

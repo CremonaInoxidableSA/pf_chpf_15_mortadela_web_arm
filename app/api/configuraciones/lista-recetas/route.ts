@@ -3,7 +3,7 @@
  * Evita problemas de CORS y certificados autofirmados
  */
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const apiUrl =
       process.env.NEXT_PUBLIC_API_CORRECCIONES_URL || "192.168.20.151:8005";

@@ -28,7 +28,7 @@ interface AuthContextType {
 
 interface ApiResponse {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
   message?: string;
 }
@@ -187,7 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           );
           const decoded = JSON.parse(json);
           return decoded;
-        } catch (e) {
+        } catch {
           return null;
         }
       };
@@ -199,7 +199,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser({
               username: payload.sub,
               rol: payload.rol ?? undefined,
-            } as any);
+            } as UserSession);
             setLoading(false);
             return;
           }
@@ -220,10 +220,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         );
 
         if (res.ok) {
-          let data: any = {};
+          let data: {
+            success?: boolean;
+            data?: { needBootstrap?: boolean; user?: unknown };
+          } = {};
           try {
             data = await res.json();
-          } catch (_) {
+          } catch {
             data = {};
           }
 
@@ -285,10 +288,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       );
 
-      let data: any = {};
+      let data: {
+        access_token?: string;
+        token?: string;
+        data?: { token?: string; access_token?: string; user?: unknown };
+        user?: unknown;
+        error?: string;
+        message?: string;
+      } = {};
       try {
         data = await response.json();
-      } catch (e) {
+      } catch {
         if (!response.ok) {
           return {
             success: false,
@@ -329,7 +339,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 .join(""),
             );
             return JSON.parse(json);
-          } catch (e) {
+          } catch {
             return null;
           }
         };
@@ -339,7 +349,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser({
             username: payload.sub,
             rol: payload.rol ?? undefined,
-          } as any);
+          } as UserSession);
           try {
             if (typeof window !== "undefined")
               localStorage.setItem(
@@ -390,7 +400,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (data: RegisterData): Promise<ApiResponse> => {
+  const register = async (): Promise<ApiResponse> => {
     return {
       success: false,
       error: "Registro no disponible. Contacte al administrador.",
@@ -407,10 +417,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       );
 
-      let data: any = {};
+      let data: { success?: boolean } = {};
       try {
         data = await res.json();
-      } catch (e) {
+      } catch {
         data = {};
       }
 

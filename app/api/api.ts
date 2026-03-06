@@ -14,7 +14,7 @@ export async function authFetch(url: string, options: RequestInit = {}) {
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const body = (options as any).body;
+  const body = options.body;
   const hasContentType = Array.from(headers.keys()).some(
     (k) => k.toLowerCase() === "content-type",
   );

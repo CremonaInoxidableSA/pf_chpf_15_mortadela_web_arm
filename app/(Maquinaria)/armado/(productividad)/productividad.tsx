@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ReactNode } from "react";
 import {
@@ -88,21 +87,12 @@ const Productividad = () => {
   const { t } = useTranslation();
   const today = new Date().toISOString().split("T")[0];
 
-  const [data, setData] = useState<ProductividadData | null>(null);
-  const [dateRange, setDateRange] = useState<DateRange>({
+  const data: ProductividadData | null = null;
+  const dateRange: DateRange = {
     start: today,
     end: today,
-  });
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleDataUpdate = (
-    newData: ProductividadData,
-    startDate: string,
-    endDate: string,
-  ): void => {
-    setData(newData);
-    setDateRange({ start: startDate, end: endDate });
   };
+  const isLoading = false;
 
   const cantidadCiclosF = isLoading
     ? t("min.cargando")
@@ -209,8 +199,8 @@ const Productividad = () => {
         <div className="relative">
           <p>% {t("min.productosRealizados")}</p>
           <div className="flex h-5 rounded-md overflow-hidden bg-background5 mb-3.75">
-            {productos.map((producto, index) => (
-              <Tooltip>
+            {productos.map((producto) => (
+              <Tooltip key={producto.nombre}>
                 <TooltipTrigger asChild>
                   <TooltipContent>
                     <div

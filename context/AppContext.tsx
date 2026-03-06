@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface AppContextType {
   targetAddress: string | null;
@@ -16,17 +10,12 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [targetAddress, setTargetAddressState] = useState<string | null>(null);
-
-  // Cargar targetAddress desde localStorage al iniciar
-  useEffect(() => {
+  const [targetAddress, setTargetAddressState] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("targetAddress");
-      if (stored) {
-        setTargetAddressState(stored);
-      }
+      return localStorage.getItem("targetAddress");
     }
-  }, []);
+    return null;
+  });
 
   const setTargetAddress = (address: string | null) => {
     setTargetAddressState(address);

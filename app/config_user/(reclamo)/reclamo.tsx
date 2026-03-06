@@ -38,7 +38,7 @@ export default function GenerarReclamo() {
     reporte: "",
   });
 
-  const handleChange = (key: string, value: any) => {
+  const handleChange = (key: string, value: string | boolean | number) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
