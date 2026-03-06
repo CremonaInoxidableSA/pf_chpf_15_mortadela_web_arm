@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import { configuracionesApi } from "@/services/configuracionesApi";
-import { MOCK_MODE } from "@/services/mockConfiguracionesApi";
 import { useApp } from "../../context/AppContext";
 
 interface Torre {

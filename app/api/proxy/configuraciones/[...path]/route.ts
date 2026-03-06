@@ -17,19 +17,47 @@ export async function GET(request: Request, props: Props) {
     const url = new URL(request.url);
     const queryString = url.search;
 
-    const apiUrl =
+    let apiUrl =
       process.env.NEXT_PUBLIC_API_CORRECCIONES_URL ||
       "http://192.168.20.151:8005";
+
+    // Convertir https a http para APIs sin SSL certificate (ej: 192.168.20.151:8005)
+    if (apiUrl.startsWith("https://")) {
+      // Si es una IP interna (192.168.x.x) o localhost, cambiar a http
+      if (
+        apiUrl.includes("192.168") ||
+        apiUrl.includes("localhost") ||
+        apiUrl.includes("127.0.0.1")
+      ) {
+        apiUrl = apiUrl.replace("https://", "http://");
+      }
+    }
+
     const baseUrl = apiUrl.startsWith("http") ? apiUrl : `http://${apiUrl}`;
     const fullUrl = `${baseUrl}/configuraciones/${path}${queryString}`;
 
     console.log("[PROXY GET] Conectando a:", fullUrl);
 
+    // Pasar headers de autenticación desde la request original
+    const proxyHeaders: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+
+    // Copiar cookies de autenticación
+    const authCookie = request.headers.get("cookie");
+    if (authCookie) {
+      proxyHeaders["Cookie"] = authCookie;
+    }
+
+    // Copiar Authorization header si existe
+    const authHeader = request.headers.get("authorization");
+    if (authHeader) {
+      proxyHeaders["Authorization"] = authHeader;
+    }
+
     const response = await fetch(fullUrl, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: proxyHeaders,
     });
 
     console.log("[PROXY GET] Status:", response.status, "OK:", response.ok);
@@ -79,9 +107,22 @@ export async function POST(request: Request, props: Props) {
     const path = params.path.join("/");
     const body = await request.json();
 
-    const apiUrl =
+    let apiUrl =
       process.env.NEXT_PUBLIC_API_CORRECCIONES_URL ||
       "http://192.168.20.151:8005";
+
+    // Convertir https a http para APIs sin SSL certificate (ej: 192.168.20.151:8005)
+    if (apiUrl.startsWith("https://")) {
+      // Si es una IP interna (192.168.x.x) o localhost, cambiar a http
+      if (
+        apiUrl.includes("192.168") ||
+        apiUrl.includes("localhost") ||
+        apiUrl.includes("127.0.0.1")
+      ) {
+        apiUrl = apiUrl.replace("https://", "http://");
+      }
+    }
+
     const baseUrl = apiUrl.startsWith("http") ? apiUrl : `http://${apiUrl}`;
     const fullUrl = `${baseUrl}/configuraciones/${path}`;
 
@@ -91,11 +132,26 @@ export async function POST(request: Request, props: Props) {
       JSON.stringify(body).substring(0, 100) + "...",
     );
 
+    // Pasar headers de autenticación desde la request original
+    const proxyHeaders: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+
+    // Copiar cookies de autenticación
+    const authCookie = request.headers.get("cookie");
+    if (authCookie) {
+      proxyHeaders["Cookie"] = authCookie;
+    }
+
+    // Copiar Authorization header si existe
+    const authHeader = request.headers.get("authorization");
+    if (authHeader) {
+      proxyHeaders["Authorization"] = authHeader;
+    }
+
     const response = await fetch(fullUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: proxyHeaders,
       body: JSON.stringify(body),
     });
 

@@ -18,7 +18,6 @@ import { GoDotFill } from "react-icons/go";
 import React from "react";
 
 import { configuracionesApi } from "@/services/configuracionesApi";
-import { MOCK_MODE } from "@/services/mockConfiguracionesApi";
 import { validacionesConfiguraciones } from "@/utils/configuraciones/validaciones";
 import { useApp } from "@/context/AppContext";
 import NGripper from "@/public/equipos/Equipo_Gripper1.png";
@@ -255,7 +254,7 @@ export const useConfiguracionData = () => {
       // Obtener datos de la receta desde lista-recetas
       const listaRecetas = await configuracionesApi.obtenerListaRecetas();
       const receta = listaRecetas.find(
-        (r) => r.id_receta === parseInt(idReceta),
+        (r: any) => r.id_receta === parseInt(idReceta),
       );
 
       if (!receta) {

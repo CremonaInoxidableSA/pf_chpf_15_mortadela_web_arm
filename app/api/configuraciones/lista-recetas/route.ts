@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   try {
     const apiUrl =
       process.env.NEXT_PUBLIC_API_CORRECCIONES_URL || "192.168.20.151:8005";
-    const baseUrl = apiUrl.startsWith("http") ? apiUrl : `https://${apiUrl}`;
+    const baseUrl = apiUrl.startsWith("http") ? apiUrl : `http://${apiUrl}`;
     const fullUrl = `${baseUrl}/configuraciones/lista-recetas`;
 
     console.log("[PROXY] GET →", fullUrl);
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
           error instanceof Error
             ? error.message
             : "Error al conectar con la API",
-        hint: "Verifica que https://192.168.20.151:8005 esté disponible",
+        hint: "Verifica que http://192.168.20.151:8005 esté disponible",
       },
       { status: 500 },
     );
