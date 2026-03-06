@@ -11,7 +11,8 @@
     "layout": "LAYOUT",
     "productividad": "PRODUCTIVIDAD",
     "graficosHistoricos": "GRÁFICOS HISTÓRICOS",
-    "datosGenerales": "DATOS GENERALES"
+    "datosGenerales": "DATOS GENERALES",
+    "camaras": "CÁMARAS"
   },
   "min": {
     "usuario": "Usuario",
@@ -83,6 +84,18 @@
     "minimo6Caracteres": "Mínimo 6 caracteres",
     "confirmarContrasena": "Confirmar contraseña",
     "repiteContrasena": "Repite la contraseña",
-    "actualizarContrasena": "Actualizar contraseña"
+    "actualizarContrasena": "Actualizar contraseña",
+    "sinSenal": "Sin señal",
+    "conectando": "Conectando...",
+    "monitoreoTiempoReal": "Monitoreo en tiempo real",
+    "sistemaCamaras": "Sistema de Cámaras"
+  },
+  "cameras": {
+    "title": "Sistema de Cámaras",
+    "subtitle": "Monitoreo en tiempo real - 8 cámaras",
+    "noSignal": "Sin señal",
+    "loading": "Cargando...",
+    "live": "EN VIVO",
+    "camera": "Cámara"
   }
 }

@@ -11,7 +11,8 @@
     "layout": "LAYOUT",
     "productividad": "PRODUCTIVITY",
     "graficosHistoricos": "HISTORIC GRAPHS",
-    "datosGenerales": "GENERAL DATA"
+    "datosGenerales": "GENERAL DATA",
+    "camaras": "CAMERAS"
   },
   "min": {
     "usuario": "User",
@@ -83,6 +84,18 @@
     "minimo6Caracteres": "Minimum 6 characters",
     "confirmarContrasena": "Confirm Password",
     "repiteContrasena": "Repeat password",
-    "actualizarContrasena": "Update Password"
+    "actualizarContrasena": "Update Password",
+    "sinSenal": "No signal",
+    "conectando": "Connecting...",
+    "monitoreoTiempoReal": "Real-time monitoring",
+    "sistemaCamaras": "Camera System"
+  },
+  "cameras": {
+    "title": "Camera System",
+    "subtitle": "Real-time monitoring - 8 cameras",
+    "noSignal": "No signal",
+    "loading": "Loading...",
+    "live": "LIVE",
+    "camera": "Camera"
   }
 }

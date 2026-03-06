@@ -38,18 +38,6 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleCamarasClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    const userData = sessionStorage.getItem("user_data");
-    const url = process.env.NEXT_PUBLIC_CAMARAS_URL;
-    const params = new URLSearchParams();
-
-    if (userData) params.append("userData", encodeURIComponent(userData));
-
-    window.open(`${url}?${params.toString()}`, "_blank");
-  };
-
   const opcionesIconos: OpcionIcono[] = [
     {
       id: 1,
@@ -86,11 +74,7 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
 
   const opcionesMenu: OpcionMenu[] = [
     { id: 1, url: "/", text: t("min.home") },
-    {
-      id: 2,
-      onClick: handleCamarasClick,
-      text: t("min.camaras"),
-    },
+    { id: 2, url: "/camaras", text: t("min.camaras") },
   ];
 
   if (!mounted) {

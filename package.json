@@ -6,7 +6,10 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate-config": "node mediamtx/generate-config.js",
+    "dev:cameras": "npm run generate-config && concurrently \"cd mediamtx && mediamtx.exe\" \"next dev --hostname 0.0.0.0\"",
+    "start:cameras": "npm run generate-config && concurrently \"cd mediamtx && mediamtx.exe\" \"next start --hostname 0.0.0.0\""
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -26,6 +29,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "country-flag-icons": "^1.6.4",
+    "hls.js": "^1.6.15",
     "i18next": "^25.7.3",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.562.0",
@@ -43,6 +47,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.0",
     "tailwindcss": "^4",

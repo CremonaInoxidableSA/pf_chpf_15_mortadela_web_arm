@@ -1,0 +1,46 @@
+# Configuración MediaMTX para PF Mortadela - 8 Cámaras
+# Versión MediaMTX: v1.14.0+
+# DVR: Hikvision DS-7216HGHI-K1
+
+# Logging
+logLevel: info
+logDestinations: [stdout]
+
+# RTSP Server
+rtsp: true
+rtspAddress: :8554
+rtspTransports: [udp, multicast, tcp]
+
+# HLS Server (para streaming web)
+hls: true
+hlsAddress: :8888
+hlsAllowOrigin: "*"
+hlsSegmentCount: 7
+hlsSegmentDuration: 1s
+
+# WebRTC Server (opcional, para baja latencia)
+webrtc: true
+webrtcAddress: :8889
+webrtcAllowOrigin: "*"
+
+# Configuración de cámaras - DVR Hikvision DS-7216HGHI-K1
+# Los canales 101, 201, etc. corresponden a:
+# - Primer dígito (1,2,3...): número de cámara
+# - Últimos dos dígitos (01=main stream, 02=sub stream)
+paths:
+  cam1:
+    source: rtsp://{{DVR_USER}}:{{DVR_PASSWORD}}@{{DVR_IP}}:{{RTSP_PORT}}/Streaming/Channels/601
+  cam2:
+    source: rtsp://{{DVR_USER}}:{{DVR_PASSWORD}}@{{DVR_IP}}:{{RTSP_PORT}}/Streaming/Channels/701
+  cam3:
+    source: rtsp://{{DVR_USER}}:{{DVR_PASSWORD}}@{{DVR_IP}}:{{RTSP_PORT}}/Streaming/Channels/801
+  cam4:
+    source: rtsp://{{DVR_USER}}:{{DVR_PASSWORD}}@{{DVR_IP}}:{{RTSP_PORT}}/Streaming/Channels/901
+  cam5:
+    source: rtsp://{{DVR_USER}}:{{DVR_PASSWORD}}@{{DVR_IP}}:{{RTSP_PORT}}/Streaming/Channels/1201
+  cam6:
+    source: rtsp://{{DVR_USER}}:{{DVR_PASSWORD}}@{{DVR_IP}}:{{RTSP_PORT}}/Streaming/Channels/1301
+  cam7:
+    source: rtsp://{{DVR_USER}}:{{DVR_PASSWORD}}@{{DVR_IP}}:{{RTSP_PORT}}/Streaming/Channels/1401
+  cam8:
+    source: rtsp://{{DVR_USER}}:{{DVR_PASSWORD}}@{{DVR_IP}}:{{RTSP_PORT}}/Streaming/Channels/1501
