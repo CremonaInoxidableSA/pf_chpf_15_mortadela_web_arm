@@ -49,11 +49,8 @@ interface ListadoTorresResponse {
 interface TorreConfig {
   id_torre: number;
   nombre_torre: string;
-  ajuste_altura: number;
-  delta_niveles: number;
-  altura_n1: number;
-  bastidor_altura: number;
-  ajuste_altura_n1: number;
+  correccion_busqueda: number;
+  correccion_guardado: number;
 }
 
 interface Configuracion {

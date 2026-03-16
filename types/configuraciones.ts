@@ -41,18 +41,18 @@ export interface RecetaResponse {
 }
 
 export interface NivelesTorreResponse {
-  DatosTorre?: {
-    hBastidor?: number;
-    hAjuste?: number;
-    hAjusteN1?: number;
-    DisteNivel?: number;
-    ActualizarTAG?: string;
+  torre?: {
+    id_torre?: number;
+    nombre_torre?: string;
+    correccion_busqueda?: number;
+    correccion_guardado?: number;
   };
-  DatosNivelesHN?: number[];
-  DatosNivelesChG?: number[];
-  DatosNivelesChB?: number[];
-  DatosNivelesFallas?: number[];
-  DatosNivelesuHN?: number[];
+  configuraciones?: Array<{
+    id_correccion: number;
+    tipo: string;
+    valor: number;
+    nivel: number;
+  }>;
 }
 
 export interface TorresResponse {
@@ -61,12 +61,12 @@ export interface TorresResponse {
 
 export interface RecetasResponse {
   ListadoRecetas?: Array<{
-    id: number;
-    codigoProducto: string;
+    id_receta: number;
+    codigo_producto: string;
   }>;
 }
 
-export type TipoNivel = "HN" | "ChG" | "ChB" | "FA" | "uHN";
+export type TipoNivel = "ChG" | "ChB";
 
 // Estructura para POST /configuraciones/tomar-datos-torre
 export interface TorreDataPayload {
@@ -120,11 +120,8 @@ export interface ConfiguracionData {
   selectedTorre: string | null;
 
   datosCorrecionesTorre: DatoCorreccion[];
-  datosCorrecionesNivelesHN: DatoCorreccion[];
   datosCorrecionesNivelesChG: DatoCorreccion[];
   datosCorrecionesNivelesChB: DatoCorreccion[];
-  datosCorrecionesNivelesFA: DatoCorreccion[];
-  datosCorrecionesNivelesuHN: DatoCorreccion[];
 
   selectedOption: number;
   selectedNivel: TipoNivel;

@@ -21,7 +21,7 @@ const RecetasSection: React.FC<RecetasSectionProps> = ({
   onRecetaApply,
 }) => {
   return (
-    <div className="flex flex-col w-1/4 h-full bg-background2 p-5 rounded-lg gap-5">
+    <div className="flex flex-col w-1/2 h-full bg-background2 p-5 rounded-lg gap-5">
       <SelectConfiguracion
         disabled={loading}
         onChange={onRecetaChange}
@@ -39,7 +39,7 @@ const RecetasSection: React.FC<RecetasSectionProps> = ({
                     : dato}
                 </p>
               </div>
-              <BiReceipt className="flex h-[7%] w-[7%]" />
+              <BiReceipt className="flex h-[5%] w-[5%]" />
             </div>
           </li>
         ))}

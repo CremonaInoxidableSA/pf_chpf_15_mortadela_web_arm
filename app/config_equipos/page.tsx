@@ -6,11 +6,10 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthProvider";
 import { useConfiguracionData } from "@/hooks/configuraciones/useConfiguracionData";
 import RecetasSection from "@/components/configuraciones/RecetasSection";
-import DatosGeneralesSection from "@/components/configuraciones/DatosGeneralesSection";
 import CorreccionesSection from "@/components/configuraciones/CorreccionesSection";
 
 const Configuraciones = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -21,6 +20,8 @@ const Configuraciones = () => {
   }, []);
 
   useEffect(() => {
+    if (authLoading) return;
+
     if (!user) {
       router.push("/login");
 
@@ -30,10 +31,11 @@ const Configuraciones = () => {
     if (user.rol !== "admin" && user.rol !== "superadmin") {
       router.push("/completo");
     }
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
   if (
     !mounted ||
+    authLoading ||
     !user ||
     (user.rol !== "admin" && user.rol !== "superadmin")
   ) {
@@ -50,10 +52,6 @@ const Configuraciones = () => {
           configuracionData.cargarDatosReceta(configuracionData.selectedReceta)
         }
         onRecetaChange={configuracionData.handleRecetaChange}
-      />
-
-      <DatosGeneralesSection
-        datosGeneralesDer={configuracionData.datosGeneralesDer}
       />
 
       <CorreccionesSection

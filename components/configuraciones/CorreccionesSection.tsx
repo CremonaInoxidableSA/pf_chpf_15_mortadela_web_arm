@@ -13,7 +13,6 @@ import { toast } from "sonner";
 import SelectTorre from "./SelectTorre";
 import SelectNivel from "./SelectNivel";
 import BotonAplicar2 from "./BotonAplicar2";
-import BotonResetear from "./BotonResetear";
 import BotonRefresh from "./BotonRefresh";
 
 import { configuracionesApi } from "@/services/configuracionesApi";
@@ -74,18 +73,16 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   const handleAplicarTorre = async () => {
     const inputValues = validacionesConfiguraciones.procesarValoresInput(
       inputRefs.current || [],
-      5,
+      2,
     );
 
-    // Estructura para POST /configuraciones/tomar-datos-torre
     const finalData = {
-      id: selectedTorre!,
-      hBastidor: typeof inputValues[0] === "number" ? inputValues[0] : null,
-      hAjuste: typeof inputValues[1] === "number" ? inputValues[1] : null,
-      hAjusteN1: typeof inputValues[2] === "number" ? inputValues[2] : null,
-      DisteNivel: typeof inputValues[3] === "number" ? inputValues[3] : null,
-      ActualizarTAG: (inputValues[4] as string) || "",
-      id_recetario: parseInt(selectedReceta, 10) || 1,
+      id_torre: parseInt(selectedTorre!, 10),
+      correccion_busqueda:
+        typeof inputValues[0] === "number" ? inputValues[0] : null,
+      correccion_guardado:
+        typeof inputValues[1] === "number" ? inputValues[1] : null,
+      actualizar_tag: "",
     };
 
     console.log(
@@ -97,10 +94,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       for (let i = 1; i <= reintentos; i++) {
         try {
           await configuracionesApi.enviarDatosTorre(finalData, i);
-
-          toast.success("Datos de la torre corregidos exitosamente", {
-            position: "bottom-center",
-          });
           limpiarInputs();
           refreshData();
 
@@ -119,40 +112,26 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   };
 
   const handleAplicarNiveles = async () => {
+    const cantidadNiveles = datosActuales.length;
     const inputValues = validacionesConfiguraciones.procesarValoresInput(
       inputRefs.current || [],
-      10,
+      cantidadNiveles,
     );
 
-    // Mapear selectedNivel a tipo string ("1" o "2")
-    // HN = "1" (Altura), ChG = "2" (Guardado), ChB puede ser otro tipo
-    const getTipoFromNivel = (nivel: TipoNivel): string => {
-      switch (nivel) {
-        case "HN":
-          return "1"; // Tipo 1: Correcciones de altura
-        case "ChG":
-          return "2"; // Tipo 2: Correcciones de guardado
-        case "ChB":
-          return "2"; // Tipo 2: Correcciones de búsqueda (temporal)
-        default:
-          return "1";
-      }
-    };
+    const correcciones: Record<string, number | null> = {};
 
-    // Estructura para POST /configuraciones/tomar-datos-niveles
+    for (let i = 1; i <= 12; i++) {
+      const inputIdx = i - 1;
+      correcciones[`correccion${i}`] =
+        inputIdx < cantidadNiveles && typeof inputValues[inputIdx] === "number"
+          ? (inputValues[inputIdx] as number)
+          : null;
+    }
+
     const finalData = {
-      id: selectedTorre!,
-      tipo: getTipoFromNivel(selectedNivel),
-      Correccion1: typeof inputValues[0] === "number" ? inputValues[0] : null,
-      Correccion2: typeof inputValues[1] === "number" ? inputValues[1] : null,
-      Correccion3: typeof inputValues[2] === "number" ? inputValues[2] : null,
-      Correccion4: typeof inputValues[3] === "number" ? inputValues[3] : null,
-      Correccion5: typeof inputValues[4] === "number" ? inputValues[4] : null,
-      Correccion6: typeof inputValues[5] === "number" ? inputValues[5] : null,
-      Correccion7: typeof inputValues[6] === "number" ? inputValues[6] : null,
-      Correccion8: typeof inputValues[7] === "number" ? inputValues[7] : null,
-      Correccion9: typeof inputValues[8] === "number" ? inputValues[8] : null,
-      Correccion10: typeof inputValues[9] === "number" ? inputValues[9] : null,
+      id_torre: parseInt(selectedTorre!, 10),
+      tipo: selectedNivel,
+      ...correcciones,
     };
 
     console.log(
@@ -162,9 +141,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
 
     try {
       await configuracionesApi.enviarDatosNiveles(finalData);
-      toast.success("Datos de la torre corregidos exitosamente", {
-        position: "bottom-center",
-      });
       limpiarInputs();
       refreshData();
     } catch {
@@ -175,17 +151,15 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   };
 
   const handleAplicarReset = async (index: number) => {
-    // Crear objeto con todas las correcciones en null excepto la que se resetea (valor 0)
-    const correcciones: { [key: string]: number | null } = {};
-    for (let i = 1; i <= 10; i++) {
-      correcciones[`Correccion${i}`] = i === index + 1 ? 0 : null;
+    const correcciones: Record<string, number | null> = {};
+
+    for (let i = 1; i <= 12; i++) {
+      correcciones[`correccion${i}`] = i === index + 1 ? 0 : null;
     }
 
-    // Estructura para POST /configuraciones/reset-datos-niveles
-    // tipo siempre es "3" para reset de fallas
     const datos = {
-      id: selectedTorre!,
-      tipo: "3",
+      id_torre: parseInt(selectedTorre!, 10),
+      tipo: selectedNivel,
       ...correcciones,
     };
 
@@ -196,10 +170,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
 
     try {
       await configuracionesApi.resetearFallasNivel(datos);
-
-      toast.success("Datos de la torre corregidos exitosamente", {
-        position: "bottom-center",
-      });
       refreshData();
     } catch {
       toast.error("Error al resetear la falla", {
@@ -208,39 +178,14 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
     }
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    if (selectedOption === 1) {
-      if (index === 4) {
-        let inputValue = e.target.value.toUpperCase();
-        const tagValidado = validarTAGDuplicado(inputValue);
-
-        if (inputValue.includes(".")) {
-          inputValue = inputValue.split(".")[0];
-        }
-
-        e.target.value = tagValidado;
-      } else {
-        if (e.target.value.includes(".")) {
-          e.target.value = e.target.value.split(".")[0];
-        }
-      }
-    } else {
-      if (e.target.value.includes(".")) {
-        e.target.value = e.target.value.split(".")[0];
-      }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.includes(".")) {
+      e.target.value = e.target.value.split(".")[0];
     }
   };
 
   const renderListaItems = () => {
-    if (
-      selectedOption === 2 &&
-      (selectedNivel === "HN" ||
-        selectedNivel === "ChG" ||
-        selectedNivel === "ChB")
-    ) {
+    if (selectedOption === 2) {
       return (
         <>
           <ul
@@ -276,7 +221,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
                       onInput={(e) =>
                         handleInputChange(
                           e as React.ChangeEvent<HTMLInputElement>,
-                          index,
                         )
                       }
                     />
@@ -290,32 +234,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
             <BotonRefresh className="p-2" onClick={refreshData} />
           </div>
         </>
-      );
-    } else if (selectedOption === 2 && selectedNivel === "FA") {
-      return (
-        <ul
-          className="rounded-lg h-full grid gap-5"
-          style={{
-            gridTemplateColumns: "repeat(2, 1fr)",
-          }}
-        >
-          {datosActuales.map(({ id, texto, dato }, index) => (
-            <li
-              key={id}
-              className={`bg-background3 p-2 rounded-lg flex flex-col justify-between ${
-                index === datosActuales.length - 1 &&
-                datosActuales.length % 2 !== 0
-                  ? "col-span-2"
-                  : ""
-              }`}
-            >
-              <p className="flex flex-row w-full justify-between">
-                {texto} <span>{dato}</span>
-              </p>
-              <BotonResetear onClick={() => handleAplicarReset(index)} />
-            </li>
-          ))}
-        </ul>
       );
     } else if (selectedOption === 1) {
       return (
@@ -336,13 +254,10 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
                     }
                   }}
                   className="bg-background4 rounded-lg w-full px-2"
-                  pattern={index === 4 ? undefined : "\\d+"}
-                  type={index === 4 ? "text" : "number"}
+                  pattern="\d+"
+                  type="number"
                   onInput={(e) =>
-                    handleInputChange(
-                      e as React.ChangeEvent<HTMLInputElement>,
-                      index,
-                    )
+                    handleInputChange(e as React.ChangeEvent<HTMLInputElement>)
                   }
                 />
               </div>
@@ -356,31 +271,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
             />
             <BotonRefresh className="p-2" onClick={refreshData} />
           </div>
-        </ul>
-      );
-    } else {
-      return (
-        <ul
-          className="rounded-lg h-full grid gap-5"
-          style={{
-            gridTemplateColumns: "repeat(2, 1fr)",
-          }}
-        >
-          {datosActuales.map(({ id, texto, dato }, index) => (
-            <li
-              key={id}
-              className={`bg-background3 p-2 rounded-lg flex flex-col items-center justify-center ${
-                index === datosActuales.length - 1 &&
-                datosActuales.length % 2 !== 0
-                  ? "col-span-2"
-                  : ""
-              }`}
-            >
-              <p className="flex flex-col w-full">
-                {texto} <span>{dato}</span>
-              </p>
-            </li>
-          ))}
         </ul>
       );
     }

@@ -1,5 +1,5 @@
 interface SelectNivelProps {
-  onChange: (nivel: "HN" | "ChG" | "ChB" | "FA" | "uHN") => void;
+  onChange: (nivel: "ChG" | "ChB") => void;
   disabled?: boolean;
 }
 
@@ -10,18 +10,10 @@ const SelectNivel: React.FC<SelectNivelProps> = ({
   return (
     <select
       className="border rounded px-2 py-1 text-texto w-full"
-      defaultValue="HN"
+      defaultValue="ChG"
       disabled={disabled}
-      onChange={(e) =>
-        onChange(e.target.value as "HN" | "ChG" | "ChB" | "FA" | "uHN")
-      }
+      onChange={(e) => onChange(e.target.value as "ChG" | "ChB")}
     >
-      <option
-        className="text-texto bg-background4 hover:bg-background5"
-        value="HN"
-      >
-        Altura Nivel
-      </option>
       <option
         className="text-texto bg-background4 hover:bg-background5"
         value="ChG"
@@ -33,18 +25,6 @@ const SelectNivel: React.FC<SelectNivelProps> = ({
         value="ChB"
       >
         Corr. Búsqueda
-      </option>
-      <option
-        className="text-texto bg-background4 hover:bg-background5"
-        value="FA"
-      >
-        Fallas
-      </option>
-      <option
-        className="text-texto bg-background4 hover:bg-background5"
-        value="uHN"
-      >
-        Último Nivel
       </option>
     </select>
   );
