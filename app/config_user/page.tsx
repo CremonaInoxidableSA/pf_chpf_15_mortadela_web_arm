@@ -51,7 +51,6 @@ export default function ConfiguracionUsuario() {
         ),
       );
     } catch (err) {
-      console.error(err);
       alert(t("min.errorConexionAPI"));
     }
   };
@@ -106,7 +105,6 @@ export default function ConfiguracionUsuario() {
         prev.filter((u: User) => u.username !== username),
       );
     } catch (error) {
-      console.error(error);
       alert("Error de conexión con la API");
     }
   };
@@ -140,7 +138,6 @@ export default function ConfiguracionUsuario() {
       .then((users: User[]) => {
         if (mounted) setData(users);
       })
-      .catch((err) => console.error(err))
       .finally(() => mounted && setIsLoading(false));
 
     return () => {

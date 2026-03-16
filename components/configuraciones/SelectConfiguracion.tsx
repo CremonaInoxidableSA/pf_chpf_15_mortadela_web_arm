@@ -51,7 +51,6 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
           }
         }
       } catch (error) {
-        console.error("Error al cargar recetas:", error);
       } finally {
         setLoading(false);
       }

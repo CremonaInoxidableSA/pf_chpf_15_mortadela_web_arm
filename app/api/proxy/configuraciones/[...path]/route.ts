@@ -36,8 +36,6 @@ export async function GET(request: Request, props: Props) {
     const baseUrl = apiUrl.startsWith("http") ? apiUrl : `http://${apiUrl}`;
     const fullUrl = `${baseUrl}/configuraciones/${path}${queryString}`;
 
-    console.log("[PROXY GET] Conectando a:", fullUrl);
-
     // Pasar headers de autenticación desde la request original
     const proxyHeaders: HeadersInit = {
       "Content-Type": "application/json",
@@ -60,11 +58,8 @@ export async function GET(request: Request, props: Props) {
       headers: proxyHeaders,
     });
 
-    console.log("[PROXY GET] Status:", response.status, "OK:", response.ok);
-
     if (!response.ok) {
       const text = await response.text();
-      console.error("[PROXY GET] Error body:", text);
       return Response.json(
         {
           error: `API returned ${response.status}`,
@@ -76,20 +71,12 @@ export async function GET(request: Request, props: Props) {
     }
 
     const data = await response.json();
-    console.log("[PROXY GET] Success, returned keys:", Object.keys(data));
 
     return Response.json(data, {
       status: 200,
     });
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error("[PROXY GET ERROR]", errorMsg);
-
-    if (errorMsg.includes("ECONNREFUSED")) {
-      console.error("[HINT] → API no está disponible o puerto incorrecto");
-    } else if (errorMsg.includes("ENOTFOUND")) {
-      console.error("[HINT] → Host no encontrado (DNS/IP incorrecta)");
-    }
 
     return Response.json(
       {
@@ -126,12 +113,6 @@ export async function POST(request: Request, props: Props) {
     const baseUrl = apiUrl.startsWith("http") ? apiUrl : `http://${apiUrl}`;
     const fullUrl = `${baseUrl}/configuraciones/${path}`;
 
-    console.log("[PROXY POST] Conectando a:", fullUrl);
-    console.log(
-      "[PROXY POST] Body:",
-      JSON.stringify(body).substring(0, 100) + "...",
-    );
-
     // Pasar headers de autenticación desde la request original
     const proxyHeaders: HeadersInit = {
       "Content-Type": "application/json",
@@ -155,11 +136,8 @@ export async function POST(request: Request, props: Props) {
       body: JSON.stringify(body),
     });
 
-    console.log("[PROXY POST] Status:", response.status, "OK:", response.ok);
-
     if (!response.ok) {
       const text = await response.text();
-      console.error("[PROXY POST] Error body:", text);
       return Response.json(
         {
           error: `API returned ${response.status}`,
@@ -171,20 +149,12 @@ export async function POST(request: Request, props: Props) {
     }
 
     const data = await response.json();
-    console.log("[PROXY POST] Success");
 
     return Response.json(data, {
       status: 200,
     });
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error("[PROXY POST ERROR]", errorMsg);
-
-    if (errorMsg.includes("ECONNREFUSED")) {
-      console.error("[HINT] → API no está disponible o puerto incorrecto");
-    } else if (errorMsg.includes("ENOTFOUND")) {
-      console.error("[HINT] → Host no encontrado (DNS/IP incorrecta)");
-    }
 
     return Response.json(
       {

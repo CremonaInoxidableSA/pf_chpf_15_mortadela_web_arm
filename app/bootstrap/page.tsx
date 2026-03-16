@@ -29,7 +29,6 @@ const BootstrapPage = () => {
           router.push("/login");
         }
       } catch (err) {
-        console.error("Error checking setup:", err);
         router.push("/login");
       } finally {
         setLoading(false);
@@ -77,7 +76,6 @@ const BootstrapPage = () => {
         router.push("/login");
       }, 2000);
     } catch (err) {
-      console.error(err);
       setError("Error al conectarse con el servidor");
       setLoading(false);
     }

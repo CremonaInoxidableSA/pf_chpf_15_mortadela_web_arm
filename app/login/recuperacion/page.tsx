@@ -33,7 +33,6 @@ const Recuperacion = () => {
       }
 
       const url = new URL("/recuperacion_check", apiUrl).toString();
-      console.log("Realizando solicitud a:", url);
 
       const response = await fetch(url, {
         method: "POST",
@@ -50,7 +49,6 @@ const Recuperacion = () => {
         toast.error(data.error || data.message || t("min.errorEnvioCorreo"));
       }
     } catch (err) {
-      console.error("Error en recuperación:", err);
       toast.error("Error de conexión con el servidor");
     } finally {
       setLoading(false);

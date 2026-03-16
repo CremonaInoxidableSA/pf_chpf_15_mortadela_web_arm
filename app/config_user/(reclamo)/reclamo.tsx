@@ -90,7 +90,6 @@ export default function GenerarReclamo() {
         });
       }
     } catch (error) {
-      console.error("Error al enviar reclamo:", error);
       toast.error(t("min.errorReclamo"), {
         position: "top-center",
       });

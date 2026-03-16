@@ -93,7 +93,6 @@ const CambioPass = () => {
         });
       }
     } catch (error) {
-      console.error("Change password error:", error);
       toast.error(t("min.errorConexion"), {
         position: "top-center",
       });

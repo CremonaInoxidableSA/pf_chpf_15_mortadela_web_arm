@@ -85,11 +85,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       actualizar_tag: "",
     };
 
-    console.log(
-      "[APLICAR TORRE] Estructura a enviar:",
-      JSON.stringify(finalData, null, 2),
-    );
-
     const intentarEnvio = async (reintentos: number = 5) => {
       for (let i = 1; i <= reintentos; i++) {
         try {
@@ -134,11 +129,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       ...correcciones,
     };
 
-    console.log(
-      "[APLICAR NIVELES] Estructura a enviar:",
-      JSON.stringify(finalData, null, 2),
-    );
-
     try {
       await configuracionesApi.enviarDatosNiveles(finalData);
       limpiarInputs();
@@ -162,11 +152,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       tipo: selectedNivel,
       ...correcciones,
     };
-
-    console.log(
-      "[RESET FALLAS] Estructura a enviar:",
-      JSON.stringify(datos, null, 2),
-    );
 
     try {
       await configuracionesApi.resetearFallasNivel(datos);

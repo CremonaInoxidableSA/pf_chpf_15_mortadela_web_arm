@@ -10,8 +10,6 @@ export async function GET() {
     const baseUrl = apiUrl.startsWith("http") ? apiUrl : `http://${apiUrl}`;
     const fullUrl = `${baseUrl}/configuraciones/lista-recetas`;
 
-    console.log("[PROXY] GET →", fullUrl);
-
     const response = await fetch(fullUrl, {
       method: "GET",
       headers: {
@@ -28,10 +26,6 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error(
-      "[PROXY ERROR]",
-      error instanceof Error ? error.message : error,
-    );
     return Response.json(
       {
         error:

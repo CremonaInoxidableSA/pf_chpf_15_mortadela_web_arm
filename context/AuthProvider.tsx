@@ -264,7 +264,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.warn("Error checking session with /check endpoint:", err);
       }
     } catch (error) {
-      console.error("Session check error:", error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -395,7 +394,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         error: data?.error ?? data?.message ?? "Login fallido",
       };
     } catch (error) {
-      console.error("Login error:", error);
       return { success: false, error: "Error de conexión" };
     }
   };
@@ -439,7 +437,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return res.ok && (data.success ?? true);
     } catch (error) {
-      console.error("Logout error:", error);
       setUser(null);
       try {
         if (typeof window !== "undefined") {

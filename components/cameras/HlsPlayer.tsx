@@ -76,15 +76,12 @@ export default function HlsPlayer({
             if (data.fatal) {
               switch (data.type) {
                 case HlsModule.ErrorTypes.NETWORK_ERROR:
-                  console.error("Network error - trying to recover");
                   hls.startLoad();
                   break;
                 case HlsModule.ErrorTypes.MEDIA_ERROR:
-                  console.error("Media error - trying to recover");
                   hls.recoverMediaError();
                   break;
                 default:
-                  console.error("Fatal error - destroying HLS instance");
                   hls.destroy();
                   onError?.();
                   break;

@@ -69,29 +69,24 @@ interface NivelesTorreResponse {
 const realConfiguracionesApi = {
   obtenerListaRecetas: async (): Promise<Receta[]> => {
     const url = getProxyUrl("lista-recetas");
-    console.log("[DEBUG] GET lista-recetas →", url);
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error(`${response.status}`);
       const data: ListadoRecetasResponse = await response.json();
-      console.log("[DEBUG] Datos recibidos:", data.ListadoRecetas);
       return data.ListadoRecetas;
     } catch (error) {
-      console.error("[ERROR]", error);
       throw error;
     }
   },
 
   obtenerListaTorres: async (idReceta: string): Promise<Torre[]> => {
     const url = getProxyUrl("lista-torres", { id_receta: idReceta });
-    console.log("[DEBUG] GET lista-torres →", url);
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error(`${response.status}`);
       const data: ListadoTorresResponse = await response.json();
       return data.ListadoTorres;
     } catch (error) {
-      console.error("[ERROR]", error);
       throw error;
     }
   },
@@ -100,18 +95,12 @@ const realConfiguracionesApi = {
     idTorre: string,
   ): Promise<NivelesTorreResponse> => {
     const url = getProxyUrl("niveles-torre", { id_torre: idTorre });
-    console.log("[DEBUG] GET niveles-torre →", url);
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error(`${response.status}`);
       const data: NivelesTorreResponse = await response.json();
-      console.log(
-        "[DEBUG] Configuraciones recibidas:",
-        data.configuraciones.length,
-      );
       return data;
     } catch (error) {
-      console.error("[ERROR]", error);
       throw error;
     }
   },
@@ -121,11 +110,6 @@ const realConfiguracionesApi = {
     intento: number = 1,
   ): Promise<void> => {
     const url = getProxyUrl("tomar-datos-torre");
-    console.log(
-      `[DEBUG] POST tomar-datos-torre (intento ${intento}) →`,
-      url,
-      datos,
-    );
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -135,16 +119,13 @@ const realConfiguracionesApi = {
         body: JSON.stringify(datos),
       });
       if (!response.ok) throw new Error(`${response.status}`);
-      console.log("[DEBUG] Datos de torre enviados exitosamente");
     } catch (error) {
-      console.error("[ERROR] Fallo al enviar datos de torre:", error);
       throw error;
     }
   },
 
   enviarDatosNiveles: async (datos: Record<string, unknown>): Promise<void> => {
     const url = getProxyUrl("tomar-datos-niveles");
-    console.log("[DEBUG] POST tomar-datos-niveles →", url, datos);
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -154,9 +135,7 @@ const realConfiguracionesApi = {
         body: JSON.stringify(datos),
       });
       if (!response.ok) throw new Error(`${response.status}`);
-      console.log("[DEBUG] Datos de niveles enviados exitosamente");
     } catch (error) {
-      console.error("[ERROR] Fallo al enviar datos de niveles:", error);
       throw error;
     }
   },
@@ -165,7 +144,6 @@ const realConfiguracionesApi = {
     datos: Record<string, unknown>,
   ): Promise<void> => {
     const url = getProxyUrl("reset-datos-niveles");
-    console.log("[DEBUG] POST reset-datos-niveles →", url, datos);
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -175,9 +153,7 @@ const realConfiguracionesApi = {
         body: JSON.stringify(datos),
       });
       if (!response.ok) throw new Error(`${response.status}`);
-      console.log("[DEBUG] Fallas de nivel reseteadas exitosamente");
     } catch (error) {
-      console.error("[ERROR] Fallo al resetear fallas:", error);
       throw error;
     }
   },

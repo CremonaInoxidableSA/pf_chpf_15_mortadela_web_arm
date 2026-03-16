@@ -35,7 +35,6 @@ const UserIcon = () => {
       await logout();
       setOpen(false);
     } catch (error) {
-      console.error("Error closing session:", error);
     } finally {
       setLoggingOut(false);
     }

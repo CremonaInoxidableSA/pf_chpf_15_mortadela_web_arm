@@ -60,7 +60,6 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
           onChange("");
         }
       } catch (error) {
-        console.error("Error al cargar torres:", error);
         setTorres([]);
         onTorresChange([]);
         onChange("");
