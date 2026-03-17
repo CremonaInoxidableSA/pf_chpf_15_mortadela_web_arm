@@ -21,22 +21,17 @@ import { useAuth } from "@/context/AuthProvider";
 export default function ConfiguracionUsuario() {
   const { t } = useTranslation();
   const refetchUsuarios = async () => {
-    const res = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`,
-    );
+    const res = await authFetch(`/api/proxy/auth/usuarios`);
     const users = await res.json();
     setData(users);
   };
 
   const deshabilitarUsuario = async (username: string) => {
     try {
-      const res = await authFetch(
-        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/deshabilitar_usuario`,
-        {
-          method: "POST",
-          body: JSON.stringify({ username }),
-        },
-      );
+      const res = await authFetch(`/api/proxy/auth/deshabilitar_usuario`, {
+        method: "POST",
+        body: JSON.stringify({ username }),
+      });
 
       const result = await res.json();
 
@@ -56,13 +51,10 @@ export default function ConfiguracionUsuario() {
   };
 
   const habilitarUsuario = async (username: string) => {
-    const res = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_AUTH_URL}/habilitar_usuario`,
-      {
-        method: "POST",
-        body: JSON.stringify({ username }),
-      },
-    );
+    const res = await authFetch(`/api/proxy/auth/habilitar_usuario`, {
+      method: "POST",
+      body: JSON.stringify({ username }),
+    });
 
     if (!res.ok) return;
 
@@ -81,13 +73,10 @@ export default function ConfiguracionUsuario() {
     if (!confirmar) return;
 
     try {
-      const res = await authFetch(
-        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/eliminar_usuario`,
-        {
-          method: "DELETE",
-          body: JSON.stringify({ username }),
-        },
-      );
+      const res = await authFetch(`/api/proxy/auth/eliminar_usuario`, {
+        method: "DELETE",
+        body: JSON.stringify({ username }),
+      });
 
       let result: { detail?: string } = {};
       try {
@@ -133,7 +122,7 @@ export default function ConfiguracionUsuario() {
 
   useEffect(() => {
     let mounted = true;
-    authFetch(`${process.env.NEXT_PUBLIC_API_AUTH_URL}/usuarios`)
+    authFetch(`/api/proxy/auth/usuarios`)
       .then((res) => res.json())
       .then((users: User[]) => {
         if (mounted) setData(users);

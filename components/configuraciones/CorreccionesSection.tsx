@@ -7,7 +7,7 @@ import type {
   TipoNivel,
 } from "@/types/configuraciones";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import SelectTorre from "./SelectTorre";
@@ -28,6 +28,8 @@ interface CorreccionesSectionProps {
   isButtonDisabled: boolean;
   inputRefs: React.RefObject<(HTMLInputElement | null)[]>;
   datosGeneralesIzq: DatoReceta[];
+  nombreTorreActual: string;
+  torresRefreshKey: number;
 
   handleOptionChange: (option: number) => void;
   handleNivelChange: (nivel: TipoNivel) => void;
@@ -52,6 +54,8 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   isButtonDisabled,
   inputRefs,
   datosGeneralesIzq,
+  nombreTorreActual,
+  torresRefreshKey,
   handleOptionChange,
   handleNivelChange,
   handleTorreChange,
@@ -59,6 +63,14 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   validarTAGDuplicado,
   refreshData,
 }) => {
+  const [tagValue, setTagValue] = useState<string>("");
+  const [newTagValue, setNewTagValue] = useState<string>("");
+
+  useEffect(() => {
+    setTagValue(nombreTorreActual);
+    setNewTagValue("");
+  }, [nombreTorreActual]);
+
   // Función para limpiar los inputs después de aplicar cambios
   const limpiarInputs = () => {
     if (inputRefs.current) {
@@ -82,7 +94,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
         typeof inputValues[0] === "number" ? inputValues[0] : null,
       correccion_guardado:
         typeof inputValues[1] === "number" ? inputValues[1] : null,
-      actualizar_tag: "",
+      actualizar_tag: newTagValue,
     };
 
     const intentarEnvio = async (reintentos: number = 5) => {
@@ -248,6 +260,19 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
               </div>
             </li>
           ))}
+          <li className="bg-background3 p-2 rounded-lg flex flex-col">
+            <p>Actualizar TAG</p>
+            <div className="flex flex-row items-center gap-2">
+              {tagValue}
+              -
+              <input
+                className="bg-background4 rounded-lg w-full px-2"
+                type="text"
+                value={newTagValue}
+                onChange={(e) => setNewTagValue(e.target.value)}
+              />
+            </div>
+          </li>
           <div className="col-span-2 flex flex-col gap-2">
             <BotonAplicar2
               className="p-2"
@@ -277,6 +302,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
               {id === 1 && (
                 <SelectTorre
                   disabled={loading || datosGeneralesIzq[0].dato === "null"}
+                  refreshKey={torresRefreshKey}
                   refreshTorres={() => {}}
                   refreshTorres2={() => {}}
                   selectedReceta={selectedReceta}

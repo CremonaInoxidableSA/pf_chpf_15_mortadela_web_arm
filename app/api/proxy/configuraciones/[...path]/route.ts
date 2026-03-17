@@ -1,7 +1,9 @@
 /**
  * API Route proxy genérico para todas las llamadas a configuraciones
  * Ruta: /api/proxy/configuraciones/[...path]
- * Redirige a: https://192.168.20.151:8005/configuraciones/[...path]
+ * Redirige a: process.env.API_CORRECCIONES_URL/configuraciones/[...path]
+ *
+ * Corre únicamente en el servidor — la URL real de la API nunca se envía al navegador.
  */
 
 type Props = {
@@ -10,6 +12,22 @@ type Props = {
   }>;
 };
 
+function getBaseUrl(): string {
+  const raw = process.env.API_CORRECCIONES_URL ?? "http://192.168.20.151:8005";
+  return raw.startsWith("http") ? raw : `http://${raw}`;
+}
+
+function buildHeaders(request: Request): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  const cookie = request.headers.get("cookie");
+  if (cookie) headers["Cookie"] = cookie;
+  const auth = request.headers.get("authorization");
+  if (auth) headers["Authorization"] = auth;
+  return headers;
+}
+
 export async function GET(request: Request, props: Props) {
   try {
     const params = await props.params;
@@ -17,41 +35,8 @@ export async function GET(request: Request, props: Props) {
     const url = new URL(request.url);
     const queryString = url.search;
 
-    let apiUrl =
-      process.env.NEXT_PUBLIC_API_CORRECCIONES_URL ||
-      "http://192.168.20.151:8005";
-
-    // Convertir https a http para APIs sin SSL certificate (ej: 192.168.20.151:8005)
-    if (apiUrl.startsWith("https://")) {
-      // Si es una IP interna (192.168.x.x) o localhost, cambiar a http
-      if (
-        apiUrl.includes("192.168") ||
-        apiUrl.includes("localhost") ||
-        apiUrl.includes("127.0.0.1")
-      ) {
-        apiUrl = apiUrl.replace("https://", "http://");
-      }
-    }
-
-    const baseUrl = apiUrl.startsWith("http") ? apiUrl : `http://${apiUrl}`;
-    const fullUrl = `${baseUrl}/configuraciones/${path}${queryString}`;
-
-    // Pasar headers de autenticación desde la request original
-    const proxyHeaders: HeadersInit = {
-      "Content-Type": "application/json",
-    };
-
-    // Copiar cookies de autenticación
-    const authCookie = request.headers.get("cookie");
-    if (authCookie) {
-      proxyHeaders["Cookie"] = authCookie;
-    }
-
-    // Copiar Authorization header si existe
-    const authHeader = request.headers.get("authorization");
-    if (authHeader) {
-      proxyHeaders["Authorization"] = authHeader;
-    }
+    const fullUrl = `${getBaseUrl()}/configuraciones/${path}${queryString}`;
+    const proxyHeaders = buildHeaders(request);
 
     const response = await fetch(fullUrl, {
       method: "GET",
@@ -94,41 +79,8 @@ export async function POST(request: Request, props: Props) {
     const path = params.path.join("/");
     const body = await request.json();
 
-    let apiUrl =
-      process.env.NEXT_PUBLIC_API_CORRECCIONES_URL ||
-      "http://192.168.20.151:8005";
-
-    // Convertir https a http para APIs sin SSL certificate (ej: 192.168.20.151:8005)
-    if (apiUrl.startsWith("https://")) {
-      // Si es una IP interna (192.168.x.x) o localhost, cambiar a http
-      if (
-        apiUrl.includes("192.168") ||
-        apiUrl.includes("localhost") ||
-        apiUrl.includes("127.0.0.1")
-      ) {
-        apiUrl = apiUrl.replace("https://", "http://");
-      }
-    }
-
-    const baseUrl = apiUrl.startsWith("http") ? apiUrl : `http://${apiUrl}`;
-    const fullUrl = `${baseUrl}/configuraciones/${path}`;
-
-    // Pasar headers de autenticación desde la request original
-    const proxyHeaders: HeadersInit = {
-      "Content-Type": "application/json",
-    };
-
-    // Copiar cookies de autenticación
-    const authCookie = request.headers.get("cookie");
-    if (authCookie) {
-      proxyHeaders["Cookie"] = authCookie;
-    }
-
-    // Copiar Authorization header si existe
-    const authHeader = request.headers.get("authorization");
-    if (authHeader) {
-      proxyHeaders["Authorization"] = authHeader;
-    }
+    const fullUrl = `${getBaseUrl()}/configuraciones/${path}`;
+    const proxyHeaders = buildHeaders(request);
 
     const response = await fetch(fullUrl, {
       method: "POST",

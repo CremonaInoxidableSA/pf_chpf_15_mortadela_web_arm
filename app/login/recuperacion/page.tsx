@@ -24,17 +24,7 @@ const Recuperacion = () => {
     setLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_AUTH_URL;
-
-      if (!apiUrl) {
-        toast.error("Error: URL del servidor no configurada");
-        setLoading(false);
-        return;
-      }
-
-      const url = new URL("/recuperacion_check", apiUrl).toString();
-
-      const response = await fetch(url, {
+      const response = await fetch(`/api/proxy/auth/recuperacion_check`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email }),

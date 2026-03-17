@@ -30,7 +30,7 @@ const ResetPassword = () => {
     async (tokenToVerify: string) => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_MAIL_URL}/verificar-token-recuperacion?token=${tokenToVerify}`,
+          `/api/proxy/mail/verificar-token-recuperacion?token=${tokenToVerify}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -84,17 +84,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_AUTH_URL;
-
-      if (!apiUrl) {
-        toast.error(t("min.errorUrlServidorNoConfigurada"));
-        setLoading(false);
-        return;
-      }
-
-      const url = new URL("/reset-password", apiUrl).toString();
-
-      const response = await fetch(url, {
+      const response = await fetch(`/api/proxy/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

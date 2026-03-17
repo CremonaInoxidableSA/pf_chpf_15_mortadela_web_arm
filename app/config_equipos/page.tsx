@@ -64,6 +64,8 @@ const Configuraciones = () => {
         inputRefs={configuracionData.inputRefs}
         isButtonDisabled={configuracionData.isButtonDisabled}
         loading={configuracionData.loading}
+        nombreTorreActual={configuracionData.nombreTorreActual}
+        torresRefreshKey={configuracionData.torresRefreshKey}
         refreshData={configuracionData.refreshData}
         selectedNivel={configuracionData.selectedNivel}
         selectedOption={configuracionData.selectedOption}

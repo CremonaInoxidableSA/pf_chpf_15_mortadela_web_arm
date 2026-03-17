@@ -18,9 +18,7 @@ const BootstrapPage = () => {
   useEffect(() => {
     const checkSetup = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_AUTH_URL}/needs-setup`,
-        );
+        const res = await fetch(`/api/proxy/auth/needs-setup`);
         const data = await res.json();
 
         if (data.needs_setup) {
@@ -44,22 +42,19 @@ const BootstrapPage = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/create-superadmin`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            username,
-            nombre,
-            apellido,
-            password,
-          }),
+      const res = await fetch(`/api/proxy/auth/create-superadmin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          email,
+          username,
+          nombre,
+          apellido,
+          password,
+        }),
+      });
 
       const result = await res.json();
 

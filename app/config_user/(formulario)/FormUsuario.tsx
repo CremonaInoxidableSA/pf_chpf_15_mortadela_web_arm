@@ -55,13 +55,10 @@ export default function FormUsuario({ onUserCreated }: Props) {
 
     const payload = { ...form, habilitado: form.habilitado ? 1 : 0 };
 
-    const res = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_AUTH_URL}/crear_usuario`,
-      {
-        method: "POST",
-        body: JSON.stringify(payload),
-      },
-    );
+    const res = await authFetch(`/api/proxy/auth/crear_usuario`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
 
     if (!res.ok) {
       const err = await res.json();

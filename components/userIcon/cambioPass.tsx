@@ -54,18 +54,15 @@ const CambioPass = () => {
       };
       if (token) headers["Authorization"] = `Bearer ${token}`;
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/cambiar_password`,
-        {
-          method: "POST",
-          headers,
-          body: JSON.stringify({
-            current_password: form.current_password,
-            new_password: form.new_password,
-          }),
-          credentials: "include",
-        },
-      );
+      const res = await fetch(`/api/proxy/auth/cambiar_password`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          current_password: form.current_password,
+          new_password: form.new_password,
+        }),
+        credentials: "include",
+      });
 
       let data: {
         success?: boolean;

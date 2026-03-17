@@ -133,9 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkSession = async () => {
     try {
       try {
-        const needsSetupRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_AUTH_URL}/needs-setup`,
-        );
+        const needsSetupRes = await fetch(`/api/proxy/auth/needs-setup`);
         if (needsSetupRes.ok) {
           const needsSetupData = await needsSetupRes.json();
           if (needsSetupData.needs_setup === true) {
@@ -211,13 +209,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_AUTH_URL}/check`,
-          {
-            credentials: "include",
-            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-          },
-        );
+        const res = await fetch(`/api/proxy/auth/check`, {
+          credentials: "include",
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
 
         if (res.ok) {
           let data: {
@@ -277,15 +272,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const body = { username, password };
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-          credentials: "include",
-        },
-      );
+      const response = await fetch(`/api/proxy/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        credentials: "include",
+      });
 
       let data: {
         access_token?: string;
@@ -407,13 +399,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async (): Promise<boolean> => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_AUTH_URL}/logout`,
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
+      const res = await fetch(`/api/proxy/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
 
       let data: { success?: boolean } = {};
       try {

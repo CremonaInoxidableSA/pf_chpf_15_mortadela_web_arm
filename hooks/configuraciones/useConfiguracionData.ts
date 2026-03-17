@@ -117,6 +117,8 @@ export const useConfiguracionData = () => {
   const [selectedNivel, setSelectedNivel] = useState<TipoNivel>("ChG");
   const [torres, setTorres] = useState<Torre[]>([]);
   const [initialized, setInitialized] = useState(false);
+  const [nombreTorreActual, setNombreTorreActual] = useState<string>("");
+  const [torresRefreshKey, setTorresRefreshKey] = useState(0);
 
   // Permitir llamadas API siempre (el proxy las maneja)
   const canMakeApiCalls = true;
@@ -269,6 +271,7 @@ export const useConfiguracionData = () => {
         setTorres(data);
         // Siempre seleccionar la primera torre al cambiar de receta
         setSelectedTorre(data[0].id_torre.toString());
+        setNombreTorreActual(data[0].nombre_torre ?? "");
       } else {
         setTorres([]);
         setSelectedTorre(null);
@@ -293,6 +296,8 @@ export const useConfiguracionData = () => {
 
       const torre = data.torre;
       const configuraciones = data.configuraciones ?? [];
+
+      setNombreTorreActual(torre.nombre_torre ?? "");
 
       // Correcciones generales de la torre
       setDatosCorrecionesTorre([
@@ -413,6 +418,8 @@ export const useConfiguracionData = () => {
 
     handleTorreChange: (torre: string) => {
       setSelectedTorre(torre);
+      const found = torres.find((t) => t.id_torre.toString() === torre);
+      if (found) setNombreTorreActual(found.nombre_torre);
     },
 
     handleNivelChange: (nivel: TipoNivel) => {
@@ -448,6 +455,7 @@ export const useConfiguracionData = () => {
 
     refreshData: () => {
       if (selectedTorre && selectedReceta) {
+        setTorresRefreshKey((k) => k + 1);
         cargarDatosTorre(selectedTorre);
       }
     },
@@ -461,6 +469,8 @@ export const useConfiguracionData = () => {
     selectedOption,
     selectedNivel,
     torres,
+    nombreTorreActual,
+    torresRefreshKey,
     datosGeneralesIzq,
     datosGeneralesDer,
     datosActuales: obtenerDatosActuales(),

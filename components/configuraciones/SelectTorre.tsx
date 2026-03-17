@@ -15,6 +15,7 @@ interface SelectTorreProps {
   refreshTorres2: () => void;
   selectedTorre: string | null;
   disabled?: boolean;
+  refreshKey?: number;
 }
 
 const SelectTorre: React.FC<SelectTorreProps> = ({
@@ -25,6 +26,7 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
   refreshTorres2,
   selectedTorre,
   disabled = false,
+  refreshKey = 0,
 }) => {
   const [torres, setTorres] = useState<Torre[]>([]);
   const [loading, setLoading] = useState(false);
@@ -77,6 +79,26 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
       refreshTorres(selectedReceta);
     }
   }, [refreshTorres, refreshTorres2, selectedReceta]);
+
+  useEffect(() => {
+    if (refreshKey === 0 || !selectedReceta) return;
+    const reload = async () => {
+      setLoading(true);
+      try {
+        const data =
+          await configuracionesApi.obtenerListaTorres(selectedReceta);
+        const torresData = data || [];
+        setTorres(torresData);
+        onTorresChange(torresData);
+      } catch {
+        // silent
+      } finally {
+        setLoading(false);
+      }
+    };
+    reload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshKey]);
 
   return (
     <select

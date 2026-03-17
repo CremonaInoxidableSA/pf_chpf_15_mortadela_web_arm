@@ -58,19 +58,16 @@ export default function GenerarReclamo() {
     }
 
     try {
-      const response = await authFetch(
-        `${process.env.NEXT_PUBLIC_API_MAIL_URL}/reclamos/crear`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            nombre: form.nombre,
-            apellido: form.apellido,
-            area: form.area,
-            reporte: form.reporte,
-            email: email,
-          }),
-        },
-      );
+      const response = await authFetch(`/api/proxy/mail/reclamos/crear`, {
+        method: "POST",
+        body: JSON.stringify({
+          nombre: form.nombre,
+          apellido: form.apellido,
+          area: form.area,
+          reporte: form.reporte,
+          email: email,
+        }),
+      });
 
       if (response.ok) {
         const data = await response.json();

@@ -59,7 +59,7 @@ export default function FormUsuario({
     const fetchUserData = async () => {
       try {
         const res = await authFetch(
-          `${process.env.NEXT_PUBLIC_API_AUTH_URL}/data_usuario/${usernameToEdit}`,
+          `/api/proxy/auth/data_usuario/${usernameToEdit}`,
           { method: "GET" },
         );
 
@@ -111,13 +111,10 @@ export default function FormUsuario({
     };
 
     const endpoint = isEditing ? "/editar_usuario" : "/crear_usuario";
-    const res = await authFetch(
-      `${process.env.NEXT_PUBLIC_API_AUTH_URL}${endpoint}`,
-      {
-        method: "POST",
-        body: JSON.stringify(payload),
-      },
-    );
+    const res = await authFetch(`/api/proxy/auth${endpoint}`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
 
     if (!res.ok) {
       const err = await res.json();
