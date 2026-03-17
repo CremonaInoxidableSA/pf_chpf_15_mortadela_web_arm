@@ -263,8 +263,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
           <li className="bg-background3 p-2 rounded-lg flex flex-col">
             <p>Actualizar TAG</p>
             <div className="flex flex-row items-center gap-2">
-              {tagValue}
-              -
+              <span className="whitespace-nowrap shrink-0">{tagValue} -</span>
               <input
                 className="bg-background4 rounded-lg w-full px-2"
                 type="text"
