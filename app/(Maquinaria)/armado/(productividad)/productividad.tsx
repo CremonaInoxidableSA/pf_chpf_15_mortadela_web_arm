@@ -173,62 +173,57 @@ const Productividad = () => {
 
   return (
     <div
-      className="flex flex-col-reverse md:flex-row gap-5"
-      id="ProductividadSection"
-    >
-      <div className="w-full md:w-[78%] flex flex-col bg-background2 rounded-md p-5 relative">
-        <p className="text-left text-xl font-bold mb-[-5]">
-          {t("mayus.productividad")}
+      className="w-full md:w-[75%] flex flex-col bg-background2 rounded-md p-5">
+      <p className="text-left text-xl font-bold mb-[-5]">
+        {t("mayus.productividad")}
+      </p>
+      <div className="flex items-center">
+        <p className="inline text-[#ffa500] font-system-ui text-md">
+          {dateRange.start}
+          <span className="inline px-1.25 font-semibold"> - </span>
+          {dateRange.end}
         </p>
-        <div className="flex items-center">
-          <p className="inline text-[#ffa500] font-system-ui text-md">
-            {dateRange.start}
-            <span className="inline px-1.25 font-semibold"> - </span>
-            {dateRange.end}
-          </p>
+      </div>
+      <div className="flex justify-between w-full px-12.5">
+        {datos.map((dato, index) => (
+          <div key={index} className="flex flex-col items-center text-center">
+            <p className="text-[2.5vw] font-semibold">{dato.dato}</p>
+            <p className="text-[1vw] text-texto2">{dato.titulo}</p>
+          </div>
+        ))}
+      </div>
+      <hr className="border-t-4 border-texto rounded-md mx-auto my-5 w-4/5" />
+      <div className="relative">
+        <p>% {t("min.productosRealizados")}</p>
+        <div className="flex h-5 rounded-md overflow-hidden bg-background5 mb-3.75">
+          {productos.map((producto) => (
+            <Tooltip key={producto.nombre}>
+              <TooltipTrigger asChild>
+                <TooltipContent>
+                  <div
+                    className="h-full"
+                    style={{
+                      width: `${producto.porcentaje}%`,
+                      backgroundColor: producto.color,
+                    }}
+                  />
+                </TooltipContent>
+              </TooltipTrigger>
+            </Tooltip>
+          ))}
         </div>
-        <div className="flex justify-between w-full px-12.5">
-          {datos.map((dato, index) => (
-            <div key={index} className="flex flex-col items-center text-center">
-              <p className="text-[2.5vw] font-semibold">{dato.dato}</p>
-              <p className="text-[1vw] text-texto2">{dato.titulo}</p>
+        <div className="flex justify-around flex-wrap">
+          {productos.map((producto, index) => (
+            <div key={index} className="flex items-center m-[5px_10px]">
+              <p
+                className="w-3.75 h-3.75 rounded-md mr-1.25"
+                style={{ backgroundColor: producto.color }}
+              />
+              <p>{`${producto.nombre} - ${producto.porcentaje}% (${producto.peso})`}</p>
             </div>
           ))}
         </div>
-        <hr className="border-t-4 border-texto rounded-md mx-auto my-5 w-4/5" />
-        <div className="relative">
-          <p>% {t("min.productosRealizados")}</p>
-          <div className="flex h-5 rounded-md overflow-hidden bg-background5 mb-3.75">
-            {productos.map((producto) => (
-              <Tooltip key={producto.nombre}>
-                <TooltipTrigger asChild>
-                  <TooltipContent>
-                    <div
-                      className="h-full"
-                      style={{
-                        width: `${producto.porcentaje}%`,
-                        backgroundColor: producto.color,
-                      }}
-                    />
-                  </TooltipContent>
-                </TooltipTrigger>
-              </Tooltip>
-            ))}
-          </div>
-          <div className="flex justify-around flex-wrap">
-            {productos.map((producto, index) => (
-              <div key={index} className="flex items-center m-[5px_10px]">
-                <p
-                  className="w-3.75 h-3.75 rounded-md mr-1.25"
-                  style={{ backgroundColor: producto.color }}
-                />
-                <p>{`${producto.nombre} - ${producto.porcentaje}% (${producto.peso})`}</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
-      <div className="w-full md:w-[22%] flex flex-col gap-5 ocultar-en-pdf"></div>
     </div>
   );
 };

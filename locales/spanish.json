@@ -12,7 +12,8 @@
     "productividad": "PRODUCTIVIDAD",
     "graficosHistoricos": "GRÁFICOS HISTÓRICOS",
     "datosGenerales": "DATOS GENERALES",
-    "camaras": "CÁMARAS"
+    "camaras": "CÁMARAS",
+    "rangoDeFechas": "RANGO DE FECHAS"
   },
   "min": {
     "usuario": "Usuario",
@@ -88,7 +89,11 @@
     "sinSenal": "Sin señal",
     "conectando": "Conectando...",
     "monitoreoTiempoReal": "Monitoreo en tiempo real",
-    "sistemaCamaras": "Sistema de Cámaras"
+    "sistemaCamaras": "Sistema de Cámaras",
+    "seleccionarFechas": "Seleccionar fechas",
+    "aplicar": "Aplicar",
+    "descargarPDF": "Descargar PDF",
+    "descargarExcel": "Descargar Excel"
   },
   "cameras": {
     "title": "Sistema de Cámaras",

@@ -1,7 +1,7 @@
 "use client";
 
 import ArmadoDesign from "./design";
-import Productividad from "./(productividad)/productividad";
+import Productividad from "./(productividad)/sectorProductividad";
 import GraficoCiclos from "./(graficoCiclos)/graficoTorres";
 import GraficoProductos from "./(graficoProductos)/graficoProductos";
 import DatosLateralesArmado from "./datosLateralesArmado";

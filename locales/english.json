@@ -12,7 +12,8 @@
     "productividad": "PRODUCTIVITY",
     "graficosHistoricos": "HISTORIC GRAPHS",
     "datosGenerales": "GENERAL DATA",
-    "camaras": "CAMERAS"
+    "camaras": "CAMERAS",
+    "rangoDeFechas": "DATE RANGE"
   },
   "min": {
     "usuario": "User",
@@ -88,7 +89,11 @@
     "sinSenal": "No signal",
     "conectando": "Connecting...",
     "monitoreoTiempoReal": "Real-time monitoring",
-    "sistemaCamaras": "Camera System"
+    "sistemaCamaras": "Camera System",
+    "seleccionarFechas": "Select dates",
+    "aplicar": "Apply",
+    "descargarPDF": "Download PDF",
+    "descargarExcel": "Download Excel"
   },
   "cameras": {
     "title": "Camera System",
