@@ -11,6 +11,11 @@
     "layout": "LAYOUT",
     "productividad": "PRODUCTIVITY",
     "graficosHistoricos": "HISTORIC GRAPHS",
+    "torresPorDia": "TOWERS PER DAY",
+    "productosRealizadosGrafico": "PRODUCTS MADE",
+    "ciclos": "Cycles",
+    "toneladas": "Tonnes",
+    "fecha": "Date",
     "datosGenerales": "GENERAL DATA",
     "camaras": "CAMERAS",
     "rangoDeFechas": "DATE RANGE"

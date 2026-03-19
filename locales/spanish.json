@@ -11,6 +11,11 @@
     "layout": "LAYOUT",
     "productividad": "PRODUCTIVIDAD",
     "graficosHistoricos": "GRÁFICOS HISTÓRICOS",
+    "torresPorDia": "TORRES POR DÍA",
+    "productosRealizadosGrafico": "PRODUCTOS REALIZADOS",
+    "ciclos": "Ciclos",
+    "toneladas": "Toneladas",
+    "fecha": "Fecha",
     "datosGenerales": "DATOS GENERALES",
     "camaras": "CÁMARAS",
     "rangoDeFechas": "RANGO DE FECHAS"

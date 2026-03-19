@@ -1,12 +1,42 @@
 "use client";
 
+import { useState } from "react";
+import { format, startOfWeek, endOfWeek, subWeeks } from "date-fns";
+import { type DateRange } from "react-day-picker";
+import { useTranslation } from "react-i18next";
 import ArmadoDesign from "./design";
-import Productividad from "./(productividad)/sectorProductividad";
+import SectorProductividad from "./(productividad)/sectorProductividad";
 import GraficoCiclos from "./(graficoCiclos)/graficoTorres";
 import GraficoProductos from "./(graficoProductos)/graficoProductos";
 import DatosLateralesArmado from "./datosLateralesArmado";
 
+const getPreviousWeekRange = (): DateRange => {
+  const prevWeek = subWeeks(new Date(), 1);
+  return {
+    from: startOfWeek(prevWeek, { weekStartsOn: 0 }),
+    to: endOfWeek(prevWeek, { weekStartsOn: 0 }),
+  };
+};
+
 export default function Armado() {
+  const { t } = useTranslation();
+  const [appliedRange, setAppliedRange] =
+    useState<DateRange>(getPreviousWeekRange);
+
+  const handleApply = (range: DateRange | undefined) => {
+    if (range?.from && range?.to) setAppliedRange(range);
+  };
+
+  const rangeLabel =
+    appliedRange.from && appliedRange.to
+      ? `${format(appliedRange.from, "dd/MM/yyyy")} - ${format(appliedRange.to, "dd/MM/yyyy")}`
+      : "-";
+
+  const chartRange =
+    appliedRange.from && appliedRange.to
+      ? { from: appliedRange.from, to: appliedRange.to }
+      : undefined;
+
   return (
     <>
       <DatosLateralesArmado />
@@ -15,18 +45,20 @@ export default function Armado() {
           <ArmadoDesign />
         </section>
         <section id="section2">
-          <Productividad />
+          <SectorProductividad dateRange={appliedRange} onApply={handleApply} />
         </section>
         <section id="section3" className="flex flex-col gap-5">
           <div className="p-5 bg-background2 rounded-md">
-            <h1 className="text-2xl font-bold">Torres por dia</h1>
-            <h2 className="text-orange">23/11/2025 - 23/12/2025</h2>
-            <GraficoCiclos />
+            <h1 className="text-2xl font-bold">{t("mayus.torresPorDia")}</h1>
+            <h2 className="text-orange">{rangeLabel}</h2>
+            <GraficoCiclos dateRange={chartRange} />
           </div>
 
           <div className="p-5 bg-background2 rounded-md">
-            <h1 className="text-2xl font-bold">Productos Realizados</h1>
-            <h2 className="text-orange">23/11/2025 - 23/12/2025</h2>
+            <h1 className="text-2xl font-bold">
+              {t("mayus.productosRealizadosGrafico")}
+            </h1>
+            <h2 className="text-orange">{rangeLabel}</h2>
             <GraficoProductos />
           </div>
         </section>

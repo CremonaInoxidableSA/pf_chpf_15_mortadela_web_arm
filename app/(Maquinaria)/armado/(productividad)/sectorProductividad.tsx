@@ -1,39 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import { startOfWeek, endOfWeek, subWeeks } from "date-fns";
 import { type DateRange } from "react-day-picker";
 import Productividad from "./productividad";
 import DateRangePicker from "./dateRangePicker";
 
-const getPreviousWeekRange = (): DateRange => {
-  const prevWeek = subWeeks(new Date(), 1);
-  return {
-    from: startOfWeek(prevWeek, { weekStartsOn: 0 }),
-    to: endOfWeek(prevWeek, { weekStartsOn: 0 }),
-  };
-};
+interface SectorProductividadProps {
+  dateRange: DateRange;
+  onApply: (range: DateRange | undefined) => void;
+}
 
-const SectorProductividad = () => {
-  const [appliedRange, setAppliedRange] =
-    useState<DateRange>(getPreviousWeekRange);
-
-  const handleApply = (range: DateRange | undefined) => {
-    if (range?.from && range?.to) {
-      setAppliedRange(range);
-    }
-  };
-
+const SectorProductividad = ({
+  dateRange,
+  onApply,
+}: SectorProductividadProps) => {
   return (
     <div className="flex gap-5" id="ProductividadSection">
       <Productividad
         dateRange={
-          appliedRange.from && appliedRange.to
-            ? { from: appliedRange.from, to: appliedRange.to }
+          dateRange.from && dateRange.to
+            ? { from: dateRange.from, to: dateRange.to }
             : undefined
         }
       />
-      <DateRangePicker onApply={handleApply} />
+      <DateRangePicker onApply={onApply} />
     </div>
   );
 };
