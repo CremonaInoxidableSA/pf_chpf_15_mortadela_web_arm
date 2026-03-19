@@ -43,6 +43,8 @@
     "habilitar": "Enable",
     "cargando": "Loading...",
     "productosRealizados": "Products Made",
+    "torrescantidad": "Product count",
+    "promedioUsoDiario": "Average daily usage",
     "crearUsuario": "Create User",
     "editarUsuario": "Edit User",
     "cambiarContra": "Change Password",

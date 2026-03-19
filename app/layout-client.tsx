@@ -48,7 +48,7 @@ export default function LayoutClient({
           {!hideHeaderFooter && <HeaderSecundario />}
         </div>
         <main
-          className={`grow flex ${
+          className={`grow flex w-full min-w-0 ${
             pathname === "/login" ||
             pathname === "/login/recuperacion" ||
             pathname === "/login/recuperacion/reset_pass"

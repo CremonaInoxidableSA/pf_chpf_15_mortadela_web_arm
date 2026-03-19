@@ -1,45 +1,15 @@
 "use client";
 
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ReactNode } from "react";
+import { format, differenceInDays } from "date-fns";
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-interface productosRealizados {
-  id_recetario: number;
-  NombreProducto: string;
-  cantidadCiclos: number;
-  pesoTotal: number;
-  tiempoTotal: string;
-}
-
-export interface ProductividadData {
-  ProductosRealizados: productosRealizados[];
-  PesoTotalCiclos: number;
-  CantidadCiclosCorrectos: number;
-}
-
-interface ProductoVisual {
-  nombre: string;
-  peso: string;
-  cantidadCiclos: number;
-  porcentaje: string;
-  color: string;
-}
-
-interface DatoMetrica {
-  id: number;
-  titulo: string;
-  dato: ReactNode;
-}
-
-interface DateRange {
-  start: string;
-  end: string;
-}
+import mockData from "@/data/mock/productividad.json";
 
 const colors: string[] = [
   "#FF5733",
@@ -64,162 +34,166 @@ const colors: string[] = [
   "#33FFC5",
 ];
 
-const getColorById = (id: number): string => {
-  return colors[(id - 1) % colors.length];
-};
-
 const parseTimeToSeconds = (timeStr: string): number => {
   const [hours, minutes, seconds] = timeStr.split(":").map(Number);
-
   return hours * 3600 + minutes * 60 + seconds;
 };
 
 const formatSecondsToHHMM = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const mins = Math.floor((seconds % 3600) / 60);
-
-  return `${hours.toString().padStart(2, "0")}:${mins
-    .toString()
-    .padStart(2, "0")}`;
+  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
 };
 
-const Productividad = () => {
+interface ProductoVisual {
+  nombre: string;
+  toneladas: number;
+  porcentaje: number;
+  color: string;
+}
+
+interface ProductividadProps {
+  dateRange?: { from: Date; to: Date };
+}
+
+const Productividad = ({ dateRange }: ProductividadProps) => {
   const { t } = useTranslation();
-  const today = new Date().toISOString().split("T")[0];
 
-  const data: ProductividadData | null = null;
-  const dateRange: DateRange = {
-    start: today,
-    end: today,
-  };
-  const isLoading = false;
+  const {
+    productos,
+    totalToneladas,
+    cantidadProductos,
+    promedioUsoDiario,
+    fechaInicio,
+    fechaFin,
+  } = useMemo(() => {
+    if (!dateRange) {
+      return {
+        productos: [] as ProductoVisual[],
+        totalToneladas: 0,
+        cantidadProductos: 0,
+        promedioUsoDiario: 0,
+        fechaInicio: "-",
+        fechaFin: "-",
+      };
+    }
 
-  const cantidadCiclosF = isLoading
-    ? t("min.cargando")
-    : data?.CantidadCiclosCorrectos !== undefined
-      ? data.CantidadCiclosCorrectos.toFixed(2)
-      : t("min.cargando");
+    const fromStr = format(dateRange.from, "yyyy-MM-dd");
+    const toStr = format(dateRange.to, "yyyy-MM-dd");
+    const cantDias = Math.max(
+      differenceInDays(dateRange.to, dateRange.from) + 1,
+      1,
+    );
 
-  const PesoTotalCiclos = isLoading
-    ? t("min.cargando")
-    : data?.PesoTotalCiclos !== undefined
-      ? data.PesoTotalCiclos.toFixed(2)
-      : t("min.cargando");
+    const filtered = mockData.filter(
+      (e) => e.fecha >= fromStr && e.fecha <= toStr,
+    );
 
-  const Horas_Uso = isLoading
-    ? t("min.cargando")
-    : data?.ProductosRealizados && Array.isArray(data.ProductosRealizados)
-      ? data.ProductosRealizados.reduce(
-          (acc, prod) => acc + parseTimeToSeconds(prod.tiempoTotal),
-          0,
-        )
-      : t("min.cargando");
+    const grouped: Record<string, { toneladas: number; segundos: number }> = {};
+    for (const entry of filtered) {
+      if (!grouped[entry.nombre])
+        grouped[entry.nombre] = { toneladas: 0, segundos: 0 };
+      grouped[entry.nombre].toneladas += entry.toneladas;
+      grouped[entry.nombre].segundos += parseTimeToSeconds(entry.tiempo);
+    }
 
-  const cantDias =
-    dateRange.start && dateRange.end
-      ? (new Date(dateRange.end).getTime() -
-          new Date(dateRange.start).getTime()) /
-          (1000 * 60 * 60 * 24) +
-        1
-      : 1;
+    const sortedNames = Object.keys(grouped).sort();
+    const totalTn = sortedNames.reduce(
+      (acc, n) => acc + grouped[n].toneladas,
+      0,
+    );
+    const totalSecs = sortedNames.reduce(
+      (acc, n) => acc + grouped[n].segundos,
+      0,
+    );
 
-  const Promedio_Horas = (
-    horasUso: number | string,
-    cantDias: number,
-  ): string =>
-    horasUso !== t("min.cargando")
-      ? formatSecondsToHHMM((horasUso as number) / cantDias)
-      : t("min.cargando");
+    const productos: ProductoVisual[] = sortedNames.map((nombre, idx) => ({
+      nombre,
+      toneladas: grouped[nombre].toneladas,
+      porcentaje: totalTn > 0 ? (grouped[nombre].toneladas * 100) / totalTn : 0,
+      color: colors[idx % colors.length],
+    }));
 
-  const datos: DatoMetrica[] = [
-    { id: 1, titulo: t("min.torrescantidad"), dato: cantidadCiclosF },
-    {
-      id: 2,
-      titulo: t("min.productosRealizados"),
-      dato: (
-        <>
-          {PesoTotalCiclos} <span className="text-lg">Tn</span>
-        </>
-      ),
-    },
-    {
-      id: 3,
-      titulo: t("min.promedioUsoDiario"),
-      dato: (
-        <>
-          {Promedio_Horas(Horas_Uso, cantDias)}{" "}
-          <span className="text-lg">hh:mm</span>
-        </>
-      ),
-    },
-  ];
-
-  const productos: ProductoVisual[] = isLoading
-    ? []
-    : (data?.ProductosRealizados?.map((producto) => {
-        const porcentaje = data.PesoTotalCiclos
-          ? (producto.pesoTotal * 100) / data.PesoTotalCiclos / 1000
-          : 0;
-        const pesoEnToneladas = (producto.pesoTotal / 1000).toFixed(1) + "Tn";
-
-        return {
-          nombre: producto.NombreProducto,
-          peso: pesoEnToneladas,
-          cantidadCiclos: producto.cantidadCiclos,
-          porcentaje: porcentaje.toFixed(2),
-          color: getColorById(producto.id_recetario),
-        };
-      }) ?? []);
+    return {
+      productos,
+      totalToneladas: totalTn,
+      cantidadProductos: filtered.length,
+      promedioUsoDiario: totalSecs / cantDias,
+      fechaInicio: format(dateRange.from, "dd/MM/yyyy"),
+      fechaFin: format(dateRange.to, "dd/MM/yyyy"),
+    };
+  }, [dateRange]);
 
   return (
-    <div
-      className="w-full md:w-[75%] flex flex-col bg-background2 rounded-md p-5">
+    <div className="w-full flex flex-col bg-background2 rounded-md p-5">
       <p className="text-left text-xl font-bold mb-[-5]">
         {t("mayus.productividad")}
       </p>
-      <div className="flex items-center">
+      <div className="flex items-center mb-3">
         <p className="inline text-[#ffa500] font-system-ui text-md">
-          {dateRange.start}
+          {fechaInicio}
           <span className="inline px-1.25 font-semibold"> - </span>
-          {dateRange.end}
+          {fechaFin}
         </p>
       </div>
       <div className="flex justify-between w-full px-12.5">
-        {datos.map((dato, index) => (
-          <div key={index} className="flex flex-col items-center text-center">
-            <p className="text-[2.5vw] font-semibold">{dato.dato}</p>
-            <p className="text-[1vw] text-texto2">{dato.titulo}</p>
-          </div>
-        ))}
+        <div className="flex flex-col items-center text-center">
+          <p className="text-[2.5vw] font-semibold">{cantidadProductos}</p>
+          <p className="text-[1vw] text-texto2">{t("min.torrescantidad")}</p>
+        </div>
+        <div className="flex flex-col items-center text-center">
+          <p className="text-[2.5vw] font-semibold">
+            {totalToneladas.toFixed(2)} <span className="text-lg">Tn</span>
+          </p>
+          <p className="text-[1vw] text-texto2">
+            {t("min.productosRealizados")}
+          </p>
+        </div>
+        <div className="flex flex-col items-center text-center">
+          <p className="text-[2.5vw] font-semibold">
+            {formatSecondsToHHMM(promedioUsoDiario)}{" "}
+            <span className="text-lg">hh:mm</span>
+          </p>
+          <p className="text-[1vw] text-texto2">{t("min.promedioUsoDiario")}</p>
+        </div>
       </div>
       <hr className="border-t-4 border-texto rounded-md mx-auto my-5 w-4/5" />
       <div className="relative">
-        <p>% {t("min.productosRealizados")}</p>
+        <p className="mb-2">% {t("min.productosRealizados")}</p>
         <div className="flex h-5 rounded-md overflow-hidden bg-background5 mb-3.75">
-          {productos.map((producto) => (
-            <Tooltip key={producto.nombre}>
-              <TooltipTrigger asChild>
-                <TooltipContent>
+          <TooltipProvider>
+            {productos.map((producto) => (
+              <Tooltip key={producto.nombre}>
+                <TooltipTrigger asChild>
                   <div
-                    className="h-full"
+                    className="h-full cursor-pointer"
                     style={{
                       width: `${producto.porcentaje}%`,
                       backgroundColor: producto.color,
                     }}
                   />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {producto.nombre}: {producto.porcentaje.toFixed(1)}% (
+                    {producto.toneladas.toFixed(2)} Tn)
+                  </p>
                 </TooltipContent>
-              </TooltipTrigger>
-            </Tooltip>
-          ))}
+              </Tooltip>
+            ))}
+          </TooltipProvider>
         </div>
         <div className="flex justify-around flex-wrap">
           {productos.map((producto, index) => (
             <div key={index} className="flex items-center m-[5px_10px]">
-              <p
-                className="w-3.75 h-3.75 rounded-md mr-1.25"
+              <div
+                className="w-3.75 h-3.75 rounded-sm mr-1.25 shrink-0"
                 style={{ backgroundColor: producto.color }}
               />
-              <p>{`${producto.nombre} - ${producto.porcentaje}% (${producto.peso})`}</p>
+              <p>
+                {producto.nombre} — {producto.porcentaje.toFixed(1)}% (
+                {producto.toneladas.toFixed(2)} Tn)
+              </p>
             </div>
           ))}
         </div>

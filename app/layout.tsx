@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background font-sans antialiased text-texto`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen w-screen overflow-x-hidden bg-background font-sans antialiased text-texto`}
       >
         <ThemeProvider
           attribute="class"

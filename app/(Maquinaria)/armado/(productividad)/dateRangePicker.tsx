@@ -83,7 +83,7 @@ const DateRangePickerComponent: React.FC<DateRangePickerProps> = ({
             />
           </PopoverContent>
         </Popover>
-        <div className="flex flex-col w-fill h-[60%] justify-between">
+        <div className="flex flex-col w-fill gap-5 justify-end">
           <Button onClick={() => onApply?.(date)} className="w-full">
             {t("min.aplicar")}
           </Button>

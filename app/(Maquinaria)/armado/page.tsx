@@ -10,7 +10,7 @@ export default function Armado() {
   return (
     <>
       <DatosLateralesArmado />
-      <div className="flex flex-col gap-4 p-4 ml-67.5">
+      <div className="flex-1 min-w-0 flex flex-col gap-4 p-4 ml-67.5">
         <section id="section1">
           <ArmadoDesign />
         </section>
