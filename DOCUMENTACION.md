@@ -434,7 +434,6 @@ const { t } = useTranslation();
 | `/login`          | Login                | Autenticación            |
 | `/bootstrap`      | BootstrapPage        | Setup inicial            |
 | `/armado`         | Armado               | Proceso de armado        |
-| `/desarmado`      | Desarmado            | Proceso de desarmado     |
 | `/config_user`    | ConfiguracionUsuario | Gestión de usuarios      |
 | `/config_equipos` | ConfigEquipos        | Configuración de equipos |
 

@@ -26,7 +26,7 @@ export default function LayoutClient({
     "/bootstrap",
   ].includes(pathname);
 
-  const isDesarmadoPage = pathname === "/armado" || pathname === "/desarmado";
+  const isDesarmadoPage = pathname === "/armado";
 
   useEffect(() => {
     const saved =

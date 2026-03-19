@@ -31,13 +31,7 @@ const HeaderSecundario = () => {
       path: "/armado",
       text: t("mayus.armado"),
       styleClass: "",
-    },
-    {
-      id: 3,
-      path: "/desarmado",
-      text: t("mayus.desarmado"),
-      styleClass: "desac",
-    },
+    }
   ];
 
   return (

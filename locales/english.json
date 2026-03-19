@@ -2,7 +2,6 @@
   "mayus": {
     "general": "GENERAL",
     "armado": "ARMING",
-    "desarmado": "DISASSEMBLY",
     "titulo": "PF-MORTADELA & CREMONA INOXIDABLE S.A.",
     "crearUsuario": "CREATE USER",
     "importarBDD": "IMPORT BDD",
