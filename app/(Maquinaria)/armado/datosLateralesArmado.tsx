@@ -44,7 +44,6 @@ const DatosLaterales: React.FC = () => {
     () => [
       { id: 1, nombre: t("mayus.layout") },
       { id: 2, nombre: t("mayus.productividad") },
-      { id: 3, nombre: t("mayus.graficosHistoricos") },
     ],
     [t],
   );
