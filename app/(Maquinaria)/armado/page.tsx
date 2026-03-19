@@ -6,7 +6,6 @@ import { type DateRange } from "react-day-picker";
 import { useTranslation } from "react-i18next";
 import ArmadoDesign from "./design";
 import SectorProductividad from "./(productividad)/sectorProductividad";
-import GraficoCiclos from "./(graficoCiclos)/graficoTorres";
 import GraficoProductos from "./(graficoProductos)/graficoProductos";
 import DatosLateralesArmado from "./datosLateralesArmado";
 
@@ -49,17 +48,11 @@ export default function Armado() {
         </section>
         <section id="section3" className="flex flex-col gap-5">
           <div className="p-5 bg-background2 rounded-md">
-            <h1 className="text-2xl font-bold">{t("mayus.torresPorDia")}</h1>
-            <h2 className="text-orange">{rangeLabel}</h2>
-            <GraficoCiclos dateRange={chartRange} />
-          </div>
-
-          <div className="p-5 bg-background2 rounded-md">
             <h1 className="text-2xl font-bold">
               {t("mayus.productosRealizadosGrafico")}
             </h1>
             <h2 className="text-orange">{rangeLabel}</h2>
-            <GraficoProductos />
+            <GraficoProductos dateRange={chartRange} />
           </div>
         </section>
       </div>
