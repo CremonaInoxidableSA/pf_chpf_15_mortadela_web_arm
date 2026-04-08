@@ -8,8 +8,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import CambioPass from "@/components/userIcon/cambioPass";
+import { UserAvatar } from "@/components/userIcon/userAvatar";
 
-import { VscAccount } from "react-icons/vsc";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -34,7 +34,7 @@ const UserIcon = () => {
       setLoggingOut(true);
       await logout();
       setOpen(false);
-    } catch (error) {
+    } catch {
     } finally {
       setLoggingOut(false);
     }
@@ -44,8 +44,15 @@ const UserIcon = () => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className="cursor-pointer">
         <div className="group relative flex items-center justify-center w-6.25 h-6.25 ease-in-out">
-          <div className="absolute inset-0 rounded-md bg-gray-400/0 group-hover:bg-gray-400/20 ease-in-out group-hover:scale-150" />
-          <VscAccount className="w-6.25 h-6.25 transition-transform ease-in-out group-hover:scale-110" />
+          <div className="absolute inset-0 rounded-full bg-gray-400/0 group-hover:bg-gray-400/20 ease-in-out group-hover:scale-150" />
+          <div className="transition-transform ease-in-out group-hover:scale-110">
+            <UserAvatar
+              nombre={nombre}
+              apellido={apellido}
+              rol={rol}
+              loading={loading}
+            />
+          </div>
         </div>
       </PopoverTrigger>
       <PopoverContent className="z-901">
@@ -61,7 +68,7 @@ const UserIcon = () => {
 
             {rol === "admin" || rol === "superadmin" ? (
               <Button
-                className="mt-2 w-full border border-botonblueborder bg-botonblue hover:bg-botonbluehover text-white cursor-pointer"
+                className="mt-2 w-full border border-botonblueborder bg-botonblue hover:bg-botonbluehover text-texto cursor-pointer"
                 onClick={() => {
                   router.push("/config_user");
                   setOpen(false);
@@ -75,7 +82,7 @@ const UserIcon = () => {
               <CambioPass />
             )}
             <Button
-              className="mt-2 w-full bg-redlogo hover:bg-red2 text-white cursor-pointer"
+              className="mt-2 w-full bg-redlogo hover:bg-red2 text-texto cursor-pointer"
               onClick={closeSession}
               disabled={loggingOut}
             >
@@ -85,7 +92,9 @@ const UserIcon = () => {
                   <span>{t("min.cargando")}</span>
                 </div>
               ) : (
-                t("min.cerrarSesion")
+                <p className="text-white font-medium">
+                  {t("min.cerrarSesion")}
+                </p>
               )}
             </Button>
           </>
