@@ -18,7 +18,7 @@ const BootstrapPage = () => {
   useEffect(() => {
     const checkSetup = async () => {
       try {
-        const res = await fetch(`/api/proxy/auth/needs-setup`);
+        const res = await fetch(`/api/needs-setup`);
         const data = await res.json();
 
         if (data.needs_setup) {
@@ -62,6 +62,12 @@ const BootstrapPage = () => {
         setError(result.message);
         setLoading(false);
         return;
+      }
+
+      // Invalidar caché de needs-setup en servidor y cliente
+      await fetch("/api/needs-setup/invalidate", { method: "POST" });
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("setup_check_cache");
       }
 
       setSuccess(true);

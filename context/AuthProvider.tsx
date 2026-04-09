@@ -6,6 +6,8 @@ import React, {
   useContext,
   useEffect,
   ReactNode,
+  useRef,
+  useCallback,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { UserSession } from "@/lib/types";
@@ -48,6 +50,44 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
 
+// Cache en cliente para setup check (usando localStorage para persistencia)
+let setupCheckInProgress = false;
+
+const SETUP_CACHE_KEY = "setup_check_cache";
+const SETUP_CACHE_DURATION = 3600000; // 1 hora
+
+function getStoredSetupCache(): boolean | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const cached = localStorage.getItem(SETUP_CACHE_KEY);
+    if (!cached) return null;
+    const { value, timestamp } = JSON.parse(cached);
+    const now = Date.now();
+    if (now - timestamp > SETUP_CACHE_DURATION) {
+      localStorage.removeItem(SETUP_CACHE_KEY);
+      return null;
+    }
+    return value;
+  } catch {
+    return null;
+  }
+}
+
+function setStoredSetupCache(value: boolean): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(
+      SETUP_CACHE_KEY,
+      JSON.stringify({
+        value,
+        timestamp: Date.now(),
+      }),
+    );
+  } catch (e) {
+    console.warn("Could not store setup cache:", e);
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserSession | null>(null);
   const [email, setEmail] = useState<string | null>(null);
@@ -62,16 +102,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const [needBootstrap, setNeedBootstrap] = useState(false);
+  const sessionCheckCompleted = useRef(false);
 
   useEffect(() => {
-    checkSession();
+    // Solo hacer checkSession una vez al montar
+    if (!sessionCheckCompleted.current) {
+      sessionCheckCompleted.current = true;
+      checkSession();
+    }
   }, []);
 
   useEffect(() => {
-    if (pathname === "/login" && needBootstrap) {
-      checkSession();
+    // Re-verificar solo cuando se navega a login Y se sospecha que hay bootstrap pendiente
+    if (pathname === "/login" && needBootstrap && !loading) {
+      checkSetupStatus();
     }
-  }, [pathname, needBootstrap]);
+  }, [pathname]);
 
   useEffect(() => {
     if (!loading) {
@@ -130,24 +176,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
+  const checkSetupStatus = useCallback(async () => {
+    // Verificar caché en localStorage primero
+    const storedCache = getStoredSetupCache();
+
+    if (storedCache !== null) {
+      if (storedCache === false) {
+        setNeedBootstrap(false);
+      } else {
+        setNeedBootstrap(true);
+      }
+      return;
+    }
+
+    // Si ya hay una verificación en progreso, esperar
+    if (setupCheckInProgress) {
+      return;
+    }
+
+    setupCheckInProgress = true;
+
+    try {
+      const res = await fetch(`/api/needs-setup`, {
+        headers: {
+          "Cache-Control": "max-age=3600",
+        },
+      });
+      const data = await res.json();
+
+      const needsSetup = data.needs_setup === true;
+
+      // Cachear en localStorage
+      setStoredSetupCache(needsSetup);
+
+      if (needsSetup) {
+        setNeedBootstrap(true);
+      } else {
+        setNeedBootstrap(false);
+      }
+    } catch (err) {
+      console.warn("Error checking setup status:", err);
+      // En caso de error, asumir que no necesita setup
+      setStoredSetupCache(false);
+      setNeedBootstrap(false);
+    } finally {
+      setupCheckInProgress = false;
+    }
+  }, []);
+
   const checkSession = async () => {
     try {
-      try {
-        const needsSetupRes = await fetch(`/api/proxy/auth/needs-setup`);
-        if (needsSetupRes.ok) {
-          const needsSetupData = await needsSetupRes.json();
-          if (needsSetupData.needs_setup === true) {
-            setNeedBootstrap(true);
-            setUser(null);
-            setLoading(false);
-            return;
-          } else {
-            // Si no necesita setup, asegurar que needBootstrap sea false
-            setNeedBootstrap(false);
-          }
+      // Verificar caché de setup en localStorage primero
+      const setupCache = getStoredSetupCache();
+      if (setupCache !== null) {
+        if (setupCache === true) {
+          setNeedBootstrap(true);
+          setUser(null);
+          setLoading(false);
+          return;
+        } else {
+          setNeedBootstrap(false);
         }
-      } catch (needsSetupErr) {
-        console.warn("Could not check needs-setup:", needsSetupErr);
+      } else {
+        // Si no hay caché, hacer verificación
+        await checkSetupStatus();
       }
 
       const token =
@@ -190,17 +282,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       };
 
-      if (token) {
+      // Si ya tenemos user en localStorage + token válido, no necesitamos hacer fetch
+      if (hydratedFromStorage && token) {
         const payload = decodeToken(token);
         if (payload && payload.sub) {
-          if (!hydratedFromStorage) {
-            setUser({
-              username: payload.sub,
-              rol: payload.rol ?? undefined,
-            } as UserSession);
-            setLoading(false);
-            return;
-          }
+          // Token es válido y tenemos user, ya está listo
+          setNeedBootstrap(false);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Si tenemos token, intentar decodificar
+      if (token && !hydratedFromStorage) {
+        const payload = decodeToken(token);
+        if (payload && payload.sub) {
+          setUser({
+            username: payload.sub,
+            rol: payload.rol ?? undefined,
+          } as UserSession);
+          setLoading(false);
+          return;
         } else {
           setUser(null);
           setLoading(false);
@@ -208,55 +310,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      try {
-        const res = await fetch(`/api/proxy/auth/check`, {
-          credentials: "include",
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        });
+      // Solo hacer fetch a /check si no tenemos información en localStorage
+      // o si el token parece inválido
+      if (!hydratedFromStorage || !token) {
+        try {
+          const res = await fetch(`/api/proxy/auth/check`, {
+            credentials: "include",
+            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          });
 
-        if (res.ok) {
-          let data: {
-            success?: boolean;
-            data?: { needBootstrap?: boolean; user?: unknown };
-          } = {};
-          try {
-            data = await res.json();
-          } catch {
-            data = {};
-          }
-
-          if (data && data.success) {
-            if (data.data && data.data.needBootstrap) {
-              setNeedBootstrap(true);
-              setUser(null);
-              setLoading(false);
-              return;
+          if (res.ok) {
+            let data: {
+              success?: boolean;
+              data?: { needBootstrap?: boolean; user?: unknown };
+            } = {};
+            try {
+              data = await res.json();
+            } catch {
+              data = {};
             }
 
-            if (data.data && data.data.user) {
-              setNeedBootstrap(false);
-              const incomingUser = data.data.user;
-              const normalized =
-                Array.isArray(incomingUser) && incomingUser.length > 0
-                  ? incomingUser[0]
-                  : incomingUser;
-              setUser(normalized);
-              try {
-                if (typeof window !== "undefined")
-                  localStorage.setItem("user", JSON.stringify(normalized));
-              } catch (e) {
-                console.warn(
-                  "Could not persist user from /check to localStorage",
-                  e,
-                );
+            if (data && data.success) {
+              if (data.data && data.data.needBootstrap) {
+                setNeedBootstrap(true);
+                setUser(null);
+                setLoading(false);
+                return;
               }
-              setLoading(false);
-              return;
+
+              if (data.data && data.data.user) {
+                setNeedBootstrap(false);
+                const incomingUser = data.data.user;
+                const normalized =
+                  Array.isArray(incomingUser) && incomingUser.length > 0
+                    ? incomingUser[0]
+                    : incomingUser;
+                setUser(normalized);
+                try {
+                  if (typeof window !== "undefined")
+                    localStorage.setItem("user", JSON.stringify(normalized));
+                } catch (e) {
+                  console.warn(
+                    "Could not persist user from /check to localStorage",
+                    e,
+                  );
+                }
+                setLoading(false);
+                return;
+              }
             }
           }
+        } catch (err) {
+          console.warn("Error checking session with /check endpoint:", err);
         }
-      } catch (err) {
-        console.warn("Error checking session with /check endpoint:", err);
       }
     } catch (error) {
       setUser(null);
@@ -416,10 +522,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (typeof window !== "undefined") {
           localStorage.removeItem("access_token");
           localStorage.removeItem("user");
+          localStorage.removeItem(SETUP_CACHE_KEY);
           Cookies.remove("access_token");
         }
       } catch (e) {
-        console.warn("Could not remove access_token/user from localStorage", e);
+        console.warn("Could not remove tokens from localStorage", e);
       }
 
       router.push("/login");
@@ -431,9 +538,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (typeof window !== "undefined") {
           localStorage.removeItem("access_token");
           localStorage.removeItem("user");
+          localStorage.removeItem(SETUP_CACHE_KEY);
         }
       } catch (e) {
-        console.warn("Could not remove access_token/user from localStorage", e);
+        console.warn("Could not remove tokens from localStorage", e);
       }
       router.push("/login");
       return false;
