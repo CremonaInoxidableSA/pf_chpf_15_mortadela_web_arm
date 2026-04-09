@@ -18,7 +18,8 @@
     "tiempo": "Time",
     "datosGenerales": "GENERAL DATA",
     "camaras": "CAMERAS",
-    "rangoDeFechas": "DATE RANGE"
+    "rangoDeFechas": "DATE RANGE",
+    "generalArmado": "GENERAL ARMING"
   },
   "min": {
     "usuario": "User",
@@ -100,14 +101,7 @@
     "seleccionarFechas": "Select dates",
     "aplicar": "Apply",
     "descargarPDF": "Download PDF",
-    "descargarExcel": "Download Excel"
-  },
-  "cameras": {
-    "title": "Camera System",
-    "subtitle": "Real-time monitoring - 8 cameras",
-    "noSignal": "No signal",
-    "loading": "Loading...",
-    "live": "LIVE",
-    "camera": "Camera"
+    "descargarExcel": "Download Excel",
+    "alarmas": "Alarms"
   }
 }

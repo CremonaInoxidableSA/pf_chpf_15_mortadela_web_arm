@@ -149,7 +149,7 @@ export default function ConfiguracionUsuario() {
 
   return (
     <div className="w-full p-4 flex flex-row gap-4">
-      <div className="h-full w-1/5 flex flex-col bg-background2 rounded-lg p-4 justify-between self-stretch">
+      <div className="h-full w-1/5 flex flex-col bg-background2 rounded-md p-4 justify-between self-stretch">
         <div className="flex w-full items-center justify-center">
           <VscAccount className="w-20 h-20" />
         </div>

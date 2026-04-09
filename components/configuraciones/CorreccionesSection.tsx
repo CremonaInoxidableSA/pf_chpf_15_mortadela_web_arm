@@ -186,7 +186,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       return (
         <>
           <ul
-            className="rounded-lg h-full grid gap-5"
+            className="rounded-md h-full grid gap-5"
             style={{
               gridTemplateColumns: "repeat(2, 1fr)",
             }}
@@ -194,7 +194,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
             {datosActuales.map(({ id, texto, dato }, index) => (
               <li
                 key={id}
-                className={`bg-background3 p-2 rounded-lg flex flex-col ${
+                className={`bg-background3 p-2 rounded-md flex flex-col ${
                   index === datosActuales.length - 1 &&
                   datosActuales.length % 2 !== 0
                     ? "col-span-2"
@@ -212,7 +212,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
                           inputRefs.current[index] = el;
                         }
                       }}
-                      className="bg-background4 rounded-lg px-2 w-full"
+                      className="bg-background4 rounded-md px-2 w-full"
                       pattern="\d+"
                       type="number"
                       onInput={(e) =>
@@ -234,11 +234,11 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       );
     } else if (selectedOption === 1) {
       return (
-        <ul className="flex flex-col rounded-lg h-full justify-between">
+        <ul className="flex flex-col rounded-md h-full justify-between">
           {datosActuales.map(({ id, texto, dato }, index) => (
             <li
               key={id}
-              className="bg-background3 p-2 rounded-lg flex flex-col"
+              className="bg-background3 p-2 rounded-md flex flex-col"
             >
               <p>{texto}</p>
               <div className="flex flex-row items-center gap-2">
@@ -250,7 +250,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
                       inputRefs.current[index] = el;
                     }
                   }}
-                  className="bg-background4 rounded-lg w-full px-2"
+                  className="bg-background4 rounded-md w-full px-2"
                   pattern="\d+"
                   type="number"
                   onInput={(e) =>
@@ -260,12 +260,12 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
               </div>
             </li>
           ))}
-          <li className="bg-background3 p-2 rounded-lg flex flex-col">
+          <li className="bg-background3 p-2 rounded-md flex flex-col">
             <p>Actualizar TAG</p>
             <div className="flex flex-row items-center gap-2">
               <span className="whitespace-nowrap shrink-0">{tagValue} -</span>
               <input
-                className="bg-background4 rounded-lg w-full px-2"
+                className="bg-background4 rounded-md w-full px-2"
                 type="text"
                 value={newTagValue}
                 onChange={(e) => setNewTagValue(e.target.value)}
@@ -286,7 +286,7 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   };
 
   return (
-    <div className="bg-background2 flex-1 p-5 rounded-lg h-full flex flex-col gap-5 w-2/4">
+    <div className="bg-background2 flex-1 p-5 rounded-md h-full flex flex-col gap-5 w-2/4">
       <p className="text-xl font-semibold">CORRECCIONES</p>
       <ul className="flex flex-row justify-between w-full gap-5">
         {opcionesCorrecciones.map(({ id, nombre }) => (

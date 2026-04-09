@@ -18,7 +18,8 @@
     "tiempo": "Tiempo",
     "datosGenerales": "DATOS GENERALES",
     "camaras": "CÁMARAS",
-    "rangoDeFechas": "RANGO DE FECHAS"
+    "rangoDeFechas": "RANGO DE FECHAS",
+    "generalArmado": "GENERAL ARMADO"
   },
   "min": {
     "usuario": "Usuario",
@@ -100,14 +101,7 @@
     "seleccionarFechas": "Seleccionar fechas",
     "aplicar": "Aplicar",
     "descargarPDF": "Descargar PDF",
-    "descargarExcel": "Descargar Excel"
-  },
-  "cameras": {
-    "title": "Sistema de Cámaras",
-    "subtitle": "Monitoreo en tiempo real - 8 cámaras",
-    "noSignal": "Sin señal",
-    "loading": "Cargando...",
-    "live": "EN VIVO",
-    "camera": "Cámara"
+    "descargarExcel": "Descargar Excel",
+    "alarmas": "Alarmas"
   }
 }

@@ -121,7 +121,7 @@ export default function HlsPlayer({
       poster={poster}
       onLoadedData={onLoadedData}
       onError={onError}
-      className={`w-full h-full object-cover rounded-lg bg-black ${className}`}
+      className={`w-full h-full object-cover rounded-md bg-black ${className}`}
     />
   );
 }

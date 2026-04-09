@@ -4,10 +4,10 @@ import { useState } from "react";
 import { format, startOfWeek, endOfWeek, subWeeks } from "date-fns";
 import { type DateRange } from "react-day-picker";
 import { useTranslation } from "react-i18next";
-import ArmadoDesign from "./design";
+import ArmadoDesign from "./(comp)/design";
 import SectorProductividad from "./(productividad)/sectorProductividad";
 import GraficoProductos from "./(graficoProductos)/graficoProductos";
-import DatosLateralesArmado from "./datosLateralesArmado";
+import DatosLateralesArmado from "./(comp)/datosLateralesArmado";
 
 const getPreviousWeekRange = (): DateRange => {
   const prevWeek = subWeeks(new Date(), 1);

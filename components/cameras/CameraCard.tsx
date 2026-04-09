@@ -28,7 +28,7 @@ export default function CameraCard({
   };
 
   return (
-    <div className="relative w-full aspect-video rounded-lg bg-black shadow-lg overflow-hidden group">
+    <div className="relative w-full aspect-video rounded-md bg-black shadow-lg overflow-hidden group">
       {/* Video Player */}
       <HlsPlayer
         src={camera.url}
@@ -41,14 +41,14 @@ export default function CameraCard({
 
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 bg-black/80 flex items-center justify-center rounded-lg z-10">
+        <div className="absolute inset-0 bg-black/80 flex items-center justify-center rounded-md z-10">
           <CameraLoadingSpinner />
         </div>
       )}
 
       {/* Error Overlay */}
       {hasError && !isLoading && (
-        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center rounded-lg z-10">
+        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center rounded-md z-10">
           <svg
             className="w-12 h-12 text-red-500 mb-2"
             fill="none"
