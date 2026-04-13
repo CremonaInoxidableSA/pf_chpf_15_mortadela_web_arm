@@ -28,10 +28,10 @@ const HeaderSecundario = () => {
     },
     {
       id: 2,
-      path: "/armado",
-      text: t("mayus.armado"),
+      path: "/armador",
+      text: t("mayus.armador"),
       styleClass: "",
-    }
+    },
   ];
 
   return (

@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-5 p-5 w-full">
       <div className="flex bg-background2 w-full rounded-md p-5 gap-5">
-        <div className="w-3/4 relative shrink-0">
+        <div className="w-4/7 relative shrink-0">
           <Image
             alt={t("mayus.general")}
             src={imageSource}
@@ -23,7 +23,7 @@ export default function Home() {
             priority
           />
         </div>
-        <div className="w-full overflow-y-auto pr-2 h-full">
+        <div className="w-3/7 overflow-y-auto pr-2 h-full">
           <DatosGeneral />
         </div>
       </div>

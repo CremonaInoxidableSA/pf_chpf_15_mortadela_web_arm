@@ -1,7 +1,3 @@
-import Image from "next/image";
-
-import ArmadoDesign from "@/public/designs/Armado.png";
-
 const DatosDelCiclo = [
   { id: 1, nombre: "ESTADO FINAL", dato: "FINALIZADO CON CANCELACIONES" },
   { id: 2, nombre: "TIPO DE CORTE REALIZADO", dato: "MORTADELA LARGA" },

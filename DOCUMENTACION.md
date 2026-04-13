@@ -25,7 +25,7 @@ Sistema de gestión de producción para línea de mortadela desarrollado con **N
 
 ```
 ├── app/                      # Rutas y páginas (App Router de Next.js)
-│   ├── (Maquinaria)/        # Grupo de rutas para Armado/Desarmado
+│   ├── (Maquinaria)/        # Grupo de rutas para Armador/Desarmado
 │   ├── api/                 # Funciones de fetch con autenticación
 │   ├── bootstrap/           # Configuración inicial (crear superadmin)
 │   ├── config_equipos/      # Configuración de equipos
@@ -397,7 +397,7 @@ i18n.init({
 {
   "mayus": {
     "general": "GENERAL",
-    "armado": "ARMADO",
+    "armador": "ARMADOR",
     "crearUsuario": "CREAR USUARIO"
   },
   "min": {
@@ -433,7 +433,7 @@ const { t } = useTranslation();
 | `/`               | Home                 | Vista general            |
 | `/login`          | Login                | Autenticación            |
 | `/bootstrap`      | BootstrapPage        | Setup inicial            |
-| `/armado`         | Armado               | Proceso de armado        |
+| `/armador`        | Armador              | Proceso de armador       |
 | `/config_user`    | ConfiguracionUsuario | Gestión de usuarios      |
 | `/config_equipos` | ConfigEquipos        | Configuración de equipos |
 

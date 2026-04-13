@@ -1,7 +1,7 @@
 {
   "mayus": {
     "general": "GENERAL",
-    "armado": "ARMADO",
+    "armador": "ARMADOR",
     "titulo": "PF-MORTADELA & CREMONA INOXIDABLE S.A.",
     "crearUsuario": "CREAR USUARIO",
     "importarBDD": "IMPORTAR BDD",
@@ -19,7 +19,7 @@
     "datosGenerales": "DATOS GENERALES",
     "camaras": "CÁMARAS",
     "rangoDeFechas": "RANGO DE FECHAS",
-    "generalArmado": "GENERAL ARMADO"
+    "generalArmado": "GENERAL ARMADOR"
   },
   "min": {
     "usuario": "Usuario",

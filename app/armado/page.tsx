@@ -17,7 +17,7 @@ const getPreviousWeekRange = (): DateRange => {
   };
 };
 
-export default function Armado() {
+export default function Armador() {
   const { t } = useTranslation();
   const [appliedRange, setAppliedRange] =
     useState<DateRange>(getPreviousWeekRange);
