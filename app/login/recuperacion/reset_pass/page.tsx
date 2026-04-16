@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
@@ -17,6 +17,7 @@ const ResetPassword = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [token, setToken] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
@@ -68,6 +69,15 @@ const ResetPassword = () => {
     }
   }, [searchParams, verificarToken]);
 
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -98,7 +108,7 @@ const ResetPassword = () => {
 
       if (response.ok && data.success) {
         toast.success(t("min.contraActualizadaExitosamente"));
-        setTimeout(() => {
+        timerRef.current = setTimeout(() => {
           router.push("/login");
         }, 2000);
       } else {

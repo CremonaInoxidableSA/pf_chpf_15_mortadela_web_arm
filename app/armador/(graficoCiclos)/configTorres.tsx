@@ -36,8 +36,7 @@ export function createCiclosConfig(
           callbacks: {
             label(ctx) {
               const prod = ctx.dataset.label ?? "";
-              const dayLabel = ctx.label; // dd/MM
-              // find the dateStr that matches this label
+              const dayLabel = ctx.label;
               const dateStr = Object.keys(aggregated).find((k) => {
                 const [m, d] = k.split("-");
                 return `${d}/${m}` === dayLabel;

@@ -1,7 +1,6 @@
 import { format, eachDayOfInterval } from "date-fns";
 import mockData from "@/data/mock/productividad.json";
 
-// One colour per product name (stable order)
 const COLORS = [
   "rgba(255,87,51,1)",
   "rgba(51,255,87,1)",
@@ -20,28 +19,21 @@ const COLORS_BG = COLORS.map((c) => c.replace(",1)", ",0.4)"));
 export interface DayProductEntry {
   ciclos: number;
   toneladas: number;
-  tiempo: string; // HH:MM:SS total
+  tiempo: string;
 }
 
 export interface DayEntry {
   [product: string]: DayProductEntry;
 }
 
-/** Pre-aggregated data indexed by date string then product name */
 export type AggregatedData = Record<string, DayEntry>;
 
 export interface ChartBuildResult {
-  /** X-axis labels: dd/MM */
   labels: string[];
-  /** Sorted product names */
   products: string[];
-  /** Per-product colour (solid) */
   colors: string[];
-  /** Per-product fill colour */
   colorsBg: string[];
-  /** aggregatedData[dateStr][product] */
   aggregated: AggregatedData;
-  /** datasets[i].data[j] = toneladas for product i on day j */
   toneladasByProduct: number[][];
 }
 
@@ -52,7 +44,6 @@ export function buildChartData(dateRange: {
   const days = eachDayOfInterval({ start: dateRange.from, end: dateRange.to });
   const labels = days.map((d) => format(d, "dd/MM"));
 
-  // Collect all products that appear in the range
   const fromStr = format(dateRange.from, "yyyy-MM-dd");
   const toStr = format(dateRange.to, "yyyy-MM-dd");
   const filtered = mockData.filter(
@@ -63,7 +54,6 @@ export function buildChartData(dateRange: {
   filtered.forEach((e) => productSet.add(e.nombre));
   const products = Array.from(productSet).sort();
 
-  // Build aggregated map: dateStr -> product -> { ciclos, toneladas, tiempo }
   const aggregated: AggregatedData = {};
   for (const day of days) {
     const dateStr = format(day, "yyyy-MM-dd");
@@ -77,7 +67,6 @@ export function buildChartData(dateRange: {
     const a = aggregated[entry.fecha][entry.nombre];
     a.ciclos += 1;
     a.toneladas += entry.toneladas;
-    // Sum tiempo in seconds then back to HH:MM:SS
     const [h, m, s] = entry.tiempo.split(":").map(Number);
     const prevSecs = a.tiempo
       ? (() => {
@@ -92,7 +81,6 @@ export function buildChartData(dateRange: {
     a.tiempo = `${String(th).padStart(2, "0")}:${String(tm).padStart(2, "0")}:${String(ts).padStart(2, "0")}`;
   }
 
-  // toneladas[productIdx][dayIdx]
   const toneladasByProduct = products.map((prod) =>
     days.map((d) => {
       const dateStr = format(d, "yyyy-MM-dd");

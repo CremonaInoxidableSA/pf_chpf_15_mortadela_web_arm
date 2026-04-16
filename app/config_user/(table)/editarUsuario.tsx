@@ -52,7 +52,6 @@ export default function FormUsuario({
 
   const isEditing = !!usernameToEdit;
 
-  // Cargar datos del usuario si estamos editando
   useEffect(() => {
     if (!usernameToEdit) return;
 

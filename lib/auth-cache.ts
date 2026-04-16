@@ -1,13 +1,10 @@
-// Cache en cliente para datos de autenticación
-// Evita decodificaciones y verificaciones repetidas del token
-
 interface UserCache {
   user: unknown | null;
   token: string | null;
   timestamp: number;
 }
 
-const CACHE_DURATION = 15 * 60 * 1000; // 15 minutos
+const CACHE_DURATION = 15 * 60 * 1000;
 let authCache: UserCache = {
   user: null,
   token: null,
@@ -16,7 +13,6 @@ let authCache: UserCache = {
 
 export function getAuthCache(): UserCache {
   const now = Date.now();
-  // Invalidar caché si expiró
   if (now - authCache.timestamp > CACHE_DURATION) {
     authCache = {
       user: null,

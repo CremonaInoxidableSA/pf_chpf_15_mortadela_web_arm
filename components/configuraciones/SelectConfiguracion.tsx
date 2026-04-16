@@ -57,7 +57,6 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
     };
 
     fetchRecetas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSelectionChange = (value: string) => {

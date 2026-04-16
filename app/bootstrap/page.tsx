@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 const BootstrapPage = () => {
   const router = useRouter();
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [nombre, setNombre] = useState("");
@@ -36,6 +38,15 @@ const BootstrapPage = () => {
     checkSetup();
   }, [router]);
 
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -64,7 +75,6 @@ const BootstrapPage = () => {
         return;
       }
 
-      // Invalidar caché de needs-setup en servidor y cliente
       await fetch("/api/needs-setup/invalidate", { method: "POST" });
       if (typeof window !== "undefined") {
         localStorage.removeItem("setup_check_cache");
@@ -73,7 +83,7 @@ const BootstrapPage = () => {
       setSuccess(true);
       setLoading(false);
 
-      setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         router.push("/login");
       }, 2000);
     } catch (err) {

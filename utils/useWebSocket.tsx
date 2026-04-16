@@ -7,7 +7,7 @@ import {
   ProcessData,
   TechnicalData,
   Alarm,
-} from "../interfaces/websocket";
+} from "@/types/websocket";
 
 interface UseWebSocketReturn {
   data: WebSocketResponse | null;
@@ -67,8 +67,8 @@ export default function useWebSocket(pollId: string): UseWebSocketReturn {
               machineStatus: rawData[0] as MachineStatus,
               processData: rawData[1] as ProcessData,
               technicalData: rawData[2] as TechnicalData,
-              alarms: rawData[3] as Alarm[],
-              extraData: rawData[4] as unknown[],
+              alarms: (rawData[3] as Alarm[]).slice(-50),
+              extraData: (rawData[4] as unknown[]).slice(-100),
             };
 
             setData(formattedData);
@@ -86,7 +86,6 @@ export default function useWebSocket(pollId: string): UseWebSocketReturn {
         socketRef.current = null;
 
         reconnectTimeoutRef.current = setTimeout(() => {
-          // eslint-disable-next-line react-hooks/immutability
           connect();
         }, 3000);
       };

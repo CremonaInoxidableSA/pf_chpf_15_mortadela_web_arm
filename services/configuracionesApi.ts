@@ -1,10 +1,3 @@
-/**
- * Obtener la URL del endpoint proxy
- * Usa el proxy de Next.js para evitar problemas de CORS/certificados
- * @param endpoint - endpoint sin query params (ej: "lista-recetas", "datos-recetas")
- * @param queryParams - parámetros opcionales (ej: {id_receta: "1"})
- * @returns URL del proxy
- */
 const getProxyUrl = (
   endpoint: string,
   queryParams?: Record<string, string | number>,
@@ -18,8 +11,6 @@ const getProxyUrl = (
   const queryString = query.toString() ? `?${query.toString()}` : "";
   return `/api/proxy/configuraciones/${endpoint}${queryString}`;
 };
-
-// Estructuras de respuesta GET
 
 interface Receta {
   id_receta: number;
@@ -65,7 +56,6 @@ interface NivelesTorreResponse {
   configuraciones: Configuracion[];
 }
 
-// API real para producción
 const realConfiguracionesApi = {
   obtenerListaRecetas: async (): Promise<Receta[]> => {
     const url = getProxyUrl("lista-recetas");
@@ -156,5 +146,4 @@ const realConfiguracionesApi = {
   },
 };
 
-// Exporta solo la API real
 export const configuracionesApi = realConfiguracionesApi;

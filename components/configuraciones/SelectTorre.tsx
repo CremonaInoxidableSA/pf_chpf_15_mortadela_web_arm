@@ -31,7 +31,6 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
   const [torres, setTorres] = useState<Torre[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Siempre permitir API calls (el proxy las maneja)
   const canMakeApiCalls = true;
 
   useEffect(() => {
@@ -71,7 +70,6 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
     };
 
     loadTorresAndSelectFirst();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedReceta, canMakeApiCalls]);
 
   useEffect(() => {
@@ -91,13 +89,11 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
         setTorres(torresData);
         onTorresChange(torresData);
       } catch {
-        // silent
       } finally {
         setLoading(false);
       }
     };
     reload();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshKey]);
 
   return (

@@ -74,7 +74,6 @@ export const NetworkProvider = ({ children }: NetworkProviderProps) => {
             setTargetAddress(frontIP);
           }
         } else {
-          // Para desarrollo local (localhost)
           base = "http://localhost:3000";
           login = "http://localhost:3000";
           redirect = "http://localhost:3000";
@@ -90,7 +89,6 @@ export const NetworkProvider = ({ children }: NetworkProviderProps) => {
         setCamarasURL(camaras);
         setMediaMTXBaseURL(mediaMTX);
 
-        // Guardar en sessionStorage
         if (base && login && redirect && camaras && mediaMTX) {
           sessionStorage.setItem("baseURL", base);
           sessionStorage.setItem("loginURL", login);
@@ -104,7 +102,6 @@ export const NetworkProvider = ({ children }: NetworkProviderProps) => {
       }
     };
 
-    // Intentar cargar desde sessionStorage primero
     if (typeof window !== "undefined") {
       const storedBase = sessionStorage.getItem("baseURL");
       const storedLogin = sessionStorage.getItem("loginURL");
@@ -121,7 +118,7 @@ export const NetworkProvider = ({ children }: NetworkProviderProps) => {
         storedCamaras &&
         storedMediaMTX
       ) {
-        setBaseURL(storedBase); // eslint-disable-line react-hooks/set-state-in-effect
+        setBaseURL(storedBase);
         setLoginURL(storedLogin);
         setRedirectURL(storedRedirect);
         setCamarasURL(storedCamaras);

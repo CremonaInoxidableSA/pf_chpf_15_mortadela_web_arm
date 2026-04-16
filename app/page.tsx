@@ -23,7 +23,7 @@ export default function Home() {
             priority
           />
         </div>
-        <div className="w-3/7 overflow-y-auto pr-2 h-full">
+        <div className="w-3/7 pr-2 h-full">
           <DatosGeneral />
         </div>
       </div>

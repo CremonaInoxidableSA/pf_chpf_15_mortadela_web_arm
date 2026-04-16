@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import CameraCard from "@/components/cameras/CameraCard";
 import CameraLoadingSpinner from "@/components/cameras/CameraLoadingSpinner";
 import { useNetwork } from "@/context/NetworkContext";
 import { Camera } from "@/types";
 
-// Configuración de las 8 cámaras
 const CAMERA_CONFIG = [
   { id: "cam1", name: "Cámara 1", channel: "101" },
   { id: "cam2", name: "Cámara 2", channel: "201" },

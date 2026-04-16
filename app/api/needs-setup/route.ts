@@ -22,13 +22,11 @@ async function checkSetupBackend(): Promise<boolean> {
     return data.needs_setup === true;
   } catch (error) {
     console.error("Error checking setup status with backend:", error);
-    // Si falla el backend, permitir que se reintente
     return true;
   }
 }
 
 export async function GET() {
-  // Verificar caché primero
   const cached = getSetupCache();
   if (cached !== null) {
     return NextResponse.json(
@@ -43,10 +41,8 @@ export async function GET() {
     );
   }
 
-  // Si no está en caché, llamar al backend
   const needsSetup = await checkSetupBackend();
 
-  // Cacheamos el resultado
   setSetupCache(needsSetup);
 
   return NextResponse.json(
@@ -64,7 +60,6 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  // Endpoint para invalidar el caché
   if (path.endsWith("/invalidate")) {
     invalidateSetupCache();
     return NextResponse.json(

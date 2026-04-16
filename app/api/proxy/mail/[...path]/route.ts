@@ -44,11 +44,7 @@ async function proxyRequest(
 
     let body: string | undefined;
     if (withBody) {
-      try {
-        body = JSON.stringify(await request.json());
-      } catch {
-        // body vacío o no-JSON — se envía sin body
-      }
+      body = JSON.stringify(await request.json());
     }
 
     const response = await fetch(fullUrl, {

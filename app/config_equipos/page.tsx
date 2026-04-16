@@ -16,7 +16,7 @@ const Configuraciones = () => {
   const configuracionData = useConfiguracionData();
 
   useEffect(() => {
-    setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect
+    setMounted(true);
   }, []);
 
   useEffect(() => {

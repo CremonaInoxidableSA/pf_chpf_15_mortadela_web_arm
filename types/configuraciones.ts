@@ -68,7 +68,6 @@ export interface RecetasResponse {
 
 export type TipoNivel = "ChG" | "ChB";
 
-// Estructura para POST /configuraciones/tomar-datos-torre
 export interface TorreDataPayload {
   id: string;
   hBastidor: number | null;
@@ -79,10 +78,9 @@ export interface TorreDataPayload {
   id_recetario: number;
 }
 
-// Estructura para POST /configuraciones/tomar-datos-niveles (tipo: "1" o "2")
 export interface NivelDataPayload {
   id: string;
-  tipo: string; // "1" para Altura, "2" para Guardado
+  tipo: string;
   Correccion1: number | null;
   Correccion2: number | null;
   Correccion3: number | null;
@@ -95,10 +93,9 @@ export interface NivelDataPayload {
   Correccion10: number | null;
 }
 
-// Estructura para POST /configuraciones/reset-datos-niveles (tipo: "3")
 export interface ResetFallasPayload {
   id: string;
-  tipo: "3"; // Siempre "3" para reset de fallas
+  tipo: "3";
   Correccion1: number | null;
   Correccion2: number | null;
   Correccion3: number | null;

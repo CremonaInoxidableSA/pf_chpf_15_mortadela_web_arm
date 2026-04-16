@@ -120,7 +120,6 @@ export const useConfiguracionData = () => {
   const [nombreTorreActual, setNombreTorreActual] = useState<string>("");
   const [torresRefreshKey, setTorresRefreshKey] = useState(0);
 
-  // Permitir llamadas API siempre (el proxy las maneja)
   const canMakeApiCalls = true;
 
   const [datosGeneralesIzq, setDatosRecetas1] = useState<DatoReceta[]>(
@@ -165,7 +164,6 @@ export const useConfiguracionData = () => {
 
     setLoading(true);
     try {
-      // Obtener datos de la receta desde lista-recetas
       const listaRecetas = await configuracionesApi.obtenerListaRecetas();
       const receta = listaRecetas.find(
         (r) => r.id_receta === parseInt(idReceta),
@@ -175,7 +173,6 @@ export const useConfiguracionData = () => {
         throw new Error("Receta no encontrada");
       }
 
-      // LADO IZQUIERDO - Datos de la receta (solo los que devuelve la API)
       setDatosRecetas1([
         {
           id: 1,
@@ -229,7 +226,6 @@ export const useConfiguracionData = () => {
         },
       ]);
 
-      // LADO DERECHO - Items 3 y 4 se actualizan cuando se carguen datos de la torre
       setDatosRecetas2([
         {
           id: 1,
@@ -269,7 +265,6 @@ export const useConfiguracionData = () => {
 
       if (data && data.length > 0) {
         setTorres(data);
-        // Siempre seleccionar la primera torre al cambiar de receta
         setSelectedTorre(data[0].id_torre.toString());
         setNombreTorreActual(data[0].nombre_torre ?? "");
       } else {
@@ -299,7 +294,6 @@ export const useConfiguracionData = () => {
 
       setNombreTorreActual(torre.nombre_torre ?? "");
 
-      // Correcciones generales de la torre
       setDatosCorrecionesTorre([
         {
           id: 1,
@@ -313,7 +307,6 @@ export const useConfiguracionData = () => {
         },
       ]);
 
-      // Armar arrays de correcciones por nivel a partir del array configuraciones
       const chgItems = configuraciones
         .filter((c) => c.tipo === "ChG")
         .sort((a, b) => a.nivel - b.nivel)
@@ -335,7 +328,6 @@ export const useConfiguracionData = () => {
       setDatosCorrecionesNivelesChG(chgItems);
       setDatosCorrecionesNivelesChB(chbItems);
 
-      // Actualizar el lado derecho con los valores de la torre
       setDatosRecetas2((prev) =>
         prev.map((dato) => {
           if (dato.id === 3) {
@@ -362,18 +354,15 @@ export const useConfiguracionData = () => {
     }
   };
 
-  // Cargar datos iniciales: lista-recetas primero
   useEffect(() => {
     const cargarDatosIniciales = async () => {
       if (!canMakeApiCalls || initialized) return;
 
       try {
         setLoading(true);
-        // 1. Primero obtenemos lista de recetas
         const recetasData = await configuracionesApi.obtenerListaRecetas();
 
         if (recetasData && recetasData.length > 0) {
-          // Seleccionar la primera receta automáticamente
           const primeraReceta = recetasData[0].id_receta.toString();
           setSelectedReceta(primeraReceta);
           setInitialized(true);
@@ -388,16 +377,13 @@ export const useConfiguracionData = () => {
     cargarDatosIniciales();
   }, [canMakeApiCalls, initialized]);
 
-  // Cuando cambia la receta seleccionada, cargar datos de receta y torres
   useEffect(() => {
     if (canMakeApiCalls && selectedReceta) {
       cargarDatosReceta(selectedReceta);
       cargarTorres(selectedReceta);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedReceta, canMakeApiCalls]);
 
-  // Cuando cambia la torre seleccionada, cargar datos de niveles
   useEffect(() => {
     if (canMakeApiCalls && selectedTorre && selectedReceta) {
       cargarDatosTorre(selectedTorre);

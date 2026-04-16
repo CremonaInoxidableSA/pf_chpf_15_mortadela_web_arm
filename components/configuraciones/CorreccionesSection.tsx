@@ -71,7 +71,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
     setNewTagValue("");
   }, [nombreTorreActual]);
 
-  // Función para limpiar los inputs después de aplicar cambios
   const limpiarInputs = () => {
     if (inputRefs.current) {
       inputRefs.current.forEach((input) => {

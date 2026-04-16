@@ -24,28 +24,28 @@ export default function HlsPlayer({
   className = "",
 }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const hlsRef = useRef<any>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !src) return;
 
+    let isMounted = true;
+
     const setup = async () => {
-      // Limpiar instancia anterior si existe
+      if (!isMounted) return;
+
       if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
       }
 
-      // Safari nativo soporta HLS
       if (video.canPlayType("application/vnd.apple.mpegurl")) {
         video.src = src;
         video.currentTime = video.duration || 0;
         return;
       }
 
-      // Para otros navegadores, usar hls.js
       const HlsModule = (await import("hls.js")).default;
 
       if (HlsModule.isSupported()) {
@@ -53,26 +53,31 @@ export default function HlsPlayer({
           lowLatencyMode: true,
           enableWorker: true,
           backBufferLength: 30,
-          maxBufferSize: 60 * 1000 * 1000, // 60MB
+          maxBufferSize: 60 * 1000 * 1000,
           maxBufferLength: 30,
         });
+
+        if (!isMounted) {
+          hls.destroy();
+          return;
+        }
 
         hlsRef.current = hls;
         hls.loadSource(src);
         hls.attachMedia(video);
 
         hls.on(HlsModule.Events.MANIFEST_PARSED, () => {
+          if (!isMounted) return;
           if (video.readyState > 0) {
             video.currentTime = video.duration || 0;
           }
-          video.play().catch(() => {
-            // Autoplay puede estar bloqueado
-          });
+          video.play().catch(() => {});
         });
 
         hls.on(
           HlsModule.Events.ERROR,
           (_event: unknown, data: { fatal: boolean; type: string }) => {
+            if (!isMounted) return;
             if (data.fatal) {
               switch (data.type) {
                 case HlsModule.ErrorTypes.NETWORK_ERROR:
@@ -83,6 +88,7 @@ export default function HlsPlayer({
                   break;
                 default:
                   hls.destroy();
+                  hlsRef.current = null;
                   onError?.();
                   break;
               }
@@ -94,18 +100,27 @@ export default function HlsPlayer({
 
     setup();
 
-    // Reconectar cuando la pestaña vuelve a ser visible
     const handleVisibility = () => {
-      if (document.visibilityState === "visible") {
+      if (!isMounted) return;
+      if (
+        document.visibilityState === "visible" &&
+        video.src &&
+        !video.paused
+      ) {
         setup();
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
+      isMounted = false;
       if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
+      }
+      if (video) {
+        video.src = "";
+        video.pause();
       }
       document.removeEventListener("visibilitychange", handleVisibility);
     };

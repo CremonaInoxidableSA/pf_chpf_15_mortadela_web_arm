@@ -50,11 +50,10 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
 
-// Cache en cliente para setup check (usando localStorage para persistencia)
 let setupCheckInProgress = false;
 
 const SETUP_CACHE_KEY = "setup_check_cache";
-const SETUP_CACHE_DURATION = 3600000; // 1 hora
+const SETUP_CACHE_DURATION = 3600000;
 
 function getStoredSetupCache(): boolean | null {
   if (typeof window === "undefined") return null;
@@ -105,7 +104,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const sessionCheckCompleted = useRef(false);
 
   useEffect(() => {
-    // Solo hacer checkSession una vez al montar
     if (!sessionCheckCompleted.current) {
       sessionCheckCompleted.current = true;
       checkSession();
@@ -113,7 +111,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Re-verificar solo cuando se navega a login Y se sospecha que hay bootstrap pendiente
     if (pathname === "/login" && needBootstrap && !loading) {
       checkSetupStatus();
     }
@@ -177,7 +174,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const checkSetupStatus = useCallback(async () => {
-    // Verificar caché en localStorage primero
     const storedCache = getStoredSetupCache();
 
     if (storedCache !== null) {
@@ -189,7 +185,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // Si ya hay una verificación en progreso, esperar
     if (setupCheckInProgress) {
       return;
     }
@@ -206,7 +201,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const needsSetup = data.needs_setup === true;
 
-      // Cachear en localStorage
       setStoredSetupCache(needsSetup);
 
       if (needsSetup) {
@@ -216,7 +210,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (err) {
       console.warn("Error checking setup status:", err);
-      // En caso de error, asumir que no necesita setup
       setStoredSetupCache(false);
       setNeedBootstrap(false);
     } finally {
@@ -226,7 +219,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkSession = async () => {
     try {
-      // Verificar caché de setup en localStorage primero
       const setupCache = getStoredSetupCache();
       if (setupCache !== null) {
         if (setupCache === true) {
@@ -238,7 +230,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setNeedBootstrap(false);
         }
       } else {
-        // Si no hay caché, hacer verificación
         await checkSetupStatus();
       }
 
@@ -282,18 +273,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       };
 
-      // Si ya tenemos user en localStorage + token válido, no necesitamos hacer fetch
       if (hydratedFromStorage && token) {
         const payload = decodeToken(token);
         if (payload && payload.sub) {
-          // Token es válido y tenemos user, ya está listo
           setNeedBootstrap(false);
           setLoading(false);
           return;
         }
       }
 
-      // Si tenemos token, intentar decodificar
       if (token && !hydratedFromStorage) {
         const payload = decodeToken(token);
         if (payload && payload.sub) {
@@ -310,8 +298,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      // Solo hacer fetch a /check si no tenemos información en localStorage
-      // o si el token parece inválido
       if (!hydratedFromStorage || !token) {
         try {
           const res = await fetch(`/api/proxy/auth/check`, {
