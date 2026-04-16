@@ -2,43 +2,53 @@
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
-const DatosGeneral = {
-  Hola: "Hola",
-  Ejemplo: "Ejemplo",
-  "Este es otro ejemplo": "Este es otro ejemplo",
-  "Demasiados ejemplos": "Demasiados ejemplos",
-  "Puedo poner mas ejemplos": "Puedo poner mas ejemplos",
-  "Posta, mira": "Posta, mira",
-  "Ejemplo 1": "Ejemplo 1",
-  "Ejemplo 2": "Ejemplo 2",
-  "Ejemplo 3": "Ejemplo 3",
-  "Ejemplo 4": "Ejemplo 4",
-};
+const Niveles = [
+  { label: "NIVEL 1", seleccionado: true, finalizado: true },
+  { label: "NIVEL 2", seleccionado: true, finalizado: false },
+  { label: "NIVEL 3", seleccionado: false, finalizado: null },
+  { label: "NIVEL 4", seleccionado: false, finalizado: null },
+  { label: "NIVEL 5", seleccionado: true, finalizado: true },
+  { label: "NIVEL 6", seleccionado: true, finalizado: false },
+  { label: "NIVEL 7", seleccionado: false, finalizado: null },
+  { label: "NIVEL 8", seleccionado: false, finalizado: null },
+  { label: "NIVEL 9", seleccionado: true, finalizado: true },
+  { label: "NIVEL 10", seleccionado: true, finalizado: false },
+  { label: "NIVEL 11", seleccionado: false, finalizado: null },
+  { label: "NIVEL 12", seleccionado: false, finalizado: null },
+  { label: "NIVEL 13", seleccionado: true, finalizado: true },
+];
+
+const getColor = (seleccionado: boolean, finalizado: boolean | null) => {
+  if (seleccionado && finalizado) return "bg-green/30 border-green border";
+  if (seleccionado && !finalizado) return "bg-red/30 border-red border";
+  return "bg-background6/50 border-background border";
+}
 
 export default function Home() {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col gap-5 w-full h-full">
-      <div className="w-1/2 flex flex-col gap-5 overflow-y-auto z-10">
-        {Object.keys(DatosGeneral).map((key) => (
-          <p
-            className="text-lg py-1 px-3 w-full bg-background3 rounded-md"
-            key={key}
+    <div className="relative w-full max-w-65 aspect-3/4">
+      <Image
+        src="/general/RACK.png"
+        alt="rack"
+        fill
+        className="object-contain"
+        unoptimized
+      />
+      <div className="flex flex-col items-center justify-center gap-[0.43rem] pt-2 w-full h-full">
+        {Niveles.map((nivel, index) => (
+          <div
+            key={index}
+            className={`z-200 w-[85%] h-auto rounded-md px-2 flex items-center justify-center ${getColor(nivel.seleccionado, nivel.finalizado)}`}
+            style={{
+              top: `${20 + (index % 5) * 15}%`,
+              left: `${10 + Math.floor(index / 5) * 20}%`,
+            }}
           >
-            {t(key)}
-          </p>
+            {nivel.label}
+          </div>
         ))}
-      </div>
-      <div className="w-1/2 flex items-center justify-center relative">
-        <Image
-          alt={t("mayus.general")}
-          src={"/general/RACK.png"}
-          fill
-          className="object-contain"
-          priority
-          unoptimized
-        />
       </div>
     </div>
   );

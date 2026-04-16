@@ -8,7 +8,7 @@
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint",
     "generate-config": "node mediamtx/generate-config.js",
-    "dev:cameras": "npm run generate-config && concurrently \"cd mediamtx && mediamtx.exe\" \"next dev --hostname 0.0.0.0\"",
+    "dev:cameras": "npm run generate-config && concurrently \"cross-env NODE_OPTIONS=--max-old-space-size=4096 node -e 'require(\"child_process\").spawn(\"mediamtx.exe\", {cwd: \"mediamtx\", stdio: \"inherit\"})'\" \"cross-env NODE_OPTIONS=--max-old-space-size=4096 next dev --hostname 0.0.0.0\"",
     "start:cameras": "npm run generate-config && concurrently \"cd mediamtx && mediamtx.exe\" \"next start --hostname 0.0.0.0\""
   },
   "dependencies": {

@@ -1,19 +1,15 @@
 "use client";
 import { useTranslation } from "react-i18next";
-import Image from "next/image";
+import Rack from "./rack";
 
-const DatosGeneral = {
-  Hola: "Hola",
-  Ejemplo: "Ejemplo",
-  "Este es otro ejemplo": "Este es otro ejemplo",
-  "Demasiados ejemplos": "Demasiados ejemplos",
-  "Puedo poner mas ejemplos": "Puedo poner mas ejemplos",
-  "Posta, mira": "Posta, mira",
-  "Ejemplo 1": "Ejemplo 1",
-  "Ejemplo 2": "Ejemplo 2",
-  "Ejemplo 3": "Ejemplo 3",
-  "Ejemplo 4": "Ejemplo 4",
-};
+const DatosGeneral = 
+[ 
+  { label: "NOMBRE DEL RACK", valor: "PF-1239-A2"},
+  { label: "TIPO DE CORTE", valor: "Mortadela Larga"},
+  { label: "ESTADO DEL SELECCIONADOR", valor: "ENTREGANDO PRODUCTO"},
+  { label: "ESTADO DE LA MESA DE ESPERA", valor: "ENTREGANDO PRODUCTO"},
+  { label: "TIEMPO TRANSCURRIDO", valor: "hh:mm:ss"}
+];
 
 export default function Home() {
   const { t } = useTranslation();
@@ -21,26 +17,22 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-5 w-full h-full">
       <div className="flex flex-row gap-5 w-full h-3/4">
-        <div className="w-1/2 flex flex-col gap-5 overflow-y-auto z-10">
-          {Object.keys(DatosGeneral).map((key) => (
-            <p
-              className="text-lg py-1 px-3 w-full bg-background3 rounded-md"
-              key={key}
+        <div className="flex flex-col w-full h-full gap-5 overflow-y-auto z-10">
+          {DatosGeneral.map((item, index) => (
+            <div
+              key={index}
+              className="flex flex-col flex-1 w-full justify-center py-1 px-3 bg-background3 rounded-md"
             >
-              {t(key)}
-            </p>
+              <p className="text-xl font-semibold w-full" key={index}>
+                {t(item.label)}:
+              </p>
+              <p className="text-lg w-full">
+                {item.valor}
+              </p>
+            </div>
           ))}
         </div>
-        <div className="w-1/2 flex items-center justify-center relative">
-          <Image
-            alt={t("mayus.general")}
-            src={"/general/RACK.png"}
-            fill
-            className="object-contain"
-            priority
-            unoptimized
-          />
-        </div>
+        <Rack />
       </div>
       <div className="w-full h-1/4 bg-background3 rounded-md flex p-5">
         Hola Nigga
