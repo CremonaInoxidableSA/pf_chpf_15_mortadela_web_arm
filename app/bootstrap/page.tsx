@@ -26,7 +26,7 @@ const BootstrapPage = () => {
         } else {
           router.push("/login");
         }
-      } catch (err) {
+      } catch {
         router.push("/login");
       } finally {
         setLoading(false);
@@ -77,7 +77,7 @@ const BootstrapPage = () => {
         router.push("/login");
       }, 2000);
     } catch (err) {
-      setError("Error al conectarse con el servidor");
+      setError(`Error al conectarse con el servidor: ${err}`);
       setLoading(false);
     }
   };

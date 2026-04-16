@@ -61,7 +61,7 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
         } else {
           onChange("");
         }
-      } catch (error) {
+      } catch {
         setTorres([]);
         onTorresChange([]);
         onChange("");

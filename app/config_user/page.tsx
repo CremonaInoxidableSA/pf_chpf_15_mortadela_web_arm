@@ -46,7 +46,7 @@ export default function ConfiguracionUsuario() {
         ),
       );
     } catch (err) {
-      alert(t("min.errorConexionAPI"));
+      alert(`Error de conexión con la API: ${err}`);
     }
   };
 
@@ -94,7 +94,7 @@ export default function ConfiguracionUsuario() {
         prev.filter((u: User) => u.username !== username),
       );
     } catch (error) {
-      alert("Error de conexión con la API");
+      alert(`Error de conexión con la API: ${error}`);
     }
   };
 

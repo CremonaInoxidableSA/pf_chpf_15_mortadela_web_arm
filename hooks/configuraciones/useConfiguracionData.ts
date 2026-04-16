@@ -257,7 +257,7 @@ export const useConfiguracionData = () => {
         },
       ]);
     } catch (error) {
-      toast.error("Error al cargar datos de la receta");
+      toast.error(`Error al cargar datos de la receta: ${error}`);
     } finally {
       setLoading(false);
     }
@@ -277,7 +277,7 @@ export const useConfiguracionData = () => {
         setSelectedTorre(null);
       }
     } catch (error) {
-      toast.error("Error al cargar torres");
+      toast.error(`Error al cargar torres: ${error}`);
       setTorres([]);
       setSelectedTorre(null);
     }
@@ -356,7 +356,7 @@ export const useConfiguracionData = () => {
 
       toast.success("Datos de torre cargados correctamente");
     } catch (error) {
-      toast.error("Error al cargar datos de la torre");
+      toast.error(`Error al cargar datos de la torre: ${error}`);
     } finally {
       setLoading(false);
     }
@@ -379,7 +379,7 @@ export const useConfiguracionData = () => {
           setInitialized(true);
         }
       } catch (error) {
-        toast.error("Error al cargar la lista de recetas");
+        toast.error(`Error al cargar la lista de recetas: ${error}`);
       } finally {
         setLoading(false);
       }

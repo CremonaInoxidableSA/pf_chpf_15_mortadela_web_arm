@@ -2,13 +2,12 @@
 import { useTranslation } from "react-i18next";
 import Rack from "./rack";
 
-const DatosGeneral = 
-[ 
-  { label: "NOMBRE DEL RACK", valor: "PF-1239-A2"},
-  { label: "TIPO DE CORTE", valor: "Mortadela Larga"},
-  { label: "ESTADO DEL SELECCIONADOR", valor: "ENTREGANDO PRODUCTO"},
-  { label: "ESTADO DE LA MESA DE ESPERA", valor: "ENTREGANDO PRODUCTO"},
-  { label: "TIEMPO TRANSCURRIDO", valor: "hh:mm:ss"}
+const DatosGeneral = [
+  { label: "NOMBRE DEL RACK", valor: "PF-1239-A2" },
+  { label: "TIPO DE CORTE", valor: "Mortadela Larga" },
+  { label: "ESTADO DEL SELECCIONADOR", valor: "ENTREGANDO PRODUCTO" },
+  { label: "ESTADO DE LA MESA DE ESPERA", valor: "ENTREGANDO PRODUCTO" },
+  { label: "TIEMPO TRANSCURRIDO", valor: "hh:mm:ss" },
 ];
 
 export default function Home() {
@@ -26,9 +25,7 @@ export default function Home() {
               <p className="text-xl font-semibold w-full" key={index}>
                 {t(item.label)}:
               </p>
-              <p className="text-lg w-full">
-                {item.valor}
-              </p>
+              <p className="text-lg w-full">{item.valor}</p>
             </div>
           ))}
         </div>

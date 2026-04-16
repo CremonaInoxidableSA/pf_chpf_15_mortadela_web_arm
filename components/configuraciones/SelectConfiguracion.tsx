@@ -50,7 +50,7 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
             onChange(primerReceta.id_receta.toString());
           }
         }
-      } catch (error) {
+      } catch {
       } finally {
         setLoading(false);
       }

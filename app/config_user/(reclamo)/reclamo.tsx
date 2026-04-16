@@ -87,7 +87,7 @@ export default function GenerarReclamo() {
         });
       }
     } catch (error) {
-      toast.error(t("min.errorReclamo"), {
+      toast.error(`Error al enviar el reclamo: ${error}`, {
         position: "top-center",
       });
     }

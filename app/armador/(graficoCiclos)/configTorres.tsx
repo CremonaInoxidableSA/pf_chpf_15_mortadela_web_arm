@@ -39,7 +39,7 @@ export function createCiclosConfig(
               const dayLabel = ctx.label; // dd/MM
               // find the dateStr that matches this label
               const dateStr = Object.keys(aggregated).find((k) => {
-                const [y, m, d] = k.split("-");
+                const [m, d] = k.split("-");
                 return `${d}/${m}` === dayLabel;
               });
               if (!dateStr) return `${prod}: ${ctx.parsed.y} ${i18n.toneladas}`;

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { invalidateSetupCache } from "@/lib/setup-cache";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     invalidateSetupCache();
     return NextResponse.json(

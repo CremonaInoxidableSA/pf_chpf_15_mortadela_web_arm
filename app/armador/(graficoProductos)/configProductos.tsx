@@ -34,7 +34,7 @@ export function createProductosConfig(
               const prod = ctx.dataset.label ?? "";
               const dayLabel = ctx.label;
               const dateStr = Object.keys(aggregated).find((k) => {
-                const [y, m, d] = k.split("-");
+                const [m, d] = k.split("-");
                 return `${d}/${m}` === dayLabel;
               });
               if (!dateStr) return `${prod}: ${ctx.parsed.y} ${i18n.toneladas}`;

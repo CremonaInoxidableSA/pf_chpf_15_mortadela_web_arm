@@ -105,10 +105,7 @@ const realConfiguracionesApi = {
     }
   },
 
-  enviarDatosTorre: async (
-    datos: Record<string, unknown>,
-    intento: number = 1,
-  ): Promise<void> => {
+  enviarDatosTorre: async (datos: Record<string, unknown>): Promise<void> => {
     const url = getProxyUrl("tomar-datos-torre");
     try {
       const response = await fetch(url, {

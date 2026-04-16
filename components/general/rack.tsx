@@ -1,32 +1,29 @@
 "use client";
-import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
 const Niveles = [
-  { label: "NIVEL 1", seleccionado: true, finalizado: true },
-  { label: "NIVEL 2", seleccionado: true, finalizado: false },
-  { label: "NIVEL 3", seleccionado: false, finalizado: null },
-  { label: "NIVEL 4", seleccionado: false, finalizado: null },
-  { label: "NIVEL 5", seleccionado: true, finalizado: true },
-  { label: "NIVEL 6", seleccionado: true, finalizado: false },
-  { label: "NIVEL 7", seleccionado: false, finalizado: null },
-  { label: "NIVEL 8", seleccionado: false, finalizado: null },
-  { label: "NIVEL 9", seleccionado: true, finalizado: true },
-  { label: "NIVEL 10", seleccionado: true, finalizado: false },
-  { label: "NIVEL 11", seleccionado: false, finalizado: null },
-  { label: "NIVEL 12", seleccionado: false, finalizado: null },
   { label: "NIVEL 13", seleccionado: true, finalizado: true },
+  { label: "NIVEL 12", seleccionado: true, finalizado: false },
+  { label: "NIVEL 11", seleccionado: false, finalizado: null },
+  { label: "NIVEL 10", seleccionado: false, finalizado: null },
+  { label: "NIVEL 9", seleccionado: true, finalizado: true },
+  { label: "NIVEL 8", seleccionado: true, finalizado: false },
+  { label: "NIVEL 7", seleccionado: false, finalizado: null },
+  { label: "NIVEL 6", seleccionado: false, finalizado: null },
+  { label: "NIVEL 5", seleccionado: true, finalizado: true },
+  { label: "NIVEL 4", seleccionado: true, finalizado: false },
+  { label: "NIVEL 3", seleccionado: false, finalizado: null },
+  { label: "NIVEL 2", seleccionado: false, finalizado: null },
+  { label: "NIVEL 1", seleccionado: true, finalizado: true },
 ];
 
 const getColor = (seleccionado: boolean, finalizado: boolean | null) => {
   if (seleccionado && finalizado) return "bg-green/30 border-green border";
   if (seleccionado && !finalizado) return "bg-red/30 border-red border";
   return "bg-background6/50 border-background border";
-}
+};
 
 export default function Home() {
-  const { t } = useTranslation();
-
   return (
     <div className="relative w-full max-w-65 aspect-3/4">
       <Image
