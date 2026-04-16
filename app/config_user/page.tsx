@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { VscAccount } from "react-icons/vsc";
 import { authFetch } from "@/app/api/api";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { UserAvatar } from "@/components/userIcon/userAvatar";
 
 import FormUsuario from "./(formulario)/formUsuario";
 import EditarUsuario from "./(table)/editarUsuario";
@@ -45,8 +45,8 @@ export default function ConfiguracionUsuario() {
           u.username === username ? { ...u, habilitado: 0 } : u,
         ),
       );
-    } catch (err) {
-      alert(`Error de conexión con la API: ${err}`);
+    } catch {
+      alert(t("min.errorConexionAPI"));
     }
   };
 
@@ -93,8 +93,8 @@ export default function ConfiguracionUsuario() {
       setData((prev: User[]) =>
         prev.filter((u: User) => u.username !== username),
       );
-    } catch (error) {
-      alert(`Error de conexión con la API: ${error}`);
+    } catch {
+      alert("Error de conexión con la API");
     }
   };
 
@@ -140,7 +140,7 @@ export default function ConfiguracionUsuario() {
       admin: t("min.admin"),
       user: t("min.usuario"),
     };
-    return (role && roleMap[role]) || role || "—";
+    return (role && roleMap[role]) || role || "-";
   };
 
   const fullname = `${nombre ?? ""}${nombre || apellido ? " " : ""}${
@@ -148,26 +148,33 @@ export default function ConfiguracionUsuario() {
   }`.trim();
 
   return (
-    <div className="w-full p-4 flex flex-row gap-4">
-      <div className="h-full w-1/5 flex flex-col bg-background2 rounded-md p-4 justify-between self-stretch">
+    <div className="w-full flex flex-row gap-5 p-5">
+      <div className="h-full w-1/5 flex flex-col bg-background2 rounded-md p-5 justify-between self-stretch">
         <div className="flex w-full items-center justify-center">
-          <VscAccount className="w-20 h-20" />
+          <UserAvatar
+            nombre={nombre}
+            apellido={apellido}
+            rol={rol}
+            sizeClass="w-20 h-20"
+            textClass="text-2xl"
+            imgPx={80}
+          />
         </div>
 
         <div className="flex flex-col gap-5 text-left">
           <div>
-            <p className="font-semibold text-xl">{t("min.nom")}</p>
-            <p>{fullname || "—"}</p>
+            <p className="font-semibold text-xl">{t("min.nombre")}</p>
+            <p>{fullname || "-"}</p>
           </div>
 
           <div>
             <p className="font-semibold text-lg">{t("min.email")}</p>
-            <p>{email || "—"}</p>
+            <p>{email || "-"}</p>
           </div>
 
           <div>
             <p className="font-semibold text-lg">{t("min.rol")}</p>
-            <p>{rol ? getRoleName(rol) : "—"}</p>
+            <p>{rol ? getRoleName(rol) : "-"}</p>
           </div>
 
           <div>
@@ -176,7 +183,7 @@ export default function ConfiguracionUsuario() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           <Dialog>
             <DialogTrigger asChild>
               <Button className="w-full h-10 border border-botonredborder bg-botonred hover:bg-botonredhover text-botonredborder text-md cursor-pointer">
@@ -204,10 +211,10 @@ export default function ConfiguracionUsuario() {
           </Dialog>
         </div>
       </div>
-      <div className="flex flex-col h-full w-4/5 gap-4">
+      <div className="flex flex-col h-full w-4/5 gap-5">
         <div className="flex items-center justify-between">
           <p className="text-2xl w-full flex justify-center">
-            {t("min.listaUsuarios")}
+            {t("mayus.listaUsuarios")}
           </p>
           {isLoading && (
             <div className="flex items-center gap-2">

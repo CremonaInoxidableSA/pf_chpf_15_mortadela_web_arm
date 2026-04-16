@@ -96,7 +96,7 @@ export default function GenerarReclamo() {
   return (
     <DialogContent className="sm:max-w-150 bg-background3 z-800">
       <DialogHeader>
-        <DialogTitle>{t("min.generarReclamo")}</DialogTitle>
+        <DialogTitle>{t("mayus.generarReclamo")}</DialogTitle>
         <DialogDescription>
           {t("min.completaDatosCrearUsuario")}
         </DialogDescription>

@@ -1,3 +1,5 @@
+import Rack from "./rackArmador";
+
 const DatosDelCiclo = [
   { id: 1, nombre: "ESTADO FINAL", dato: "FINALIZADO CON CANCELACIONES" },
   { id: 2, nombre: "TIPO DE CORTE REALIZADO", dato: "MORTADELA LARGA" },
@@ -29,8 +31,8 @@ const Cancelaciones = [
 
 export default function DatosLateralesArmado() {
   return (
-    <div className="bg-background2 flex flex-row gap-5 p-4 rounded-md h-180 w-full">
-      <div className="flex flex-col justify-between gap-2 rounded-md w-1/9">
+    <div className="bg-background2 flex flex-row gap-5 p-4 rounded-md h-200 w-full">
+      <div className="flex flex-col justify-between gap-5 rounded-md w-1/4">
         <div className="bg-background3 p-2 rounded-md h-1/5">
           Selector Fecha
         </div>
@@ -40,7 +42,7 @@ export default function DatosLateralesArmado() {
         </div>
       </div>
 
-      <div className="flex flex-col bg-background3 justify-between gap-2 p-5 rounded-md w-2/9">
+      <div className="flex flex-col bg-background3 justify-between gap-2 p-5 rounded-md w-1/4">
         <div>DATOS DEL CICLO</div>
         {DatosDelCiclo.map((dato) => (
           <div className="bg-background4 py-1 px-3 rounded-md" key={dato.id}>
@@ -50,7 +52,7 @@ export default function DatosLateralesArmado() {
         ))}
       </div>
 
-      <div className="flex flex-col bg-background3 justify-between gap-2 p-5 rounded-md w-3/9">
+      <div className="flex flex-col bg-background3 justify-between gap-2 p-5 rounded-md w-1/4">
         <div>DATOS DEL RACK</div>
         {DatosDelRack.map((dato) => (
           <div className="bg-background4 py-1 px-3 rounded-md" key={dato.id}>
@@ -78,7 +80,7 @@ export default function DatosLateralesArmado() {
         </div>
       </div>
 
-      <div className="bg-background3 w-3/9">Imagen Rack</div>
+      <Rack />
     </div>
   );
 }

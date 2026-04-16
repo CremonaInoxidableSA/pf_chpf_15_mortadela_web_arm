@@ -6,7 +6,7 @@
     "crearUsuario": "CREATE USER",
     "importarBDD": "IMPORT BDD",
     "exportarBDD": "EXPORT BDD",
-    "generarReclamo": "GENERATE COMPLAINT",
+    "generarReclamo": "CLAIM TICKET",
     "layout": "LAYOUT",
     "productividad": "PRODUCTIVITY",
     "graficosHistoricos": "HISTORIC GRAPHS",
@@ -19,7 +19,8 @@
     "datosGenerales": "GENERAL DATA",
     "camaras": "CAMERAS",
     "rangoDeFechas": "DATE RANGE",
-    "generalArmado": "GENERAL ARMING"
+    "generalArmado": "GENERAL ARMING",
+    "listaUsuarios": "USER LIST"
   },
   "min": {
     "usuario": "User",
@@ -102,6 +103,10 @@
     "aplicar": "Apply",
     "descargarPDF": "Download PDF",
     "descargarExcel": "Download Excel",
-    "alarmas": "Alarms"
+    "alarmas": "Alarms",
+    "completaDatosCrearUsuario": "Complete the data to create a new user",
+    "seleccioneArea": "Select the area of the inconvenient",
+    "detalleReclamo": "inconvenient description",
+    "generarReclamo": "Generate Ticket"
   }
 }

@@ -25,7 +25,7 @@ const getColor = (seleccionado: boolean, finalizado: boolean | null) => {
 
 export default function Rack() {
   return (
-    <div className="relative w-full max-w-65 aspect-3/4">
+    <div className="relative flex items-center justify-center w-1/4 h-full">
       <Image
         src="/general/RACK.png"
         alt="rack"
@@ -33,11 +33,11 @@ export default function Rack() {
         className="object-contain"
         unoptimized
       />
-      <div className="flex flex-col items-center justify-center gap-[0.43rem] pt-2 w-full h-full">
+      <div className="flex flex-col items-center justify-center gap-[0.67rem] pt-2.5 w-full h-full">
         {Niveles.map((nivel, index) => (
           <div
             key={index}
-            className={`z-200 w-[85%] h-auto rounded-md px-2 flex items-center justify-center ${getColor(nivel.seleccionado, nivel.finalizado)}`}
+            className={`z-200 w-[86%] h-1/20 rounded-md px-2 flex items-center justify-center ${getColor(nivel.seleccionado, nivel.finalizado)}`}
             style={{
               top: `${20 + (index % 5) * 15}%`,
               left: `${10 + Math.floor(index / 5) * 20}%`,

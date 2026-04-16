@@ -19,7 +19,8 @@
     "datosGenerales": "DATOS GENERALES",
     "camaras": "CÁMARAS",
     "rangoDeFechas": "RANGO DE FECHAS",
-    "generalArmado": "GENERAL ARMADOR"
+    "generalArmado": "GENERAL ARMADOR",
+    "listaUsuarios": "LISTA DE USUARIOS"
   },
   "min": {
     "usuario": "Usuario",
@@ -102,6 +103,10 @@
     "aplicar": "Aplicar",
     "descargarPDF": "Descargar PDF",
     "descargarExcel": "Descargar Excel",
-    "alarmas": "Alarmas"
+    "alarmas": "Alarmas",
+    "completaDatosCrearUsuario": "Complete los datos para crear un nuevo usuario",
+    "seleccioneArea": "Seleccione el área del reclamo",
+    "detalleReclamo": "Descripción del reclamo",
+    "generarReclamo": "Generar reclamo"
   }
 }
