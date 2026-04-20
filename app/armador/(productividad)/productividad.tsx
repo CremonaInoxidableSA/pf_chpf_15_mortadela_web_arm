@@ -130,7 +130,7 @@ const Productividad = ({ dateRange }: ProductividadProps) => {
         {t("mayus.productividad")}
       </p>
       <div className="flex items-center mb-3">
-        <p className="inline text-[#ffa500] font-system-ui text-md">
+        <p className="inline text-orange font-system-ui text-md">
           {fechaInicio}
           <span className="inline px-1.25 font-semibold"> - </span>
           {fechaFin}

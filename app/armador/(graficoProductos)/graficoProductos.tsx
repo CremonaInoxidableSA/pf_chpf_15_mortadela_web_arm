@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import { Chart, registerables } from "chart.js";
 import { useTranslation } from "react-i18next";
-import { buildChartData } from "../(graficoCiclos)/chartDataBuilder";
+import { buildChartData } from "./chartDataBuilder";
 import { createProductosConfig } from "./configProductos";
 
 Chart.register(...registerables);

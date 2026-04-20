@@ -37,12 +37,15 @@ export default function Home() {
     <div className="flex flex-col gap-5 w-full h-full">
       <div className="flex flex-row gap-5 w-full h-3/4">
         <div className="flex flex-col w-full h-full gap-5 overflow-y-auto z-10">
+          <h1 className="text-xl font-bold">RACK ACTUAL EN TIEMPO REAL</h1>
           {DatosGeneral.map((item, index) => (
             <div
               key={index}
-              className="flex flex-col flex-1 w-full justify-center py-1 px-3 bg-background3 rounded-md"
+              className="
+                flex flex-col flex-1 w-full justify-center py-1 px-3 bg-background3 rounded-md
+                "
             >
-              <p className="text-xl font-semibold w-full" key={index}>
+              <p className="text-lg font-semibold w-full" key={index}>
                 {t(item.label)}:
               </p>
               <p className="text-lg w-full">{item.valor}</p>

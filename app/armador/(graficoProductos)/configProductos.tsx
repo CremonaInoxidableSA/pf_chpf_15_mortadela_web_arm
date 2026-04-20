@@ -1,5 +1,5 @@
 import type { ChartConfiguration, ChartDataset } from "chart.js";
-import type { ChartBuildResult } from "../(graficoCiclos)/chartDataBuilder";
+import type { ChartBuildResult } from "./chartDataBuilder";
 
 export function createProductosConfig(
   {

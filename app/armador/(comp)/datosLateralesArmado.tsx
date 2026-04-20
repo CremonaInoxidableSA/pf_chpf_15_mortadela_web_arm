@@ -87,12 +87,7 @@ const DatosLaterales: React.FC = () => {
     {
       id: 6,
       nombre: t("min.pesoDesmoldado"),
-      dato:
-        estadoMaquina === "CICLO INACTIVO"
-          ? "0 kg"
-          : PesoActualDesmoldado != null
-            ? `${PesoActualDesmoldado} kg`
-            : null,
+      dato:"0 kg",
       icono: FaWeightHanging,
       isReactIcon: true,
     },

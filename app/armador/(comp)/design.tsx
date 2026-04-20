@@ -8,14 +8,12 @@ const DatosDelCiclo = [
   { id: 5, nombre: "RACK PROCESADO", dato: "PF-1239-A2" },
   { id: 6, nombre: "TIEMPO TOTAL", dato: "hh:mm:ss" },
   { id: 7, nombre: "TIEMPO DE CICLO EN PAUSA", dato: "hh:mm:ss" },
-  { id: 8, nombre: "PROXIMAMENTE", dato: "" },
 ];
 
 const DatosDelRack = [
   { id: 1, nombre: "NIVEL SELECCIONADO FINAL", dato: "Nivel 13" },
   { id: 2, nombre: "RESULTADO", dato: "PROCESADO CORRECTAMENTE" },
   { id: 3, nombre: "TIEMPO DE PROCESO", dato: "mm:ss" },
-  { id: 8, nombre: "PROXIMAMENTE", dato: "" },
 ];
 
 const Cancelaciones = [
@@ -26,7 +24,6 @@ const Cancelaciones = [
   { id: 5, dato: "5. Fallo en alimentador" },
   { id: 6, dato: "6. Error en sistema de medición" },
   { id: 7, dato: "7. Problema en sistema de iluminación" },
-  { id: 8, dato: "" },
 ];
 
 export default function DatosLateralesArmado() {
@@ -45,7 +42,10 @@ export default function DatosLateralesArmado() {
       <div className="flex flex-col bg-background3 justify-between gap-2 p-5 rounded-md w-1/4">
         <div>DATOS DEL CICLO</div>
         {DatosDelCiclo.map((dato) => (
-          <div className="bg-background4 py-1 px-3 rounded-md" key={dato.id}>
+          <div
+            className="bg-background4 py-1 px-3 rounded-md flex flex-col flex-1 justify-evenly"
+            key={dato.id}
+          >
             <div>{dato.nombre}</div>
             <div>{dato.dato}</div>
           </div>
@@ -55,15 +55,18 @@ export default function DatosLateralesArmado() {
       <div className="flex flex-col bg-background3 justify-between gap-2 p-5 rounded-md w-1/4">
         <div>DATOS DEL RACK</div>
         {DatosDelRack.map((dato) => (
-          <div className="bg-background4 py-1 px-3 rounded-md" key={dato.id}>
+          <div
+            className="bg-background4 py-1 px-3 rounded-md flex flex-col flex-1 justify-evenly"
+            key={dato.id}
+          >
             <div>{dato.nombre}</div>
             <div>{dato.dato}</div>
           </div>
         ))}
-        <div className="flex flex-col justify-between gap-2 rounded-md h-1/3">
+        <div className="flex flex-col justify-between gap-2 rounded-md h-1/2">
           <div>
             <p>CANCELACIONES</p>
-            <p>n CANCELACIONES EN ESTE NIVEL</p>
+            <p className="text-orange">n CANCELACIONES EN ESTE NIVEL</p>
           </div>
           <div className="bg-background4 flex flex-col rounded-md overflow-hidden h-full p-2">
             <div className="flex flex-col gap-2 overflow-y-auto rounded-md">
