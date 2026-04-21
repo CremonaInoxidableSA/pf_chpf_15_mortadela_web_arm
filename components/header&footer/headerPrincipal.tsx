@@ -38,7 +38,6 @@ export const HeaderPrincipal: React.FC<Header> = ({ currentPath }) => {
 
   const opcionesMenu: OpcionMenu[] = [
     { id: 1, url: "/", text: t("min.home") },
-    { id: 3, url: "/alarmas", text: t("min.alarmas") },
     { id: 4, url: "/camaras", text: t("min.camaras") },
   ];
 

@@ -44,7 +44,7 @@ const GraficoProductos: React.FC<GraficoProductosProps> = ({ dateRange }) => {
   }, [chartData, t]);
 
   return (
-    <div className="h-75">
+    <div className="h-90">
       <canvas ref={canvasRef} />
     </div>
   );
