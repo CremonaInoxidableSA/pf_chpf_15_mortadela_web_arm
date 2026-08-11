@@ -7,7 +7,7 @@ import type {
   TipoNivel,
 } from "@/types/configuraciones";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 import SelectTorre from "./SelectTorre";
@@ -60,16 +60,12 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
   handleNivelChange,
   handleTorreChange,
   handleTorresChange,
-  validarTAGDuplicado,
   refreshData,
 }) => {
-  const [tagValue, setTagValue] = useState<string>("");
-  const [newTagValue, setNewTagValue] = useState<string>("");
-
-  useEffect(() => {
-    setTagValue(nombreTorreActual);
-    setNewTagValue("");
-  }, [nombreTorreActual]);
+  const [newTagByTorre, setNewTagByTorre] = useState<Record<string, string>>(
+    {},
+  );
+  const currentNewTagValue = newTagByTorre[nombreTorreActual] ?? "";
 
   const limpiarInputs = () => {
     if (inputRefs.current) {
@@ -93,13 +89,13 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
         typeof inputValues[0] === "number" ? inputValues[0] : null,
       correccion_guardado:
         typeof inputValues[1] === "number" ? inputValues[1] : null,
-      actualizar_tag: newTagValue,
+      actualizar_tag: currentNewTagValue,
     };
 
     const intentarEnvio = async (reintentos: number = 5) => {
       for (let i = 1; i <= reintentos; i++) {
         try {
-          await configuracionesApi.enviarDatosTorre(finalData, i);
+          await configuracionesApi.enviarDatosTorre(finalData);
           limpiarInputs();
           refreshData();
 
@@ -146,29 +142,6 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
       refreshData();
     } catch {
       toast.error("Error al enviar los datos de niveles", {
-        position: "bottom-center",
-      });
-    }
-  };
-
-  const handleAplicarReset = async (index: number) => {
-    const correcciones: Record<string, number | null> = {};
-
-    for (let i = 1; i <= 12; i++) {
-      correcciones[`correccion${i}`] = i === index + 1 ? 0 : null;
-    }
-
-    const datos = {
-      id_torre: parseInt(selectedTorre!, 10),
-      tipo: selectedNivel,
-      ...correcciones,
-    };
-
-    try {
-      await configuracionesApi.resetearFallasNivel(datos);
-      refreshData();
-    } catch {
-      toast.error("Error al resetear la falla", {
         position: "bottom-center",
       });
     }
@@ -262,12 +235,19 @@ const CorreccionesSection: React.FC<CorreccionesSectionProps> = ({
           <li className="bg-background3 p-2 rounded-md flex flex-col">
             <p>Actualizar TAG</p>
             <div className="flex flex-row items-center gap-2">
-              <span className="whitespace-nowrap shrink-0">{tagValue} -</span>
+              <span className="whitespace-nowrap shrink-0">
+                {nombreTorreActual} -
+              </span>
               <input
                 className="bg-background4 rounded-md w-full px-2"
                 type="text"
-                value={newTagValue}
-                onChange={(e) => setNewTagValue(e.target.value)}
+                value={currentNewTagValue}
+                onChange={(e) =>
+                  setNewTagByTorre((prev) => ({
+                    ...prev,
+                    [nombreTorreActual]: e.target.value,
+                  }))
+                }
               />
             </div>
           </li>

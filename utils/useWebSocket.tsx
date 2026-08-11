@@ -22,6 +22,7 @@ export default function useWebSocket(pollId: string): UseWebSocketReturn {
   const [error, setError] = useState<Error | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const connectRef = useRef<() => void>(() => {});
 
   const connect = useCallback(() => {
     try {
@@ -86,7 +87,7 @@ export default function useWebSocket(pollId: string): UseWebSocketReturn {
         socketRef.current = null;
 
         reconnectTimeoutRef.current = setTimeout(() => {
-          connect();
+          connectRef.current();
         }, 3000);
       };
 
@@ -99,9 +100,17 @@ export default function useWebSocket(pollId: string): UseWebSocketReturn {
   }, [pollId]);
 
   useEffect(() => {
-    connect();
+    connectRef.current = connect;
+  }, [connect]);
+
+  useEffect(() => {
+    const initialConnectTimeout = setTimeout(() => {
+      connectRef.current();
+    }, 0);
 
     return () => {
+      clearTimeout(initialConnectTimeout);
+
       if (socketRef.current) {
         socketRef.current.close();
         socketRef.current = null;

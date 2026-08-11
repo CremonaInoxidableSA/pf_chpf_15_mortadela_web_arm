@@ -1,4 +1,5 @@
 "use client";
+"use no memo";
 
 import {
   ColumnDef,
@@ -28,6 +29,8 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  // TanStack table instance exposes non-memoizable functions by design.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,

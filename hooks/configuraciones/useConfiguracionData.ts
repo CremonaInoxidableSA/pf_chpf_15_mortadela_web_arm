@@ -5,7 +5,7 @@ import type {
   TipoNivel,
 } from "@/types/configuraciones";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import {
   TbCircleLetterAFilled,
@@ -28,6 +28,19 @@ import AlturaAjuste from "@/public/correcciones/ALTURAAJUSTE.png";
 import AlturaMolde from "@/public/correcciones/ALTURAMOLDE.png";
 import DisteNivel from "@/public/correcciones/DISTENIVEL.png";
 import Peso from "@/public/equipos/Equipo_Robot1.png";
+
+const obtenerIconoTipoMolde = (tipo: string) => {
+  switch (tipo) {
+    case "Molde A":
+      return React.createElement(TbCircleLetterAFilled);
+    case "Molde B":
+      return React.createElement(TbCircleLetterBFilled);
+    case "Molde C":
+      return React.createElement(TbCircleLetterCFilled);
+    default:
+      return React.createElement(GoDotFill);
+  }
+};
 
 const datosIniciales = {
   datosGeneralesIzq: [
@@ -146,20 +159,7 @@ export const useConfiguracionData = () => {
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const obtenerIconoTipoMolde = (tipo: string) => {
-    switch (tipo) {
-      case "Molde A":
-        return React.createElement(TbCircleLetterAFilled);
-      case "Molde B":
-        return React.createElement(TbCircleLetterBFilled);
-      case "Molde C":
-        return React.createElement(TbCircleLetterCFilled);
-      default:
-        return React.createElement(GoDotFill);
-    }
-  };
-
-  const cargarDatosReceta = async (idReceta: string) => {
+  const cargarDatosReceta = useCallback(async (idReceta: string) => {
     if (!idReceta) return;
 
     setLoading(true);
@@ -257,9 +257,9 @@ export const useConfiguracionData = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const cargarTorres = async (idReceta: string) => {
+  const cargarTorres = useCallback(async (idReceta: string) => {
     try {
       const data = await configuracionesApi.obtenerListaTorres(idReceta);
 
@@ -276,9 +276,9 @@ export const useConfiguracionData = () => {
       setTorres([]);
       setSelectedTorre(null);
     }
-  };
+  }, []);
 
-  const cargarDatosTorre = async (idTorre: string) => {
+  const cargarDatosTorre = useCallback(async (idTorre: string) => {
     if (!idTorre) return;
 
     setLoading(true);
@@ -352,7 +352,7 @@ export const useConfiguracionData = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const cargarDatosIniciales = async () => {
@@ -382,13 +382,13 @@ export const useConfiguracionData = () => {
       cargarDatosReceta(selectedReceta);
       cargarTorres(selectedReceta);
     }
-  }, [selectedReceta, canMakeApiCalls]);
+  }, [selectedReceta, canMakeApiCalls, cargarDatosReceta, cargarTorres]);
 
   useEffect(() => {
     if (canMakeApiCalls && selectedTorre && selectedReceta) {
       cargarDatosTorre(selectedTorre);
     }
-  }, [selectedTorre, selectedReceta, canMakeApiCalls]);
+  }, [selectedTorre, selectedReceta, canMakeApiCalls, cargarDatosTorre]);
 
   const obtenerDatosActuales = () => {
     if (selectedOption === 1) return datosCorrecionesTorre;

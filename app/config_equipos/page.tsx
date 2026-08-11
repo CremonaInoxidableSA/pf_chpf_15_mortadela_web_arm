@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/context/AuthProvider";
@@ -11,13 +11,8 @@ import CorreccionesSection from "@/components/configuraciones/CorreccionesSectio
 const Configuraciones = () => {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
 
   const configuracionData = useConfiguracionData();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (authLoading) return;
@@ -34,7 +29,6 @@ const Configuraciones = () => {
   }, [user, authLoading, router]);
 
   if (
-    !mounted ||
     authLoading ||
     !user ||
     (user.rol !== "admin" && user.rol !== "superadmin")

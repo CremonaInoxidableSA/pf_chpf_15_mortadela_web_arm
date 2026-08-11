@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+type HlsInstance = import("hls.js").default;
+
 type Props = {
   src: string;
   autoPlay?: boolean;
@@ -24,7 +26,7 @@ export default function HlsPlayer({
   className = "",
 }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const hlsRef = useRef<any>(null);
+  const hlsRef = useRef<HlsInstance | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;

@@ -32,12 +32,10 @@ const DatosLaterales: React.FC = () => {
   const CodigoProducto = 2;
   const TotalNiveles = 3;
   const TipoMolde = 4;
-  const estadoMaquina: "CICLO ACTIVO" | "CICLO INACTIVO" = "CICLO ACTIVO";
   const PesoPorNivel = 6;
   const TiempoTranscurrido: string = "00:15 mm:ss";
   const sdda_nivel_actual = 8;
   const NGripperActual = 9;
-  const PesoActualDesmoldado = 10;
   const TorreActual = 11;
 
   const opcionesAlarma = useMemo<NavOption[]>(
@@ -87,7 +85,7 @@ const DatosLaterales: React.FC = () => {
     {
       id: 6,
       nombre: t("min.pesoDesmoldado"),
-      dato:"0 kg",
+      dato: "0 kg",
       icono: FaWeightHanging,
       isReactIcon: true,
     },

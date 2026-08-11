@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
@@ -13,7 +13,7 @@ const Spinner = () => (
   <div className="border border-solid border-[#f3f3f3] border-t-[#e82a31] rounded-[100%] w-6 h-6 animate-spin" />
 );
 
-const ResetPassword = () => {
+const ResetPasswordContent = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -239,6 +239,25 @@ const ResetPassword = () => {
         </Link>
       </div>
     </section>
+  );
+};
+
+const ResetPasswordFallback = () => (
+  <section className="flex h-full w-full items-center justify-center">
+    <div className="w-auto h-[40vh] gap-3.75 flex flex-col items-center justify-center p-[3rem_4rem_2rem_4rem] max-w-480 bg-backgroundoscuro rounded-md">
+      <LogoBase64 className="flex w-[65%] p-0 h-auto" />
+      <div className="flex flex-col items-center gap-4">
+        <Spinner />
+      </div>
+    </div>
+  </section>
+);
+
+const ResetPassword = () => {
+  return (
+    <Suspense fallback={<ResetPasswordFallback />}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 };
 

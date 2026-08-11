@@ -57,7 +57,7 @@ const SelectConfiguracion: React.FC<SelectConfiguracionProps> = ({
     };
 
     fetchRecetas();
-  }, []);
+  }, [onChange]);
 
   const handleSelectionChange = (value: string) => {
     setSelectedKey(value);

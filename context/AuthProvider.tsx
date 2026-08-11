@@ -108,13 +108,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessionCheckCompleted.current = true;
       checkSession();
     }
-  }, []);
+  }, [checkSession]);
 
   useEffect(() => {
     if (pathname === "/login" && needBootstrap && !loading) {
       checkSetupStatus();
     }
-  }, [pathname]);
+  }, [pathname, needBootstrap, loading, checkSetupStatus]);
 
   useEffect(() => {
     if (!loading) {
@@ -217,7 +217,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const checkSession = async () => {
+  const checkSession = useCallback(async () => {
     try {
       const setupCache = getStoredSetupCache();
       if (setupCache !== null) {
@@ -355,7 +355,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [checkSetupStatus]);
 
   const login = async (
     username: string,

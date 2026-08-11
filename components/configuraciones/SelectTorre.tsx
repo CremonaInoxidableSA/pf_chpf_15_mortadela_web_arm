@@ -70,7 +70,7 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
     };
 
     loadTorresAndSelectFirst();
-  }, [selectedReceta, canMakeApiCalls]);
+  }, [selectedReceta, canMakeApiCalls, onChange, onTorresChange]);
 
   useEffect(() => {
     if (refreshTorres) {
@@ -94,7 +94,7 @@ const SelectTorre: React.FC<SelectTorreProps> = ({
       }
     };
     reload();
-  }, [refreshKey]);
+  }, [refreshKey, selectedReceta, onTorresChange]);
 
   return (
     <select

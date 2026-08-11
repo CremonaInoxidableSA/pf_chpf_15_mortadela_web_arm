@@ -16,7 +16,7 @@ export default function Camaras() {
           </h1>
           <p className="text-sm text-texto2">
             {t("min.monitoreoTiempoReal")} - 8{" "}
-            {t("cameras.camera").toLowerCase()}s
+            {String(t("cameras.camera")).toLowerCase()}s
           </p>
         </div>
         <div className="flex-1">
