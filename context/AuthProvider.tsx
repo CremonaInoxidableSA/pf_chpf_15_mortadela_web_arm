@@ -103,76 +103,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [needBootstrap, setNeedBootstrap] = useState(false);
   const sessionCheckCompleted = useRef(false);
 
-  useEffect(() => {
-    if (!sessionCheckCompleted.current) {
-      sessionCheckCompleted.current = true;
-      checkSession();
-    }
-  }, [checkSession]);
-
-  useEffect(() => {
-    if (pathname === "/login" && needBootstrap && !loading) {
-      checkSetupStatus();
-    }
-  }, [pathname, needBootstrap, loading, checkSetupStatus]);
-
-  useEffect(() => {
-    if (!loading) {
-      if (!pathname) {
-        return;
-      }
-
-      const publicRoutes = [
-        "/login",
-        "/register",
-        "/bootstrap",
-        "/login/recuperacion",
-        "/login/recuperacion/reset_pass",
-      ];
-
-      const isPublicRoute = publicRoutes.some((route) =>
-        pathname.startsWith(route),
-      );
-
-      if (isPublicRoute) {
-        return;
-      }
-
-      if (needBootstrap && pathname !== "/bootstrap") {
-        router.push("/bootstrap");
-        return;
-      }
-
-      if (!user && pathname !== "/") {
-        router.push("/login");
-      }
-
-      if (user && (pathname === "/login" || pathname === "/register")) {
-        router.push("/");
-      }
-    }
-  }, [user, loading, needBootstrap, pathname, router]);
-
-  useEffect(() => {
-    if (user) {
-      setEmail(user.email ?? null);
-      setUsername(user.username ?? null);
-      setNombre(user.nombre ?? null);
-      setApellido(user.apellido ?? null);
-      setRol(user.rol ?? null);
-      setHabilitado(!!user.habilitado);
-      setReporte(!!user.reporte);
-    } else {
-      setEmail(null);
-      setUsername(null);
-      setNombre(null);
-      setApellido(null);
-      setRol(null);
-      setHabilitado(null);
-      setReporte(null);
-    }
-  }, [user]);
-
   const checkSetupStatus = useCallback(async () => {
     const storedCache = getStoredSetupCache();
 
@@ -356,6 +286,76 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     }
   }, [checkSetupStatus]);
+
+  useEffect(() => {
+    if (!sessionCheckCompleted.current) {
+      sessionCheckCompleted.current = true;
+      checkSession();
+    }
+  }, [checkSession]);
+
+  useEffect(() => {
+    if (pathname === "/login" && needBootstrap && !loading) {
+      checkSetupStatus();
+    }
+  }, [pathname, needBootstrap, loading, checkSetupStatus]);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!pathname) {
+        return;
+      }
+
+      const publicRoutes = [
+        "/login",
+        "/register",
+        "/bootstrap",
+        "/login/recuperacion",
+        "/login/recuperacion/reset_pass",
+      ];
+
+      const isPublicRoute = publicRoutes.some((route) =>
+        pathname.startsWith(route),
+      );
+
+      if (isPublicRoute) {
+        return;
+      }
+
+      if (needBootstrap && pathname !== "/bootstrap") {
+        router.push("/bootstrap");
+        return;
+      }
+
+      if (!user && pathname !== "/") {
+        router.push("/login");
+      }
+
+      if (user && (pathname === "/login" || pathname === "/register")) {
+        router.push("/");
+      }
+    }
+  }, [user, loading, needBootstrap, pathname, router]);
+
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email ?? null);
+      setUsername(user.username ?? null);
+      setNombre(user.nombre ?? null);
+      setApellido(user.apellido ?? null);
+      setRol(user.rol ?? null);
+      setHabilitado(!!user.habilitado);
+      setReporte(!!user.reporte);
+    } else {
+      setEmail(null);
+      setUsername(null);
+      setNombre(null);
+      setApellido(null);
+      setRol(null);
+      setHabilitado(null);
+      setReporte(null);
+    }
+  }, [user]);
 
   const login = async (
     username: string,
